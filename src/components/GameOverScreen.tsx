@@ -1,7 +1,5 @@
 // Game over screen component
 
-import React from 'react';
-
 interface GameOverScreenProps {
   gameStatus: 'won' | 'lost';
   finalScore: number;

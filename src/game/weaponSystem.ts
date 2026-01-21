@@ -1,6 +1,6 @@
 // Weapon system including equip, durability, and usage tracking
 
-import { Card, PlayerState } from '../types/game';
+import type { Card, PlayerState } from '../types/game';
 
 /**
  * Equip a weapon to the player

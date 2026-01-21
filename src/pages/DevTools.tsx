@@ -1,6 +1,5 @@
 // Development tools page
 
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { runAllTests } from '../game/runAllTests';
 

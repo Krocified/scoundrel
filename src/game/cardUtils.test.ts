@@ -1,6 +1,6 @@
 // Tests for card utility functions
 
-import { Card } from '../types/game';
+import type { Card } from '../types/game';
 import { createDeck } from './deck';
 import {
   getCardType,

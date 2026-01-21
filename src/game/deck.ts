@@ -1,6 +1,6 @@
 // Deck initialization and shuffling for Scoundrel
 
-import { Card, Suit, Rank } from '../types/game';
+import type { Card, Suit, Rank } from '../types/game';
 
 /**
  * Creates the full 42-card Scoundrel deck

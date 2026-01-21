@@ -1,7 +1,5 @@
 // Skip room buttons component
 
-import React from 'react';
-
 interface SkipButtonsProps {
   canSkip: boolean;
   cardsPickedThisRoom: number;

@@ -1,7 +1,5 @@
 // Player stats display component
 
-import React from 'react';
-
 interface PlayerStatsProps {
   hp: number;
   maxHp: number;

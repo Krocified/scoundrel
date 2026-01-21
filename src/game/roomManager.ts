@@ -1,6 +1,6 @@
 // Room management including initialization, progression, and skip mechanic
 
-import { Card } from '../types/game';
+import type { Card } from '../types/game';
 
 export interface RoomResult {
   room: Card[];

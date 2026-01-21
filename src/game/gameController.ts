@@ -1,6 +1,6 @@
 // Game controller - orchestrates the complete game flow
 
-import { GameState } from '../types/game';
+import type { GameState } from '../types/game';
 import { createDeck, shuffleDeck } from './deck';
 import { initializeFirstRoom, prepareNextRoom, skipRoom } from './roomManager';
 import { pickCard, isRoomComplete, getLeftoverCard } from './cardActions';

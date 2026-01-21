@@ -1,7 +1,6 @@
 // Weapon display component
 
-import React from 'react';
-import { Card } from '../types/game';
+import type { Card } from '../types/game';
 
 interface WeaponDisplayProps {
   weapon: Card | null;

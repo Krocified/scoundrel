@@ -1,6 +1,6 @@
 // Card action handler - resolves effects when cards are picked
 
-import { Card, GameState } from '../types/game';
+import type { Card, GameState } from '../types/game';
 import { getCardType } from './cardUtils';
 import { healPlayer, calculateDamage, applyDamage } from './combat';
 import { equipWeapon, markWeaponUsed } from './weaponSystem';

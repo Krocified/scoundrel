@@ -1,6 +1,5 @@
 // Main Scoundrel game component
 
-import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { GameBoard } from './components/GameBoard';
 import { DevTools } from './pages/DevTools';

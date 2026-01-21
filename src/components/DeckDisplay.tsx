@@ -1,7 +1,5 @@
 // Deck visualization component
 
-import React from 'react';
-
 interface DeckDisplayProps {
   cardsInDeck: number;
 }

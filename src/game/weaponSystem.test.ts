@@ -1,6 +1,6 @@
 // Tests for weapon system
 
-import { Card, PlayerState } from '../types/game';
+import type { Card, PlayerState } from '../types/game';
 import {
   equipWeapon,
   markWeaponUsed,

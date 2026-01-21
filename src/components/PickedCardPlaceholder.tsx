@@ -1,7 +1,5 @@
 // Placeholder for picked cards
 
-import React from 'react';
-
 export function PickedCardPlaceholder() {
   return (
     <div

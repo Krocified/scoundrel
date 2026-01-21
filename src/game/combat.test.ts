@@ -1,6 +1,6 @@
 // Tests for combat system
 
-import { Card, PlayerState } from '../types/game';
+import type { Card, PlayerState } from '../types/game';
 import {
   calculateDamage,
   applyDamage,

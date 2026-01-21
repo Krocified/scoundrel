@@ -1,7 +1,7 @@
 // Room card component
 
 import React from 'react';
-import { Card } from '../types/game';
+import type { Card } from '../types/game';
 import { getSuitSymbol, getCardType } from '../game/cardUtils';
 
 interface RoomCardProps {

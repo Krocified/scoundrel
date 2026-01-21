@@ -1,6 +1,6 @@
 // Combat system including damage calculation and resolution
 
-import { Card, PlayerState } from '../types/game';
+import type { Card, PlayerState } from '../types/game';
 import { canWeaponDefeat } from './weaponSystem';
 
 export interface DamageResult {

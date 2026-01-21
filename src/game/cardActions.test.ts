@@ -1,6 +1,6 @@
 // Tests for card action handler
 
-import { Card, GameState } from '../types/game';
+import type { Card, GameState } from '../types/game';
 import { pickCard, isRoomComplete, getLeftoverCard } from './cardActions';
 
 // Helper to create initial game state for testing

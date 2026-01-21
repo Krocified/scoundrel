@@ -1,6 +1,6 @@
 // Card utility functions for classification and value extraction
 
-import { Card, CardType } from '../types/game';
+import type { Card, CardType } from '../types/game';
 
 /**
  * Get the type of a card based on its suit

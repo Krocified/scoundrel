@@ -1,7 +1,5 @@
 // Game log component
 
-import React from 'react';
-
 interface GameLogProps {
   log: string[];
 }
