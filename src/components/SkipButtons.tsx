@@ -8,13 +8,30 @@ interface SkipButtonsProps {
 
 export function SkipButtons({ canSkip, cardsPickedThisRoom, onSkip }: Readonly<SkipButtonsProps>) {
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '10px',
-      justifyContent: 'center'
-    }}>
-      <div style={{ 
+    <>
+      <style>{`
+        @media (max-width: 768px) {
+          .skip-buttons-container {
+            flex-direction: row !important;
+            width: 100%;
+          }
+          
+          .skip-buttons-container button {
+            flex: 1 !important;
+          }
+          
+          .skip-buttons-label {
+            display: none !important;
+          }
+        }
+      `}</style>
+      <div className="skip-buttons-container" style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '10px',
+        justifyContent: 'center'
+      }}>
+      <div className="skip-buttons-label" style={{ 
         fontSize: '12px', 
         fontWeight: 'bold', 
         color: '#666',
@@ -65,6 +82,7 @@ export function SkipButtons({ canSkip, cardsPickedThisRoom, onSkip }: Readonly<S
           Can't skip after picking
         </small>
       )}
-    </div>
+      </div>
+    </>
   );
 }

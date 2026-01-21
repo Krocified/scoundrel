@@ -38,7 +38,30 @@ export function RoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<Ro
   };
 
   return (
-    <div
+    <>
+      <style>{`
+        @media (max-width: 768px) {
+          .room-card {
+            padding: 12px !important;
+          }
+          
+          .room-card-suit {
+            font-size: 32px !important;
+          }
+          
+          .room-card-rank {
+            font-size: 24px !important;
+            margin-top: 5px !important;
+          }
+          
+          .room-card-type {
+            font-size: 10px !important;
+            margin-top: 5px !important;
+          }
+        }
+      `}</style>
+      <div
+        className="room-card"
       role="button"
       tabIndex={isGamePlaying ? 0 : -1}
       className={isGamePlaying ? 'card-hover-enabled' : ''}
@@ -60,13 +83,13 @@ export function RoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<Ro
       }}
     >
       <div style={{ flex: '1', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-        <div style={{ fontSize: '48px', color }}>
+        <div className="room-card-suit" style={{ fontSize: '48px', color }}>
           {getSuitSymbol(card.suit)}
         </div>
-        <div style={{ fontSize: '32px', fontWeight: 'bold', marginTop: '10px' }}>
+        <div className="room-card-rank" style={{ fontSize: '32px', fontWeight: 'bold', marginTop: '10px' }}>
           {card.rank}
         </div>
-        <div style={{ fontSize: '12px', marginTop: '10px', color: '#666' }}>
+        <div className="room-card-type" style={{ fontSize: '12px', marginTop: '10px', color: '#666' }}>
           {(() => {
             if (cardType === 'health') return 'HEAL';
             if (cardType === 'weapon') return 'WEAPON';
@@ -74,6 +97,7 @@ export function RoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<Ro
           })()}
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
