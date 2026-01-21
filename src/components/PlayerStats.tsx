@@ -20,7 +20,7 @@ export function PlayerStats({
   roomsCleared,
   roomsSkipped,
   cardsInDeck
-}: PlayerStatsProps) {
+}: Readonly<PlayerStatsProps>) {
   return (
     <div style={{ 
       background: '#f5f5f5', 

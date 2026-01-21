@@ -16,8 +16,8 @@ export function DeckDisplay({ cardsInDeck }: Readonly<DeckDisplayProps>) {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        height: '95%',
-        width: '95%',
+        height: '97%',
+        width: '97%',
       }}
       title={`${cardsInDeck} cards left in deck`}
     >
@@ -31,6 +31,7 @@ export function DeckDisplay({ cardsInDeck }: Readonly<DeckDisplayProps>) {
         {Array.from({ length: stackDepth }, (_, i) => ({ id: `layer-${i}`, index: i })).map(({ id, index: i }) => (
           <div
             key={id}
+            title={`${cardsInDeck} cards left in deck`}
             style={{
               position: 'absolute',
               left: `${i * 2}px`,

@@ -62,7 +62,42 @@ export function GameBoard() {
         }
       `}</style>
       <div style={{ padding: '20px', maxWidth: '1400px', margin: '0 auto', fontFamily: 'monospace' }}>
-        <h1>🃏 SCOUNDREL</h1>
+        {/* Header with Title and Buttons */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <h1 style={{ margin: 0 }}>🃏 SCOUNDREL</h1>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button
+              onClick={handleNewGame}
+              style={{
+                padding: '10px 20px',
+                background: '#607d8b',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontWeight: 'bold'
+              }}
+            >
+              New Game
+            </button>
+            <a
+              href="/GAME_RULES.md"
+              target="_blank"
+              style={{
+                padding: '10px 20px',
+                background: '#9c27b0',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                textDecoration: 'none',
+                fontWeight: 'bold',
+                display: 'inline-block'
+              }}
+            >
+              View Rules
+            </a>
+          </div>
+        </div>
 
         <PlayerStats
           hp={stats.hp}
@@ -88,15 +123,17 @@ export function GameBoard() {
 
         {!isGameOver && (
           <>
-            <div style={{ marginBottom: '20px' }}>
-              <h2>Current Room ({game.cardsPickedThisRoom}/3 picked)</h2>
+            <div style={{ marginBottom: '15px' }}>
+              <h2 style={{ marginBottom: '10px', marginTop: 0 }}>Current Room ({game.cardsPickedThisRoom}/3 picked)</h2>
               <div style={{ 
                 display: 'grid', 
                 gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 150px', 
                 columnGap: '15px',
-                marginTop: '15px'
+                height: '280px'
               }}>
-                <DeckDisplay cardsInDeck={stats.cardsInDeck} />
+                <div style={{ marginRight: '15px' }}>
+                  <DeckDisplay cardsInDeck={stats.cardsInDeck} />
+                </div>
 
                 {game.currentRoom.map((card, index) => (
                   <RoomCard
@@ -108,11 +145,13 @@ export function GameBoard() {
                   />
                 ))}
 
-                <SkipButtons
-                  canSkip={canSkip}
-                  cardsPickedThisRoom={game.cardsPickedThisRoom}
-                  onSkip={handleSkip}
-                />
+                <div style={{ marginLeft: '15px' }}>
+                  <SkipButtons
+                    canSkip={canSkip}
+                    cardsPickedThisRoom={game.cardsPickedThisRoom}
+                    onSkip={handleSkip}
+                  />
+                </div>
               </div>
             </div>
 
@@ -120,7 +159,9 @@ export function GameBoard() {
               display: 'grid', 
               gridTemplateColumns: '300px 1fr',
               gap: '20px',
-              marginBottom: '20px'
+              marginBottom: '20px',
+              marginTop: '65px',
+              maxHeight: '250px'
             }}>
               <WeaponDisplay
                 weapon={stats.weapon}
@@ -131,39 +172,6 @@ export function GameBoard() {
             </div>
           </>
         )}
-
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <button
-            onClick={handleNewGame}
-            style={{
-              padding: '10px 20px',
-              background: '#607d8b',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: 'bold'
-            }}
-          >
-            New Game
-          </button>
-          <a
-            href="/GAME_RULES.md"
-            target="_blank"
-            style={{
-              padding: '10px 20px',
-              background: '#9c27b0',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              textDecoration: 'none',
-              fontWeight: 'bold',
-              display: 'inline-block'
-            }}
-          >
-            View Rules
-          </a>
-        </div>
       </div>
     </>
   );

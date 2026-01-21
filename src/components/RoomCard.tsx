@@ -11,13 +11,17 @@ interface RoomCardProps {
   onPickCard: (index: number) => void;
 }
 
-export function RoomCard({ card, index, isGamePlaying, onPickCard }: RoomCardProps) {
+export function RoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<RoomCardProps>) {
   const cardType = getCardType(card);
   let color = '#4caf50'; // enemy default
+  let tooltipText = 'Fight enemy!';
+  
   if (cardType === 'health') {
     color = '#e91e63';
+    tooltipText = 'Drink health potion!';
   } else if (cardType === 'weapon') {
     color = '#2196f3';
+    tooltipText = 'Equip weapon!';
   }
 
   const handleClick = () => {
@@ -40,6 +44,7 @@ export function RoomCard({ card, index, isGamePlaying, onPickCard }: RoomCardPro
       className={isGamePlaying ? 'card-hover-enabled' : ''}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
+      title={tooltipText}
       style={{
         background: 'white',
         border: `3px solid ${color}`,
@@ -69,25 +74,6 @@ export function RoomCard({ card, index, isGamePlaying, onPickCard }: RoomCardPro
           })()}
         </div>
       </div>
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onPickCard(index);
-        }}
-        disabled={!isGamePlaying}
-        style={{
-          padding: '8px 16px',
-          background: color,
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: isGamePlaying ? 'pointer' : 'not-allowed',
-          fontWeight: 'bold',
-          width: '100%'
-        }}
-      >
-        Pick [{index}]
-      </button>
     </div>
   );
 }

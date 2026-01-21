@@ -6,10 +6,10 @@ interface GameLogProps {
   log: string[];
 }
 
-export function GameLog({ log }: GameLogProps) {
+export function GameLog({ log }: Readonly<GameLogProps>) {
   return (
     <div>
-      <h3>Game Log</h3>
+      <h3 style={{ margin: '0 0 10px 0' }}>Game Log</h3>
       <div
         id="game-log"
         style={{
@@ -17,7 +17,7 @@ export function GameLog({ log }: GameLogProps) {
           color: '#0f0',
           padding: '15px',
           borderRadius: '8px',
-          height: '300px',
+          height: '250px',
           overflowY: 'auto',
           fontFamily: 'monospace',
           fontSize: '14px'

@@ -8,14 +8,13 @@ interface SkipButtonsProps {
   onSkip: (direction: 'left-to-right' | 'right-to-left') => void;
 }
 
-export function SkipButtons({ canSkip, cardsPickedThisRoom, onSkip }: SkipButtonsProps) {
+export function SkipButtons({ canSkip, cardsPickedThisRoom, onSkip }: Readonly<SkipButtonsProps>) {
   return (
     <div style={{
       display: 'flex',
       flexDirection: 'column',
       gap: '10px',
-      justifyContent: 'center',
-      marginLeft: '30px'
+      justifyContent: 'center'
     }}>
       <div style={{ 
         fontSize: '12px', 
