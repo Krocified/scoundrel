@@ -8,3 +8,4 @@ export { RoomCard } from './RoomCard';
 export { SkipButtons } from './SkipButtons';
 export { WeaponDisplay } from './WeaponDisplay';
 export { GameLog } from './GameLog';
+export { PickedCardPlaceholder } from './PickedCardPlaceholder';

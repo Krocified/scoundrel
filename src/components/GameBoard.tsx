@@ -9,6 +9,7 @@ import { RoomCard } from './RoomCard';
 import { SkipButtons } from './SkipButtons';
 import { WeaponDisplay } from './WeaponDisplay';
 import { GameLog } from './GameLog';
+import { PickedCardPlaceholder } from './PickedCardPlaceholder';
 
 export function GameBoard() {
   const [game, setGame] = useState(() => initializeGame());
@@ -135,15 +136,26 @@ export function GameBoard() {
                   <DeckDisplay cardsInDeck={stats.cardsInDeck} />
                 </div>
 
-                {game.currentRoom.map((card, index) => (
-                  <RoomCard
-                    key={card.id}
-                    card={card}
-                    index={index}
-                    isGamePlaying={game.gameStatus === 'playing'}
-                    onPickCard={handlePickCard}
-                  />
-                ))}
+                {/* Render 4 slots: cards + placeholders for picked cards */}
+                {Array.from({ length: 4 }, (_, i) => ({ slotIndex: i, id: `slot-${i}` })).map(({ slotIndex, id }) => {
+                  // If we have a card at this slot index in currentRoom, show it
+                  // Otherwise show placeholder
+                  const card = game.currentRoom[slotIndex];
+                  
+                  if (card) {
+                    return (
+                      <RoomCard
+                        key={card.id}
+                        card={card}
+                        index={slotIndex}
+                        isGamePlaying={game.gameStatus === 'playing'}
+                        onPickCard={handlePickCard}
+                      />
+                    );
+                  } else {
+                    return <PickedCardPlaceholder key={`placeholder-${id}`} />;
+                  }
+                })}
 
                 <div style={{ marginLeft: '15px' }}>
                   <SkipButtons
