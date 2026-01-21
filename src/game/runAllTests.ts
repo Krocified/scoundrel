@@ -3,6 +3,8 @@
 import { testDeck } from './deck.test';
 import { testCardUtils } from './cardUtils.test';
 import { testRoomManager } from './roomManager.test';
+import { testWeaponSystem } from './weaponSystem.test';
+import { testCombat } from './combat.test';
 
 export function runAllTests() {
   console.log('\n');
@@ -19,6 +21,12 @@ export function runAllTests() {
     console.log('\n');
     
     testRoomManager();
+    console.log('\n');
+    
+    testWeaponSystem();
+    console.log('\n');
+    
+    testCombat();
     console.log('\n');
 
     console.log('═'.repeat(60));

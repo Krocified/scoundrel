@@ -44,13 +44,14 @@ function App() {
           <li><strong>Deck System</strong> - 42 cards, shuffle, validation</li>
           <li><strong>Card Utilities</strong> - Type classification, display helpers</li>
           <li><strong>Room Manager</strong> - Room initialization, skip mechanic</li>
+          <li><strong>Weapon System</strong> - Equip, durability tracking, usage limits</li>
+          <li><strong>Combat System</strong> - Damage calculation, healing, player state</li>
         </ul>
         
         <h3 style={{ marginTop: '20px' }}>🚧 Coming Next:</h3>
         <ul>
-          <li>Combat System - Damage calculations</li>
-          <li>Weapon System - Durability tracking</li>
-          <li>Game Controller - Main game loop</li>
+          <li>Card Actions - Handle picking cards and resolving effects</li>
+          <li>Game Controller - Main game loop and flow</li>
           <li>UI Components - Play the actual game!</li>
         </ul>
       </div>

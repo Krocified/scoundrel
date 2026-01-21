@@ -46,7 +46,32 @@
 - ✅ `calculateRemainingRooms()` - Calculate rooms left
 - ✅ **CRITICAL: Deck order tracking** for skip mechanic
 
-### 4. Test Infrastructure
+### 4. Weapon System
+**Files created:**
+- `src/game/weaponSystem.ts` - Weapon equip, durability, and usage
+- `src/game/weaponSystem.test.ts` - Comprehensive weapon tests
+
+**Features implemented:**
+- ✅ `equipWeapon()` - Equip weapon (replaces current, resets durability)
+- ✅ `useWeapon()` - Update durability after defeating enemy
+- ✅ `canWeaponDefeat()` - Check if weapon can defeat enemy based on durability
+- ✅ **Durability system:** Weapon can only defeat enemies < last defeated enemy rank
+- ✅ `getWeaponDurabilityDescription()` - UI helper for weapon status
+
+### 5. Combat System
+**Files created:**
+- `src/game/combat.ts` - Damage calculation and player state management
+- `src/game/combat.test.ts` - Comprehensive combat tests
+
+**Features implemented:**
+- ✅ `calculateDamage()` - Calculate damage with weapon logic and durability
+- ✅ `applyDamage()` - Apply damage to player
+- ✅ `healPlayer()` - Heal player (capped at maxHp)
+- ✅ `isPlayerAlive()` - Check if player is alive
+- ✅ `getHpPercentage()` - Get HP % for UI
+- ✅ **Complex weapon logic:** No weapon, fresh weapon, worn weapon scenarios
+
+### 6. Test Infrastructure
 **Files created:**
 - `src/game/runAllTests.ts` - Test runner for all systems
 - Updated `src/App.tsx` - Added "Run All Tests" button
@@ -67,32 +92,23 @@ None currently
 
 ## 📋 To Do
 
-### 4. Combat System
-- `calculateDamage()` - Compute damage with weapon logic
-- `applyDamage()` - Reduce player HP
+### 7. Card Action Handler
+- `pickCard()` - Handle picking a card and resolving its effect (health/weapon/enemy)
 
-### 5. Weapon System
-- `equipWeapon()` - Equip weapon to player
-- `useWeapon()` - Update weapon durability after battle
-- `canWeaponDefeat()` - Check if weapon can be used against enemy
-
-### 6. Card Actions
-- `pickCard()` - Handle picking a card and resolving its effect
-
-### 7. Game Controller
+### 8. Game Controller
 - `initializeGame()` - Set up new game
 - `processCardPick()` - Handle card pick action
 - `processRoomSkip()` - Handle room skip action
 - `calculateFinalScore()` - Calculate final score
 - `getGameStats()` - Get current game statistics
 
-### 8. UI Components
+### 9. UI Components
 - Minimal text-based UI for testing
 - Card display components
 - Player stats display
 - Action buttons (pick cards, skip room)
 
-### 9. Testing & Polish
+### 10. Testing & Polish
 - Playtest full game loop
 - Verify all rules work correctly
 - Add game over screen with score
@@ -112,15 +128,19 @@ scoundrel/
 │   ├── types/
 │   │   └── game.ts            # TypeScript type definitions
 │   ├── game/
-│   │   ├── deck.ts            # ✅ Deck system
-│   │   ├── deck.test.ts       # ✅ Deck tests
-│   │   ├── cardUtils.ts       # ✅ Card utilities
-│   │   ├── cardUtils.test.ts  # ✅ Card utils tests
-│   │   ├── roomManager.ts     # ✅ Room management + skip
-│   │   ├── roomManager.test.ts# ✅ Room tests
-│   │   └── runAllTests.ts     # ✅ Test runner
-│   ├── App.tsx                # Main app with test button
-│   └── main.tsx               # Entry point
+│   │   ├── deck.ts              # ✅ Deck system
+│   │   ├── deck.test.ts         # ✅ Deck tests
+│   │   ├── cardUtils.ts         # ✅ Card utilities
+│   │   ├── cardUtils.test.ts    # ✅ Card utils tests
+│   │   ├── roomManager.ts       # ✅ Room management + skip
+│   │   ├── roomManager.test.ts  # ✅ Room tests
+│   │   ├── weaponSystem.ts      # ✅ Weapon system
+│   │   ├── weaponSystem.test.ts # ✅ Weapon tests
+│   │   ├── combat.ts            # ✅ Combat system
+│   │   ├── combat.test.ts       # ✅ Combat tests
+│   │   └── runAllTests.ts       # ✅ Test runner
+│   ├── App.tsx                  # Main app with test button
+│   └── main.tsx                 # Entry point
 └── ... (config files)
 ```
 
@@ -128,10 +148,7 @@ scoundrel/
 
 ## Next Steps
 
-1. **Card Utilities** - Simple classification and value functions
-2. **Room Management** - Core game loop mechanics (including skip)
-3. **Combat System** - Damage calculations
-4. **Weapon System** - Durability tracking
-5. **Card Actions** - Effect resolution
-6. **Game Controller** - Orchestrate everything
-7. **UI** - Simple interface to play the game
+1. **Card Action Handler** - Implement pickCard() to resolve effects
+2. **Game Controller** - Orchestrate game flow and state
+3. **UI** - Build playable interface
+4. **Polish** - Final testing and refinement
