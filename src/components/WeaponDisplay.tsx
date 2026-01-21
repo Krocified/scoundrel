@@ -64,7 +64,7 @@ export function WeaponDisplay({ weapon, weaponDurability }: Readonly<WeaponDispl
             color: '#ffeb3b',
             textShadow: '0 0 10px rgba(255,235,59,0.5)'
           }}>
-            &lt; {weaponDurability}
+            ≤ {weaponDurability}
           </div>
           <div style={{ fontSize: '10px', opacity: 0.7, marginTop: '5px' }}>
             Max enemy value you can defeat

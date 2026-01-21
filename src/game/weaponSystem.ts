@@ -16,7 +16,7 @@ export function equipWeapon(player: PlayerState, weapon: Card): PlayerState {
 
 /**
  * Update weapon durability after defeating an enemy
- * Weapon can now only defeat enemies with rank < enemyDefeated.rank
+ * Weapon can now only defeat enemies with rank <= enemyDefeated.rank
  */
 export function markWeaponUsed(player: PlayerState, enemyDefeated: Card): PlayerState {
   if (!player.equippedWeapon) {
@@ -25,7 +25,7 @@ export function markWeaponUsed(player: PlayerState, enemyDefeated: Card): Player
 
   return {
     ...player,
-    weaponMaxEnemy: enemyDefeated.rank, // Weapon can now only defeat enemies < this rank
+    weaponMaxEnemy: enemyDefeated.rank, // Weapon can now only defeat enemies <= this rank
   };
 }
 
@@ -42,8 +42,8 @@ export function canWeaponDefeat(
     return true;
   }
 
-  // Weapon can only defeat enemies with rank < weaponMaxEnemy
-  return enemyRank < weaponMaxEnemy;
+  // Weapon can only defeat enemies with rank <= weaponMaxEnemy
+  return enemyRank <= weaponMaxEnemy;
 }
 
 /**
@@ -58,5 +58,5 @@ export function getWeaponDurabilityDescription(player: PlayerState): string {
     return `Fresh weapon (can defeat any enemy)`;
   }
 
-  return `Can only defeat enemies < ${player.weaponMaxEnemy}`;
+  return `Can only defeat enemies <= ${player.weaponMaxEnemy}`;
 }

@@ -241,7 +241,7 @@ export function Rules() {
           marginBottom: '20px'
         }}>
           <strong>Weapons wear out!</strong> After defeating an enemy, your weapon can only defeat enemies with 
-          values <strong>lower</strong> than the one you just fought.
+          values <strong>equal to or lower</strong> than the one you just fought.
         </p>
 
         <div style={{ 
@@ -254,8 +254,8 @@ export function Rules() {
           <ol style={{ paddingLeft: '30px', marginBottom: 0 }}>
             <li style={{ marginBottom: '10px' }}>You equip a ♦7 weapon (fresh)</li>
             <li style={{ marginBottom: '10px' }}>You fight a ♠10 enemy (takes 3 damage)</li>
-            <li style={{ marginBottom: '10px' }}>Your weapon is now worn and can only defeat enemies &lt; 10</li>
-            <li style={{ marginBottom: '10px' }}>Fighting an 11 or higher would deal full damage (weapon is useless)</li>
+            <li style={{ marginBottom: '10px' }}>Your weapon is now worn and can only defeat enemies ≤ 10</li>
+            <li style={{ marginBottom: '10px' }}>You can still fight another ♠10, but fighting an 11 or higher would deal full damage</li>
           </ol>
         </div>
       </section>

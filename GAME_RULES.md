@@ -91,22 +91,23 @@ Player must choose ONE of two actions:
 - Example: ♦5 weapon vs ♠9 enemy → take 4 damage
 
 #### With a Weapon (Used)
-- Weapon can only be used against enemies with rank **strictly less than** the last enemy defeated
+- Weapon can only be used against enemies with rank **less than or equal to** the last enemy defeated
 - If weapon cannot be used: take full enemy damage (as if no weapon)
-- Example: ♦5 defeated ♠9 → weapon can only defeat enemies with rank ≤8
+- Example: ♦5 defeated ♠9 → weapon can only defeat enemies with rank ≤9
 
 ### Weapon Durability System
 When you use a weapon to fight an enemy:
 1. Calculate damage: `max(0, enemy_rank - weapon_rank)`
 2. The defeated enemy's rank becomes the weapon's "max enemy threshold"
-3. Weapon can now only defeat enemies with rank < threshold
-4. If enemy rank ≥ threshold: weapon cannot be used, take full damage
+3. Weapon can now only defeat enemies with rank ≤ threshold
+4. If enemy rank > threshold: weapon cannot be used, take full damage
 
 **Example Sequence:**
 - Equip ♦5 weapon (fresh, unused)
-- Fight ♠9: take 4 damage, weapon now limited to enemies rank <9
-- Fight ♠8: take 3 damage, weapon now limited to enemies rank <8
-- Fight ♣10: weapon can't be used (10 ≥8), take 10 damage, weapon still limited to <8
+- Fight ♠9: take 4 damage, weapon now limited to enemies rank ≤9
+- Fight ♠9 again: take 4 damage, weapon still limited to enemies rank ≤9
+- Fight ♠8: take 3 damage, weapon now limited to enemies rank ≤8
+- Fight ♣10: weapon can't be used (10 > 8), take 10 damage, weapon still limited to ≤8
 - Equip new ♦7 weapon: resets durability (fresh weapon)
 
 ### Visual Representation (IRL)

@@ -57,7 +57,7 @@ export function testWeaponSystem() {
       : '✗ Weapon durability failed\n'
   );
 
-  // Test 4: Used weapon can only defeat lower enemies
+  // Test 4: Used weapon can defeat same or lower enemies
   console.log('Test 4: Weapon durability restrictions...');
   console.log(`  Can defeat rank 8: ${canWeaponDefeat(player.weaponMaxEnemy, 8)}`);
   console.log(`  Can defeat rank 9: ${canWeaponDefeat(player.weaponMaxEnemy, 9)}`);
@@ -65,7 +65,7 @@ export function testWeaponSystem() {
   
   const durabilityCorrect =
     canWeaponDefeat(player.weaponMaxEnemy, 8) === true &&
-    canWeaponDefeat(player.weaponMaxEnemy, 9) === false &&
+    canWeaponDefeat(player.weaponMaxEnemy, 9) === true &&
     canWeaponDefeat(player.weaponMaxEnemy, 10) === false;
   console.log(durabilityCorrect ? '✓ Durability restrictions correct\n' : '✗ Durability check failed\n');
 
@@ -80,14 +80,16 @@ export function testWeaponSystem() {
       : '✗ Weapon durability update failed\n'
   );
 
-  // Test 6: Now can only defeat rank < 8
+  // Test 6: Now can only defeat rank <= 8
   console.log('Test 6: Further durability restrictions...');
   console.log(`  Can defeat rank 7: ${canWeaponDefeat(player.weaponMaxEnemy, 7)}`);
   console.log(`  Can defeat rank 8: ${canWeaponDefeat(player.weaponMaxEnemy, 8)}`);
+  console.log(`  Can defeat rank 9: ${canWeaponDefeat(player.weaponMaxEnemy, 9)}`);
   
   const furtherDurability =
     canWeaponDefeat(player.weaponMaxEnemy, 7) === true &&
-    canWeaponDefeat(player.weaponMaxEnemy, 8) === false;
+    canWeaponDefeat(player.weaponMaxEnemy, 8) === true &&
+    canWeaponDefeat(player.weaponMaxEnemy, 9) === false;
   console.log(furtherDurability ? '✓ Further restrictions correct\n' : '✗ Further restrictions failed\n');
 
   // Test 7: Replace weapon (resets durability)
