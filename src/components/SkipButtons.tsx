@@ -23,6 +23,10 @@ export function SkipButtons({ canSkip, cardsPickedThisRoom, onSkip }: Readonly<S
           .skip-buttons-label {
             display: none !important;
           }
+          
+          .skip-buttons-message {
+            display: none !important;
+          }
         }
       `}</style>
       <div className="skip-buttons-container" style={{
@@ -73,7 +77,7 @@ export function SkipButtons({ canSkip, cardsPickedThisRoom, onSkip }: Readonly<S
         R to L →
       </button>
       {!canSkip && cardsPickedThisRoom > 0 && (
-        <small style={{ 
+        <small className="skip-buttons-message" style={{ 
           color: '#999', 
           fontSize: '10px',
           textAlign: 'center',

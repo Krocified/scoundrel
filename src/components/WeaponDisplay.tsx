@@ -20,9 +20,9 @@ export function WeaponDisplay({ weapon, weaponDurability }: Readonly<WeaponDispl
           }
           
           .weapon-main-info {
-            flex-direction: row !important;
+            flex-direction: column !important;
             align-items: center !important;
-            gap: 15px;
+            gap: 5px !important;
           }
           
           .weapon-icon {
@@ -35,7 +35,7 @@ export function WeaponDisplay({ weapon, weaponDurability }: Readonly<WeaponDispl
           }
           
           .weapon-status {
-            font-size: 12px !important;
+            display: none !important;
           }
           
           .weapon-durability-box {
