@@ -1,100 +1,200 @@
 # 🃏 Scoundrel
 
-A single-player dungeon crawler card game built with React + TypeScript.
+> A strategic single-player dungeon crawler card game built with React + TypeScript
 
-## About
+**[Play Live Demo](#) | [Read the Rules](/rules)**
 
-Scoundrel is a strategic roguelike card game using a modified 52-card deck (42 cards). Navigate through rooms, manage health and weapons, fight enemies, and survive to achieve the highest score!
+---
 
-**Status: ✅ FULLY PLAYABLE**
+## 🎮 About
 
-## Quick Start
+Scoundrel is a roguelike card game where you navigate through dangerous rooms filled with enemies, weapons, and health potions. Using a modified 42-card deck, every decision matters—pick the wrong card and you might not survive!
+
+**Key Features:**
+- 🎯 Strategic card selection with permanent consequences
+- ⚔️ Unique weapon durability system
+- 🔄 Room skipping mechanic with directional control
+- 📊 Score-based progression system
+- 🎨 Clean, intuitive UI with real-time feedback
+
+---
+
+## 🚀 Quick Start
 
 ```bash
-# Install dependencies (if needed)
+# Install dependencies
 npm install
 
-# Run the game
+# Start development server
 npm run dev
 
-# Open browser
-# Navigate to http://localhost:5173
-# Click "Play Game" and enjoy!
+# Open http://localhost:5173
 ```
 
-## Project Structure
+That's it! Start playing immediately.
 
+---
+
+## 🎲 How to Play
+
+### The Basics
+- You start with **20 HP**
+- Each room reveals **4 cards** from the deck
+- You must pick **exactly 3 cards**, one at a time
+- The 4th card carries over to the next room
+
+### Card Types
+
+| Suit | Type | Effect |
+|------|------|--------|
+| ♥ Hearts | Health Potion | Restore HP equal to card value (max 20) |
+| ♦ Diamonds | Weapon | Equip to reduce enemy damage |
+| ♠ Spades | Enemy | Fight! Take damage based on card value |
+| ♣ Clubs | Enemy | Fight! Take damage based on card value |
+
+### Combat System
+
+**Without a weapon:**
+- Damage = Enemy Value
+- Example: ♠10 deals 10 damage
+
+**With a weapon:**
+- Damage = Enemy Value - Weapon Value
+- Example: ♠10 vs ♦7 weapon = 3 damage
+- **Weapon durability decreases after use!**
+
+### Weapon Durability
+After defeating an enemy, your weapon can only defeat enemies with values **≤** the one you just fought.
+
+**Example:**
+1. Equip ♦7 weapon (fresh)
+2. Defeat ♠10 enemy → weapon now limited to enemies ≤10
+3. Can still defeat another ♠10
+4. Cannot defeat ♠11 or higher (weapon becomes useless)
+
+### Skip Mechanic
+Before picking any cards, you can **skip the entire room**:
+- **Left → Right**: Cards return to bottom in order 1,2,3,4
+- **Right → Left**: Cards return to bottom in order 4,3,2,1
+
+Use this strategically when all cards are bad!
+
+### Win & Lose Conditions
+
+**🎉 Victory:** Deck runs out with fewer than 4 cards remaining
+
+**💀 Defeat:** HP reaches 0
+
+### Scoring
 ```
-scoundrel/
-├── GAME_RULES.md          # Complete game rules
-├── PROGRESS.md            # Development progress
-├── deck-demo.html         # Standalone deck demo
-├── src/
-│   ├── types/
-│   │   └── game.ts        # TypeScript types
-│   ├── game/
-│   │   ├── deck.ts        # Deck system
-│   │   ├── deck.test.ts   # Deck tests
-│   │   └── ...            # More game logic
-│   ├── App.tsx            # Main component
-│   └── main.tsx           # Entry point
-└── ...
+Final Score = Remaining HP + Sum of All Defeated Enemy Values
 ```
 
-## Game Overview
+Higher scores indicate better strategic play!
 
-- **Goal:** Survive all 42 cards and maximize your score
-- **Score:** Remaining HP + Sum of defeated enemy ranks  
-- **Cards:** 
-  - ♥ Hearts (2-10) = Health potions
-  - ♦ Diamonds (2-10) = Weapons
-  - ♠ Spades (2-K) = Enemies
-  - ♣ Clubs (2-K) = Enemies
-- **Gameplay:**
-  - Each room has 4 cards
-  - Pick 3 cards OR skip the room
-  - Cards resolve instantly when picked
-  - Weapons have durability (can only defeat weaker enemies after use)
-- **Win:** Deck has < 4 cards (can't form complete room)
-- **Lose:** HP reaches 0
+---
 
-See [GAME_RULES.md](GAME_RULES.md) for complete rules.
+## 🏗️ Tech Stack
 
-## Features
+- **React 18** - UI framework
+- **TypeScript** - Type safety
+- **Vite** - Build tool & dev server
+- **React Router** - Client-side routing
+- **Pure CSS** - No UI frameworks, clean inline styles
 
-✅ **Complete game logic** - All 7 core systems fully implemented  
-✅ **Strategic gameplay** - Weapon durability, room skipping, card counting  
-✅ **Interactive UI** - Click cards to pick, visual feedback, HP bars  
-✅ **Skip mechanic** - Return cards to bottom of deck with directional control  
-✅ **Score system** - HP + defeated enemies  
-✅ **Game log** - Track all actions and outcomes  
-✅ **Fully tested** - 7 comprehensive test suites  
-✅ **Dev tools** - Built-in test runner
+**No game dependencies** - All game logic is custom-built!
 
-## Tech Stack
+---
 
-- React 18
-- TypeScript
-- Vite
-- No external dependencies (pure game logic)
+## 🧪 Testing
 
-## Development
+All game systems are thoroughly tested with comprehensive unit tests.
+
+**Run tests:**
+1. Start dev server: `npm run dev`
+2. Navigate to `/dev`
+3. Click "Run All Tests"
+4. Check browser console (F12) for results
+
+**Test Coverage:**
+- ✅ Deck creation & shuffling
+- ✅ Card type classification
+- ✅ Room management & skip mechanic
+- ✅ Weapon equip & durability
+- ✅ Combat & damage calculation
+- ✅ Card action resolution
+- ✅ Game controller & win/loss
+
+---
+
+## 🛠️ Development Commands
 
 ```bash
-# Run all tests
+# Development server
 npm run dev
-# Switch to "Dev Tools" tab
-# Click "Run All Tests"
-# Check console (F12) for results
 
-# Test individual systems
-open deck-demo.html  # Deck system demo
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+
+# Lint code
+npm run lint
 ```
 
-**Development Status:**
-- ✅ All 7 core systems complete
-- ✅ All tests passing
-- ✅ UI complete and playable
-- ✅ Game fully functional
+---
 
-See [PROGRESS.md](PROGRESS.md) for detailed development history.
+## 📝 Game Rules
+
+For complete rules, visit `/rules` in the app or see [GAME_RULES.md](GAME_RULES.md).
+
+---
+
+## 🎨 Design Philosophy
+
+**Code:**
+- Component-based architecture
+- Pure functions for game logic (no side effects)
+- TypeScript for type safety
+- Comprehensive test coverage
+- Clean, readable code
+
+**UI:**
+- Minimal and functional design
+- Card-first visual hierarchy
+- Real-time feedback
+- No clutter, just gameplay
+- Accessible (keyboard navigation, tooltips)
+
+**Gameplay:**
+- Easy to learn, hard to master
+- Strategic decision-making
+- Quick games (~5-10 minutes)
+- High replayability
+
+---
+
+## 🤝 Contributing
+
+This is a personal project, but feel free to fork and experiment!
+
+---
+
+## 📜 License
+
+MIT License - feel free to use this project as you wish.
+
+---
+
+## 🎲 Ready to Play?
+
+```bash
+npm install && npm run dev
+```
+
+**Good luck, Scoundrels!** 🃏✨
+
+---
+
+Made by Michael Jong
