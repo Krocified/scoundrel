@@ -1,6 +1,7 @@
 // Main game board component
 
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { initializeGame, processCardPick, processRoomSkip, getGameStats, calculateFinalScore } from '../game/gameController';
 import { PlayerStats } from './PlayerStats';
 import { GameOverScreen } from './GameOverScreen';
@@ -81,9 +82,8 @@ export function GameBoard() {
             >
               New Game
             </button>
-            <a
-              href="/GAME_RULES.md"
-              target="_blank"
+            <Link
+              to="/rules"
               style={{
                 padding: '10px 20px',
                 background: '#9c27b0',
@@ -96,7 +96,7 @@ export function GameBoard() {
               }}
             >
               View Rules
-            </a>
+            </Link>
           </div>
         </div>
 
