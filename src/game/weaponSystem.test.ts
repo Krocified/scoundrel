@@ -3,7 +3,7 @@
 import { Card, PlayerState } from '../types/game';
 import {
   equipWeapon,
-  useWeapon,
+  markWeaponUsed,
   canWeaponDefeat,
   getWeaponDurabilityDescription,
 } from './weaponSystem';
@@ -24,7 +24,6 @@ export function testWeaponSystem() {
   const weapon7: Card = { suit: 'diamonds', rank: 7, id: 'diamond-7' };
   const enemy9: Card = { suit: 'spades', rank: 9, id: 'spade-9' };
   const enemy8: Card = { suit: 'spades', rank: 8, id: 'spade-8' };
-  const enemy10: Card = { suit: 'clubs', rank: 10, id: 'club-10' };
 
   // Test 1: Equip weapon
   console.log('Test 1: Equip a weapon...');
@@ -49,7 +48,7 @@ export function testWeaponSystem() {
 
   // Test 3: Use weapon (defeats rank 9 enemy)
   console.log('Test 3: Use weapon against rank 9 enemy...');
-  player = useWeapon(player, enemy9);
+  player = markWeaponUsed(player, enemy9);
   console.log(`  Weapon used against: ♠${enemy9.rank}`);
   console.log(`  Weapon durability: ${getWeaponDurabilityDescription(player)}`);
   console.log(
@@ -72,7 +71,7 @@ export function testWeaponSystem() {
 
   // Test 5: Use weapon again (defeats rank 8 enemy)
   console.log('Test 5: Use weapon again against rank 8 enemy...');
-  player = useWeapon(player, enemy8);
+  player = markWeaponUsed(player, enemy8);
   console.log(`  Weapon used against: ♠${enemy8.rank}`);
   console.log(`  Weapon durability: ${getWeaponDurabilityDescription(player)}`);
   console.log(

@@ -86,33 +86,36 @@ export function skipRoom(
 }
 
 /**
- * Check if there are enough cards to form a complete room
+ * Check if there are enough cards to form a room with a leftover card
  */
-export function canFormRoom(deckSize: number, hasLeftover: boolean): boolean {
-  if (hasLeftover) {
-    // Need leftover + 3 from deck = 4 total
-    return deckSize >= 3;
-  } else {
-    // Need 4 from deck
-    return deckSize >= 4;
-  }
+export function canFormRoomWithLeftover(deckSize: number): boolean {
+  // Need leftover + 3 from deck = 4 total
+  return deckSize >= 3;
 }
 
 /**
- * Calculate how many complete rooms can be formed from remaining cards
+ * Check if there are enough cards to form a room without a leftover card
  */
-export function calculateRemainingRooms(
-  deckSize: number,
-  hasLeftover: boolean
-): number {
-  if (hasLeftover) {
-    // First room uses leftover + 3, then every 3 cards after
-    if (deckSize < 3) return 0;
-    return 1 + Math.floor((deckSize - 3) / 3);
-  } else {
-    // First room uses 4, then every 3 cards after (with leftovers)
-    if (deckSize < 4) return 0;
-    const afterFirst = deckSize - 4;
-    return 1 + Math.floor(afterFirst / 3);
-  }
+export function canFormRoomWithoutLeftover(deckSize: number): boolean {
+  // Need 4 from deck
+  return deckSize >= 4;
+}
+
+/**
+ * Calculate how many complete rooms can be formed with a leftover card
+ */
+export function calculateRemainingRoomsWithLeftover(deckSize: number): number {
+  // First room uses leftover + 3, then every 3 cards after
+  if (deckSize < 3) return 0;
+  return 1 + Math.floor((deckSize - 3) / 3);
+}
+
+/**
+ * Calculate how many complete rooms can be formed without a leftover card
+ */
+export function calculateRemainingRoomsWithoutLeftover(deckSize: number): number {
+  // First room uses 4, then every 3 cards after (with leftovers)
+  if (deckSize < 4) return 0;
+  const afterFirst = deckSize - 4;
+  return 1 + Math.floor(afterFirst / 3);
 }

@@ -18,9 +18,9 @@ export function equipWeapon(player: PlayerState, weapon: Card): PlayerState {
  * Update weapon durability after defeating an enemy
  * Weapon can now only defeat enemies with rank < enemyDefeated.rank
  */
-export function useWeapon(player: PlayerState, enemyDefeated: Card): PlayerState {
+export function markWeaponUsed(player: PlayerState, enemyDefeated: Card): PlayerState {
   if (!player.equippedWeapon) {
-    throw new Error('Cannot use weapon: no weapon equipped');
+    throw new Error('Cannot mark weapon used: no weapon equipped');
   }
 
   return {

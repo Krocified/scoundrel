@@ -1,14 +1,21 @@
 // Tests for card utility functions
 
+import { Card } from '../types/game';
 import { createDeck } from './deck';
 import {
   getCardType,
   getCardValue,
-  getCardRankDisplay,
   getSuitSymbol,
   getCardDisplay,
   getSuitColor,
 } from './cardUtils';
+
+// Helper to get card from deck (throws if not found)
+function getCard(deck: Card[], suit: Card['suit'], rank: Card['rank']): Card {
+  const card = deck.find(c => c.suit === suit && c.rank === rank);
+  if (!card) throw new Error(`Card ${suit}-${rank} not found`);
+  return card;
+}
 
 export function testCardUtils() {
   console.log('=== Card Utilities Tests ===\n');
@@ -17,10 +24,10 @@ export function testCardUtils() {
 
   // Test 1: Card type classification
   console.log('Test 1: Card type classification...');
-  const heart5 = deck.find(c => c.suit === 'hearts' && c.rank === 5)!;
-  const diamond7 = deck.find(c => c.suit === 'diamonds' && c.rank === 7)!;
-  const spadeK = deck.find(c => c.suit === 'spades' && c.rank === 13)!;
-  const club3 = deck.find(c => c.suit === 'clubs' && c.rank === 3)!;
+  const heart5 = getCard(deck, 'hearts', 5);
+  const diamond7 = getCard(deck, 'diamonds', 7);
+  const spadeK = getCard(deck, 'spades', 13);
+  const club3 = getCard(deck, 'clubs', 3);
 
   console.log(`  ♥5 is ${getCardType(heart5)} (expected: health)`);
   console.log(`  ♦7 is ${getCardType(diamond7)} (expected: weapon)`);
@@ -52,8 +59,8 @@ export function testCardUtils() {
   console.log(`  ♠K display: ${getCardDisplay(spadeK)}`);
   console.log(`  ♦10 display: ${getCardDisplay(diamond7)}`);
   
-  const spadeJ = deck.find(c => c.suit === 'spades' && c.rank === 11)!;
-  const clubQ = deck.find(c => c.suit === 'clubs' && c.rank === 12)!;
+  const spadeJ = getCard(deck, 'spades', 11);
+  const clubQ = getCard(deck, 'clubs', 12);
   console.log(`  ♠J display: ${getCardDisplay(spadeJ)}`);
   console.log(`  ♣Q display: ${getCardDisplay(clubQ)}`);
   console.log('✓ All display strings generated\n');

@@ -6,8 +6,10 @@ import {
   initializeFirstRoom,
   prepareNextRoom,
   skipRoom,
-  canFormRoom,
-  calculateRemainingRooms,
+  canFormRoomWithLeftover,
+  canFormRoomWithoutLeftover,
+  calculateRemainingRoomsWithLeftover,
+  calculateRemainingRoomsWithoutLeftover,
 } from './roomManager';
 
 export function testRoomManager() {
@@ -94,24 +96,24 @@ export function testRoomManager() {
 
   // Test 6: Can form room checks
   console.log('Test 6: Check if room can be formed...');
-  console.log(`  42 cards, no leftover: ${canFormRoom(42, false)} (expected: true)`);
-  console.log(`  3 cards, no leftover: ${canFormRoom(3, false)} (expected: false)`);
-  console.log(`  3 cards, with leftover: ${canFormRoom(3, true)} (expected: true)`);
-  console.log(`  2 cards, with leftover: ${canFormRoom(2, true)} (expected: false)`);
+  console.log(`  42 cards, no leftover: ${canFormRoomWithoutLeftover(42)} (expected: true)`);
+  console.log(`  3 cards, no leftover: ${canFormRoomWithoutLeftover(3)} (expected: false)`);
+  console.log(`  3 cards, with leftover: ${canFormRoomWithLeftover(3)} (expected: true)`);
+  console.log(`  2 cards, with leftover: ${canFormRoomWithLeftover(2)} (expected: false)`);
   
   const canFormCorrect =
-    canFormRoom(42, false) === true &&
-    canFormRoom(3, false) === false &&
-    canFormRoom(3, true) === true &&
-    canFormRoom(2, true) === false;
+    canFormRoomWithoutLeftover(42) === true &&
+    canFormRoomWithoutLeftover(3) === false &&
+    canFormRoomWithLeftover(3) === true &&
+    canFormRoomWithLeftover(2) === false;
   console.log(canFormCorrect ? '✓ Room formation checks correct\n' : '✗ Room formation checks incorrect\n');
 
   // Test 7: Calculate remaining rooms
   console.log('Test 7: Calculate remaining rooms...');
-  console.log(`  42 cards, no leftover: ${calculateRemainingRooms(42, false)} rooms`);
-  console.log(`  38 cards, with leftover: ${calculateRemainingRooms(38, true)} rooms`);
-  console.log(`  10 cards, no leftover: ${calculateRemainingRooms(10, false)} rooms`);
-  console.log(`  3 cards, no leftover: ${calculateRemainingRooms(3, false)} rooms`);
+  console.log(`  42 cards, no leftover: ${calculateRemainingRoomsWithoutLeftover(42)} rooms`);
+  console.log(`  38 cards, with leftover: ${calculateRemainingRoomsWithLeftover(38)} rooms`);
+  console.log(`  10 cards, no leftover: ${calculateRemainingRoomsWithoutLeftover(10)} rooms`);
+  console.log(`  3 cards, no leftover: ${calculateRemainingRoomsWithoutLeftover(3)} rooms`);
   console.log('✓ Room calculations complete\n');
 
   // Test 8: End game scenario

@@ -8,7 +8,7 @@ import {
   isPlayerAlive,
   getHpPercentage,
 } from './combat';
-import { equipWeapon, useWeapon } from './weaponSystem';
+import { equipWeapon, markWeaponUsed } from './weaponSystem';
 
 export function testCombat() {
   console.log('=== Combat System Tests ===\n');
@@ -63,7 +63,7 @@ export function testCombat() {
 
   // Test 4: Update weapon durability
   console.log('Test 4: Use weapon and update durability...');
-  player = useWeapon(player, enemy7);
+  player = markWeaponUsed(player, enemy7);
   player = applyDamage(player, dmg2.damage);
   console.log(`  HP after combat: ${player.hp}/${player.maxHp}`);
   console.log(`  Weapon max enemy: ${player.weaponMaxEnemy}`);
