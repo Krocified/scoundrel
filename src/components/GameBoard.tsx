@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { GameState } from '../types/game';
 import { initializeGame, processCardPick, processRoomSkip, getGameStats, calculateFinalScore } from '../game/gameController';
 import { getSuitSymbol, getCardType } from '../game/cardUtils';
-import { getWeaponDurabilityDescription } from '../game/weaponSystem';
 
 export function GameBoard() {
   const [game, setGame] = useState<GameState>(() => initializeGame());
@@ -49,10 +48,21 @@ export function GameBoard() {
 
   const isGameOver = game.gameStatus !== 'playing';
   const canSkip = game.cardsPickedThisRoom === 0 && game.currentRoom.length === 4;
+  
+  // Get last defeated enemy for weapon display
+  const lastDefeated = game.defeatedEnemies.length > 0 
+    ? game.defeatedEnemies.at(-1) 
+    : null;
 
   return (
-    <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto', fontFamily: 'monospace' }}>
-      <h1>🃏 SCOUNDREL</h1>
+    <>
+      <style>{`
+        .card-hover-enabled:hover {
+          transform: translateY(-5px);
+        }
+      `}</style>
+      <div style={{ padding: '20px', maxWidth: '1400px', margin: '0 auto', fontFamily: 'monospace' }}>
+        <h1>🃏 SCOUNDREL</h1>
 
       {/* Player Stats */}
       <div style={{ 
@@ -61,7 +71,7 @@ export function GameBoard() {
         borderRadius: '8px', 
         marginBottom: '20px',
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
         gap: '15px'
       }}>
         <div>
@@ -83,19 +93,13 @@ export function GameBoard() {
         </div>
         
         <div>
-          <strong>Weapon:</strong> {stats.weapon ? `♦${stats.weapon.rank}` : 'None'}
-          <br />
-          <small>{getWeaponDurabilityDescription(game.player)}</small>
-        </div>
-        
-        <div>
           <strong>Score:</strong> {stats.currentScore}
           <br />
           <small>HP({stats.hp}) + Enemies({stats.defeatedEnemies})</small>
         </div>
         
         <div>
-          <strong>Rooms:</strong> Cleared: {stats.roomsCleared}, Skipped: {stats.roomsSkipped}
+          <strong>Rooms:</strong> {stats.roomsCleared} cleared, {stats.roomsSkipped} skipped
           <br />
           <small>Deck: {stats.cardsInDeck} cards</small>
         </div>
@@ -134,42 +138,93 @@ export function GameBoard() {
         </div>
       )}
 
-      {/* Current Room */}
+      {/* Current Room with Deck - Grid Layout */}
       {!isGameOver && (
         <>
           <div style={{ marginBottom: '20px' }}>
             <h2>Current Room ({game.cardsPickedThisRoom}/3 picked)</h2>
             <div style={{ 
               display: 'grid', 
-              gridTemplateColumns: 'repeat(4, 1fr)', 
+              gridTemplateColumns: 'repeat(5, 1fr)', 
               gap: '15px',
               marginTop: '15px'
             }}>
+              {/* Deck - First Column */}
+              <div style={{
+                background: '#333',
+                borderRadius: '8px',
+                padding: '20px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <div style={{ 
+                  position: 'relative',
+                  width: '100px',
+                  height: '140px',
+                  marginBottom: '10px'
+                }}>
+                  {/* Deck stack with depth effect */}
+                  {Array.from({ length: Math.min(5, Math.ceil(stats.cardsInDeck / 10)) }).map((_, i) => (
+                    <div
+                      key={`deck-${i}`}
+                      style={{
+                        position: 'absolute',
+                        left: `${i * 2}px`,
+                        top: `${i * 2}px`,
+                        width: '100px',
+                        height: '140px',
+                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        border: '3px solid #fff',
+                        borderRadius: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                        opacity: 1 - (i * 0.15)
+                      }}
+                    >
+                      {i === 0 && (
+                        <div style={{
+                          fontSize: '40px',
+                          color: 'white',
+                          fontWeight: 'bold',
+                          textShadow: '2px 2px 4px rgba(0,0,0,0.5)'
+                        }}>
+                          🃏
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <div style={{ color: 'white', textAlign: 'center' }}>
+                  <div style={{ fontSize: '18px', fontWeight: 'bold' }}>{stats.cardsInDeck}</div>
+                  <div style={{ fontSize: '12px', opacity: 0.8 }}>cards left</div>
+                </div>
+              </div>
+
+              {/* Room Cards - 4 Columns */}
               {game.currentRoom.map((card, index) => {
                 const cardType = getCardType(card);
-                const color = cardType === 'health' ? '#e91e63' : 
-                             cardType === 'weapon' ? '#2196f3' : '#4caf50';
+                let color = '#4caf50'; // enemy default
+                if (cardType === 'health') {
+                  color = '#e91e63';
+                } else if (cardType === 'weapon') {
+                  color = '#2196f3';
+                }
                 
                 return (
                   <div
                     key={card.id}
+                    className={game.gameStatus === 'playing' ? 'card-hover-enabled' : ''}
                     style={{
                       background: 'white',
                       border: `3px solid ${color}`,
                       borderRadius: '8px',
                       padding: '20px',
                       textAlign: 'center',
-                      cursor: game.gameStatus === 'playing' ? 'pointer' : 'default',
                       transition: 'transform 0.2s',
-                    }}
-                    onClick={() => handlePickCard(index)}
-                    onMouseEnter={(e) => {
-                      if (game.gameStatus === 'playing') {
-                        e.currentTarget.style.transform = 'translateY(-5px)';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
                     }}
                   >
                     <div style={{ fontSize: '48px', color }}>
@@ -179,7 +234,11 @@ export function GameBoard() {
                       {card.rank}
                     </div>
                     <div style={{ fontSize: '12px', marginTop: '10px', color: '#666' }}>
-                      {cardType === 'health' ? 'HEAL' : cardType === 'weapon' ? 'WEAPON' : 'ENEMY'}
+                      {(() => {
+                        if (cardType === 'health') return 'HEAL';
+                        if (cardType === 'weapon') return 'WEAPON';
+                        return 'ENEMY';
+                      })()}
                     </div>
                     <button
                       onClick={(e) => {
@@ -207,73 +266,162 @@ export function GameBoard() {
             </div>
           </div>
 
-          {/* Actions */}
-          <div style={{ marginBottom: '20px' }}>
-            <h3>Actions</h3>
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              <button
-                onClick={() => handleSkip('left-to-right')}
-                disabled={!canSkip}
-                style={{
-                  padding: '12px 24px',
-                  background: canSkip ? '#ff9800' : '#ccc',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: canSkip ? 'pointer' : 'not-allowed',
-                  fontWeight: 'bold'
-                }}
-              >
-                Skip Room (Left → Right)
-              </button>
-              <button
-                onClick={() => handleSkip('right-to-left')}
-                disabled={!canSkip}
-                style={{
-                  padding: '12px 24px',
-                  background: canSkip ? '#ff9800' : '#ccc',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: canSkip ? 'pointer' : 'not-allowed',
-                  fontWeight: 'bold'
-                }}
-              >
-                Skip Room (Right → Left)
-              </button>
-              {!canSkip && game.cardsPickedThisRoom > 0 && (
-                <small style={{ alignSelf: 'center', color: '#666' }}>
-                  (Cannot skip after picking cards)
-                </small>
+          {/* Weapon Display and Game Log - Side by Side */}
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: '300px 1fr',
+            gap: '20px',
+            marginBottom: '20px'
+          }}>
+            {/* Weapon Display */}
+            <div style={{
+              background: stats.weapon ? '#2196f3' : '#ccc',
+              color: 'white',
+              padding: '20px',
+              borderRadius: '8px',
+              textAlign: 'center',
+              border: `3px solid ${stats.weapon ? '#1976d2' : '#999'}`
+            }}>
+              <div style={{ fontSize: '12px', opacity: 0.9, marginBottom: '8px', fontWeight: 'bold' }}>
+                EQUIPPED WEAPON
+              </div>
+              <div style={{ fontSize: '48px', fontWeight: 'bold', marginBottom: '10px' }}>
+                {stats.weapon ? `♦ ${stats.weapon.rank}` : '—'}
+              </div>
+              
+              {/* Status */}
+              <div style={{ fontSize: '14px', marginBottom: '15px', minHeight: '40px' }}>
+                {(() => {
+                  if (!stats.weapon) {
+                    return <span style={{ opacity: 0.7 }}>No weapon equipped</span>;
+                  }
+                  if (stats.weaponDurability === null) {
+                    return <span style={{ color: '#fff', fontWeight: 'bold' }}>✨ FRESH<br />Can defeat ANY enemy</span>;
+                  }
+                  return (
+                    <span style={{ color: '#ffeb3b', fontWeight: 'bold' }}>
+                      ⚠️ Can defeat<br />enemies &lt; {stats.weaponDurability}
+                    </span>
+                  );
+                })()}
+              </div>
+
+              {/* Last Defeated - Very Prominent */}
+              {!!(lastDefeated) && stats.weaponDurability !== null && (
+                <div style={{
+                  background: 'rgba(0,0,0,0.3)',
+                  padding: '15px',
+                  borderRadius: '8px',
+                  marginTop: '15px',
+                  border: '2px solid rgba(255,255,255,0.3)'
+                }}>
+                  <div style={{ fontSize: '11px', opacity: 0.8, marginBottom: '5px' }}>
+                    LAST DEFEATED
+                  </div>
+                  <div style={{ 
+                    fontSize: '36px', 
+                    fontWeight: 'bold',
+                    color: '#ffeb3b',
+                    textShadow: '0 0 10px rgba(255,235,59,0.5)'
+                  }}>
+                    {lastDefeated}
+                  </div>
+                  <div style={{ fontSize: '10px', opacity: 0.7, marginTop: '5px' }}>
+                    Weapon worn from this fight
+                  </div>
+                </div>
               )}
             </div>
+
+            {/* Game Log */}
+            <div>
+              <h3>Game Log</h3>
+              <div
+                id="game-log"
+                style={{
+                  background: '#000',
+                  color: '#0f0',
+                  padding: '15px',
+                  borderRadius: '8px',
+                  height: '300px',
+                  overflowY: 'auto',
+                  fontFamily: 'monospace',
+                  fontSize: '14px'
+                }}
+              >
+                {log.map((entry, i) => (
+                  <div key={`log-${i}-${entry.substring(0, 20)}`} style={{ marginBottom: '5px' }}>
+                    {entry}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Skip Actions - Collapsible */}
+          <div style={{ 
+            marginBottom: '20px',
+            padding: '10px',
+            background: '#f9f9f9',
+            borderRadius: '4px',
+            border: '1px solid #ddd'
+          }}>
+            <details style={{ cursor: 'pointer' }}>
+              <summary style={{ 
+                fontSize: '14px', 
+                color: '#666',
+                padding: '5px',
+                userSelect: 'none'
+              }}>
+                <strong>Skip Room Options</strong> {canSkip ? '(Available)' : '(Unavailable)'}
+              </summary>
+              <div style={{ 
+                marginTop: '10px',
+                display: 'flex', 
+                gap: '10px', 
+                flexWrap: 'wrap',
+                paddingLeft: '10px'
+              }}>
+                <button
+                  onClick={() => handleSkip('left-to-right')}
+                  disabled={!canSkip}
+                  style={{
+                    padding: '8px 16px',
+                    background: canSkip ? '#ff9800' : '#ccc',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: canSkip ? 'pointer' : 'not-allowed',
+                    fontSize: '13px'
+                  }}
+                >
+                  Skip L→R
+                </button>
+                <button
+                  onClick={() => handleSkip('right-to-left')}
+                  disabled={!canSkip}
+                  style={{
+                    padding: '8px 16px',
+                    background: canSkip ? '#ff9800' : '#ccc',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: canSkip ? 'pointer' : 'not-allowed',
+                    fontSize: '13px'
+                  }}
+                >
+                  Skip R→L
+                </button>
+                {!canSkip && game.cardsPickedThisRoom > 0 && (
+                  <small style={{ alignSelf: 'center', color: '#999', fontSize: '12px' }}>
+                    Cannot skip after picking cards
+                  </small>
+                )}
+              </div>
+            </details>
           </div>
         </>
       )}
-
-      {/* Game Log */}
-      <div style={{ marginBottom: '20px' }}>
-        <h3>Game Log</h3>
-        <div
-          id="game-log"
-          style={{
-            background: '#000',
-            color: '#0f0',
-            padding: '15px',
-            borderRadius: '8px',
-            height: '200px',
-            overflowY: 'auto',
-            fontFamily: 'monospace',
-            fontSize: '14px'
-          }}
-        >
-          {log.map((entry, i) => (
-            <div key={i} style={{ marginBottom: '5px' }}>
-              {entry}
-            </div>
-          ))}
-        </div>
-      </div>
 
       {/* New Game / Help */}
       <div style={{ display: 'flex', gap: '10px' }}>
@@ -308,6 +456,7 @@ export function GameBoard() {
           View Rules
         </a>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
