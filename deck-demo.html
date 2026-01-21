@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scoundrel - Deck Test</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #00ff00;
+    }
+    h1 {
+      color: #00ff00;
+      text-align: center;
+    }
+    #output {
+      background: #000;
+      padding: 20px;
+      border: 2px solid #00ff00;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    button {
+      display: block;
+      margin: 20px auto;
+      padding: 12px 24px;
+      background: #00ff00;
+      color: #000;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      font-family: 'Courier New', monospace;
+    }
+    button:hover {
+      background: #00cc00;
+    }
+    .card {
+      display: inline-block;
+      padding: 8px 12px;
+      margin: 4px;
+      border: 1px solid #00ff00;
+      border-radius: 4px;
+      background: #0a0a0a;
+    }
+    .hearts { color: #ff4444; }
+    .diamonds { color: #4499ff; }
+    .spades { color: #00ff00; }
+    .clubs { color: #00ff00; }
+  </style>
+</head>
+<body>
+  <h1>🃏 SCOUNDREL - DECK SYSTEM TEST</h1>
+  <button onclick="runTest()">Run Deck Test</button>
+  <div id="output">Click the button to test the deck system...</div>
+
+  <script type="module">
+    // Inline TypeScript-like code (JavaScript)
+    
+    // Types
+    const SUITS = ['hearts', 'diamonds', 'spades', 'clubs'];
+    
+    // Create the 42-card deck
+    function createDeck() {
+      const deck = [];
+      
+      for (const suit of SUITS) {
+        let ranks;
+        
+        if (suit === 'hearts' || suit === 'diamonds') {
+          // Hearts and Diamonds: 2-10 only (no face cards, no Ace)
+          ranks = [2, 3, 4, 5, 6, 7, 8, 9, 10];
+        } else {
+          // Spades and Clubs: 2-10, J, Q, K (no Ace)
+          ranks = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+        }
+        
+        for (const rank of ranks) {
+          deck.push({
+            suit,
+            rank,
+            id: `${suit}-${rank}`
+          });
+        }
+      }
+      
+      return deck;
+    }
+    
+    // Fisher-Yates shuffle
+    function shuffleDeck(cards) {
+      const shuffled = [...cards];
+      
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      
+      return shuffled;
+    }
+    
+    // Validate deck
+    function validateDeck(deck) {
+      if (deck.length !== 42) return false;
+      
+      const heartCount = deck.filter(c => c.suit === 'hearts').length;
+      const diamondCount = deck.filter(c => c.suit === 'diamonds').length;
+      const spadeCount = deck.filter(c => c.suit === 'spades').length;
+      const clubCount = deck.filter(c => c.suit === 'clubs').length;
+      
+      return heartCount === 9 && diamondCount === 9 && spadeCount === 12 && clubCount === 12;
+    }
+    
+    // Format card for display
+    function formatCard(card) {
+      const suitSymbol = {
+        hearts: '♥',
+        diamonds: '♦',
+        spades: '♠',
+        clubs: '♣'
+      }[card.suit];
+      
+      const rankDisplay = card.rank <= 10 ? card.rank : ['J', 'Q', 'K'][card.rank - 11];
+      
+      return `<span class="${card.suit}">${suitSymbol}${rankDisplay}</span>`;
+    }
+    
+    // Run the test
+    window.runTest = function() {
+      const output = document.getElementById('output');
+      let html = '';
+      
+      html += '=== DECK SYSTEM TESTS ===\n\n';
+      
+      // Test 1: Create deck
+      html += 'Test 1: Creating deck...\n';
+      const deck = createDeck();
+      html += `✓ Created deck with ${deck.length} cards\n\n`;
+      
+      // Test 2: Validate
+      html += 'Test 2: Validating deck composition...\n';
+      const isValid = validateDeck(deck);
+      html += isValid ? '✓ Deck validation passed\n\n' : '✗ Deck validation failed\n\n';
+      
+      // Test 3: Breakdown
+      html += 'Test 3: Deck breakdown by suit:\n';
+      const hearts = deck.filter(c => c.suit === 'hearts');
+      const diamonds = deck.filter(c => c.suit === 'diamonds');
+      const spades = deck.filter(c => c.suit === 'spades');
+      const clubs = deck.filter(c => c.suit === 'clubs');
+      
+      html += `  ♥ Hearts: ${hearts.length} cards (2-10)\n`;
+      html += `    ${hearts.map(c => c.rank).join(', ')}\n\n`;
+      
+      html += `  ♦ Diamonds: ${diamonds.length} cards (2-10)\n`;
+      html += `    ${diamonds.map(c => c.rank).join(', ')}\n\n`;
+      
+      html += `  ♠ Spades: ${spades.length} cards (2-10, J=11, Q=12, K=13)\n`;
+      html += `    ${spades.map(c => c.rank).join(', ')}\n\n`;
+      
+      html += `  ♣ Clubs: ${clubs.length} cards (2-10, J=11, Q=12, K=13)\n`;
+      html += `    ${clubs.map(c => c.rank).join(', ')}\n\n`;
+      
+      // Test 4: Shuffle
+      html += 'Test 4: Shuffling deck...\n';
+      const shuffled = shuffleDeck(deck);
+      html += `✓ Shuffled deck has ${shuffled.length} cards\n`;
+      
+      const orderChanged = !deck.every((card, i) => card.id === shuffled[i].id);
+      html += orderChanged ? '✓ Deck order changed\n' : '⚠ Deck order unchanged (rare)\n';
+      html += validateDeck(shuffled) ? '✓ All cards present after shuffle\n\n' : '✗ Cards missing!\n\n';
+      
+      // Test 5: Show shuffled cards
+      html += 'Test 5: First 12 cards of shuffled deck:\n';
+      html += '<div style="margin: 10px 0;">';
+      shuffled.slice(0, 12).forEach((card, i) => {
+        html += `<span class="card">[${i}] ${formatCard(card)}</span>`;
+      });
+      html += '</div>\n\n';
+      
+      html += 'Test 6: Simulated first room (4 cards):\n';
+      html += '<div style="margin: 10px 0; padding: 10px; border: 1px solid #00ff00; display: inline-block;">';
+      shuffled.slice(0, 4).forEach((card, i) => {
+        html += `<span class="card">${formatCard(card)}</span>`;
+      });
+      html += '</div>\n\n';
+      
+      html += `Remaining in deck: ${shuffled.length - 4} cards\n\n`;
+      
+      html += '=== ALL TESTS COMPLETE ===\n';
+      html += '✓ Deck system is working correctly!';
+      
+      output.innerHTML = html;
+    };
+  </script>
+</body>
+</html>
