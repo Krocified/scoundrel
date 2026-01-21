@@ -48,11 +48,6 @@ export function GameBoard() {
 
   const isGameOver = game.gameStatus !== 'playing';
   const canSkip = game.cardsPickedThisRoom === 0 && game.currentRoom.length === 4;
-  
-  // Get last defeated enemy for weapon display
-  const lastDefeated = game.defeatedEnemies.length > 0 
-    ? game.defeatedEnemies.at(-1) 
-    : null;
 
   return (
     <>
@@ -145,7 +140,7 @@ export function GameBoard() {
             <h2>Current Room ({game.cardsPickedThisRoom}/3 picked)</h2>
             <div style={{ 
               display: 'grid', 
-              gridTemplateColumns: 'repeat(5, 1fr)', 
+              gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 150px', 
               gap: '15px',
               marginTop: '15px'
             }}>
@@ -217,7 +212,16 @@ export function GameBoard() {
                 return (
                   <div
                     key={card.id}
+                    role="button"
+                    tabIndex={game.gameStatus === 'playing' ? 0 : -1}
                     className={game.gameStatus === 'playing' ? 'card-hover-enabled' : ''}
+                    onClick={() => game.gameStatus === 'playing' && handlePickCard(index)}
+                    onKeyDown={(e) => {
+                      if (game.gameStatus === 'playing' && (e.key === 'Enter' || e.key === ' ')) {
+                        e.preventDefault();
+                        handlePickCard(index);
+                      }
+                    }}
                     style={{
                       background: 'white',
                       border: `3px solid ${color}`,
@@ -225,6 +229,7 @@ export function GameBoard() {
                       padding: '20px',
                       textAlign: 'center',
                       transition: 'transform 0.2s',
+                      cursor: game.gameStatus === 'playing' ? 'pointer' : 'default',
                     }}
                   >
                     <div style={{ fontSize: '48px', color }}>
@@ -263,6 +268,66 @@ export function GameBoard() {
                   </div>
                 );
               })}
+
+              {/* Skip Room Actions - 6th Column */}
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px',
+                justifyContent: 'center'
+              }}>
+                <div style={{ 
+                  fontSize: '12px', 
+                  fontWeight: 'bold', 
+                  color: '#666',
+                  marginBottom: '5px',
+                  textAlign: 'center'
+                }}>
+                  SKIP ROOM
+                </div>
+                <button
+                  onClick={() => handleSkip('left-to-right')}
+                  disabled={!canSkip}
+                  style={{
+                    padding: '12px',
+                    background: canSkip ? '#ff9800' : '#ccc',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: canSkip ? 'pointer' : 'not-allowed',
+                    fontSize: '13px',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  ← L to R
+                </button>
+                <button
+                  onClick={() => handleSkip('right-to-left')}
+                  disabled={!canSkip}
+                  style={{
+                    padding: '12px',
+                    background: canSkip ? '#ff9800' : '#ccc',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: canSkip ? 'pointer' : 'not-allowed',
+                    fontSize: '13px',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  R to L →
+                </button>
+                {!canSkip && game.cardsPickedThisRoom > 0 && (
+                  <small style={{ 
+                    color: '#999', 
+                    fontSize: '10px',
+                    textAlign: 'center',
+                    marginTop: '5px'
+                  }}>
+                    Can't skip after picking
+                  </small>
+                )}
+              </div>
             </div>
           </div>
 
@@ -296,18 +361,18 @@ export function GameBoard() {
                     return <span style={{ opacity: 0.7 }}>No weapon equipped</span>;
                   }
                   if (stats.weaponDurability === null) {
-                    return <span style={{ color: '#fff', fontWeight: 'bold' }}>✨ FRESH<br />Can defeat ANY enemy</span>;
+                    return <span style={{ color: '#fff', fontWeight: 'bold' }}>✨ FRESH</span>;
                   }
                   return (
                     <span style={{ color: '#ffeb3b', fontWeight: 'bold' }}>
-                      ⚠️ Can defeat<br />enemies &lt; {stats.weaponDurability}
+                      ⚠️ WORN
                     </span>
                   );
                 })()}
               </div>
 
-              {/* Last Defeated - Very Prominent */}
-              {!!(lastDefeated) && stats.weaponDurability !== null && (
+              {/* Durability Limit - Very Prominent */}
+              {stats.weapon && stats.weaponDurability !== null && (
                 <div style={{
                   background: 'rgba(0,0,0,0.3)',
                   padding: '15px',
@@ -316,7 +381,7 @@ export function GameBoard() {
                   border: '2px solid rgba(255,255,255,0.3)'
                 }}>
                   <div style={{ fontSize: '11px', opacity: 0.8, marginBottom: '5px' }}>
-                    LAST DEFEATED
+                    CAN DEFEAT ENEMIES
                   </div>
                   <div style={{ 
                     fontSize: '36px', 
@@ -324,10 +389,10 @@ export function GameBoard() {
                     color: '#ffeb3b',
                     textShadow: '0 0 10px rgba(255,235,59,0.5)'
                   }}>
-                    {lastDefeated}
+                    &lt; {stats.weaponDurability}
                   </div>
                   <div style={{ fontSize: '10px', opacity: 0.7, marginTop: '5px' }}>
-                    Weapon worn from this fight
+                    Max enemy value you can defeat
                   </div>
                 </div>
               )}
@@ -358,68 +423,6 @@ export function GameBoard() {
             </div>
           </div>
 
-          {/* Skip Actions - Collapsible */}
-          <div style={{ 
-            marginBottom: '20px',
-            padding: '10px',
-            background: '#f9f9f9',
-            borderRadius: '4px',
-            border: '1px solid #ddd'
-          }}>
-            <details style={{ cursor: 'pointer' }}>
-              <summary style={{ 
-                fontSize: '14px', 
-                color: '#666',
-                padding: '5px',
-                userSelect: 'none'
-              }}>
-                <strong>Skip Room Options</strong> {canSkip ? '(Available)' : '(Unavailable)'}
-              </summary>
-              <div style={{ 
-                marginTop: '10px',
-                display: 'flex', 
-                gap: '10px', 
-                flexWrap: 'wrap',
-                paddingLeft: '10px'
-              }}>
-                <button
-                  onClick={() => handleSkip('left-to-right')}
-                  disabled={!canSkip}
-                  style={{
-                    padding: '8px 16px',
-                    background: canSkip ? '#ff9800' : '#ccc',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: canSkip ? 'pointer' : 'not-allowed',
-                    fontSize: '13px'
-                  }}
-                >
-                  Skip L→R
-                </button>
-                <button
-                  onClick={() => handleSkip('right-to-left')}
-                  disabled={!canSkip}
-                  style={{
-                    padding: '8px 16px',
-                    background: canSkip ? '#ff9800' : '#ccc',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: canSkip ? 'pointer' : 'not-allowed',
-                    fontSize: '13px'
-                  }}
-                >
-                  Skip R→L
-                </button>
-                {!canSkip && game.cardsPickedThisRoom > 0 && (
-                  <small style={{ alignSelf: 'center', color: '#999', fontSize: '12px' }}>
-                    Cannot skip after picking cards
-                  </small>
-                )}
-              </div>
-            </details>
-          </div>
         </>
       )}
 
