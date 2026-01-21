@@ -20,10 +20,42 @@
 - ✅ Deck validation function
 - ✅ Unique ID for each card (for React keys)
 
+### 2. Card Utilities
+**Files created:**
+- `src/game/cardUtils.ts` - Card classification and display helpers
+- `src/game/cardUtils.test.ts` - Test suite for card utilities
+
+**Features implemented:**
+- ✅ `getCardType()` - Classify card as health/weapon/enemy
+- ✅ `getCardValue()` - Get numeric value of card
+- ✅ `getCardRankDisplay()` - Format rank (2-10, J, Q, K)
+- ✅ `getSuitSymbol()` - Get suit symbols (♥♦♠♣)
+- ✅ `getCardDisplay()` - Full card display string
+- ✅ `getSuitColor()` - Color codes for UI
+
+### 3. Room Management System
+**Files created:**
+- `src/game/roomManager.ts` - Room initialization, progression, and skip mechanic
+- `src/game/roomManager.test.ts` - Test suite for room management
+
+**Features implemented:**
+- ✅ `initializeFirstRoom()` - Draw 4 cards for first room
+- ✅ `prepareNextRoom()` - Draw 3 cards + leftover OR 4 cards after skip
+- ✅ `skipRoom()` - Return 4 cards to bottom of deck with chosen order (L→R or R→L)
+- ✅ `canFormRoom()` - Check if enough cards remain
+- ✅ `calculateRemainingRooms()` - Calculate rooms left
+- ✅ **CRITICAL: Deck order tracking** for skip mechanic
+
+### 4. Test Infrastructure
+**Files created:**
+- `src/game/runAllTests.ts` - Test runner for all systems
+- Updated `src/App.tsx` - Added "Run All Tests" button
+
 **How to test:**
-1. Open `deck-demo.html` in a browser
-2. Click "Run Deck Test" button
-3. Verify all tests pass and first room shows 4 cards
+1. Run `npm run dev`
+2. Open http://localhost:5173
+3. Click "Run All Tests" button
+4. Open browser console (F12) to see results
 
 ---
 
@@ -34,15 +66,6 @@ None currently
 ---
 
 ## 📋 To Do
-
-### 2. Card Utilities
-- `getCardType()` - Classify card as health/weapon/enemy
-- `getCardValue()` - Get numeric value of card
-
-### 3. Room Management
-- `initializeFirstRoom()` - Draw 4 cards for first room
-- `prepareNextRoom()` - Draw 3 cards + leftover OR 4 cards after skip
-- `skipRoom()` - Return 4 cards to bottom of deck with chosen order
 
 ### 4. Combat System
 - `calculateDamage()` - Compute damage with weapon logic
@@ -80,16 +103,25 @@ None currently
 
 ```
 scoundrel/
-├── GAME_RULES.md           # Complete game rules documentation
-├── PROGRESS.md             # This file - development progress
-├── README.md               # Project readme
-├── deck-demo.html          # Standalone deck demo
+├── GAME_RULES.md              # Complete game rules documentation
+├── PROGRESS.md                # This file - development progress
+├── README.md                  # Project readme
+├── deck-demo.html             # Standalone deck demo
+├── package.json               # Dependencies and scripts
 ├── src/
 │   ├── types/
-│   │   └── game.ts         # TypeScript type definitions
-│   └── game/
-│       ├── deck.ts         # Deck system
-│       └── deck.test.ts    # Deck tests
+│   │   └── game.ts            # TypeScript type definitions
+│   ├── game/
+│   │   ├── deck.ts            # ✅ Deck system
+│   │   ├── deck.test.ts       # ✅ Deck tests
+│   │   ├── cardUtils.ts       # ✅ Card utilities
+│   │   ├── cardUtils.test.ts  # ✅ Card utils tests
+│   │   ├── roomManager.ts     # ✅ Room management + skip
+│   │   ├── roomManager.test.ts# ✅ Room tests
+│   │   └── runAllTests.ts     # ✅ Test runner
+│   ├── App.tsx                # Main app with test button
+│   └── main.tsx               # Entry point
+└── ... (config files)
 ```
 
 ---
