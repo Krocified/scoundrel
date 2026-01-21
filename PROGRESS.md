@@ -86,35 +86,43 @@
 - ✅ `isRoomComplete()` - Check if 3 cards picked
 - ✅ `getLeftoverCard()` - Get remaining card after room completion
 
-### 7. Test Infrastructure
+### 7. Game Controller
 **Files created:**
-- `src/game/runAllTests.ts` - Test runner for all systems
-- Updated `src/App.tsx` - Added "Run All Tests" button
+- `src/game/gameController.ts` - Complete game flow orchestration
+- `src/game/gameController.test.ts` - Full game controller tests
+
+**Features implemented:**
+- ✅ `initializeGame()` - Create new game with shuffled 42-card deck
+- ✅ `processCardPick()` - Pick card, resolve effect, advance rooms, check win/loss
+- ✅ `processRoomSkip()` - Skip room with directional ordering (L→R or R→L)
+- ✅ `advanceToNextRoom()` - Transition between rooms with leftover card
+- ✅ `calculateFinalScore()` - HP + sum of defeated enemy ranks
+- ✅ `getGameStats()` - Complete game statistics
+- ✅ **Win conditions:** Deck < 4 cards (can't form room)
+- ✅ **Loss condition:** Player HP ≤ 0
+- ✅ **Action logging:** Every action returns descriptive log messages
+
+### 8. Test Infrastructure
+**Files created:**
+- `src/game/runAllTests.ts` - Test runner for all 7 systems
+- Updated `src/App.tsx` - "Run All Tests" button
 
 **How to test:**
 1. Run `npm run dev`
 2. Open http://localhost:5173
 3. Click "Run All Tests" button
 4. Open browser console (F12) to see results
+5. **All 7 test suites should pass!**
 
 ---
 
-## 🚧 In Progress
+## 🎉 Core Game Logic Complete!
 
-None currently
+All game systems are fully implemented and tested. The game is now playable programmatically.
 
 ---
 
 ## 📋 To Do
-
-### 8. Game Controller
-- `initializeGame()` - Set up new game with shuffled deck
-- `processCardPick()` - Handle card pick and advance game state
-- `processRoomSkip()` - Handle room skip with directional ordering
-- `advanceToNextRoom()` - Transition between rooms
-- `calculateFinalScore()` - Calculate final score (HP + enemies defeated)
-- `getGameStats()` - Get current game statistics
-- Win/loss condition checking
 
 ### 9. UI Components
 - Minimal text-based UI for testing
@@ -142,21 +150,23 @@ scoundrel/
 │   ├── types/
 │   │   └── game.ts            # TypeScript type definitions
 │   ├── game/
-│   │   ├── deck.ts              # ✅ Deck system
-│   │   ├── deck.test.ts         # ✅ Deck tests
-│   │   ├── cardUtils.ts         # ✅ Card utilities
-│   │   ├── cardUtils.test.ts    # ✅ Card utils tests
-│   │   ├── roomManager.ts       # ✅ Room management + skip
-│   │   ├── roomManager.test.ts  # ✅ Room tests
-│   │   ├── weaponSystem.ts      # ✅ Weapon system
-│   │   ├── weaponSystem.test.ts # ✅ Weapon tests
-│   │   ├── combat.ts            # ✅ Combat system
-│   │   ├── combat.test.ts       # ✅ Combat tests
-│   │   ├── cardActions.ts       # ✅ Card actions
-│   │   ├── cardActions.test.ts  # ✅ Card actions tests
-│   │   └── runAllTests.ts       # ✅ Test runner
-│   ├── App.tsx                  # Main app with test button
-│   └── main.tsx                 # Entry point
+│   │   ├── deck.ts                # ✅ Deck system
+│   │   ├── deck.test.ts           # ✅ Deck tests
+│   │   ├── cardUtils.ts           # ✅ Card utilities
+│   │   ├── cardUtils.test.ts      # ✅ Card utils tests
+│   │   ├── roomManager.ts         # ✅ Room management + skip
+│   │   ├── roomManager.test.ts    # ✅ Room tests
+│   │   ├── weaponSystem.ts        # ✅ Weapon system
+│   │   ├── weaponSystem.test.ts   # ✅ Weapon tests
+│   │   ├── combat.ts              # ✅ Combat system
+│   │   ├── combat.test.ts         # ✅ Combat tests
+│   │   ├── cardActions.ts         # ✅ Card actions
+│   │   ├── cardActions.test.ts    # ✅ Card actions tests
+│   │   ├── gameController.ts      # ✅ Game controller
+│   │   ├── gameController.test.ts # ✅ Game controller tests
+│   │   └── runAllTests.ts         # ✅ Test runner (7 suites)
+│   ├── App.tsx                    # Main app with test button
+│   └── main.tsx                   # Entry point
 └── ... (config files)
 ```
 
@@ -164,6 +174,12 @@ scoundrel/
 
 ## Next Steps
 
-1. **Game Controller** - Orchestrate complete game flow (pick, skip, room transitions, win/loss)
-2. **UI Components** - Build playable interface with card display and actions
-3. **Polish** - Final testing, refinement, and game balance
+1. **UI Components** - Build playable interface:
+   - Game board with current room cards
+   - Player stats display (HP, weapon, score)
+   - Action buttons (pick cards 0-3, skip left/right)
+   - Game log/history
+   - Victory/defeat screen
+2. **Visual Polish** - Add styling, animations, card designs
+3. **localStorage** - Save/load game state
+4. **Balance & Testing** - Playtest and refine difficulty

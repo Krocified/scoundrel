@@ -47,13 +47,11 @@ function App() {
           <li><strong>Weapon System</strong> - Equip, durability tracking, usage limits</li>
           <li><strong>Combat System</strong> - Damage calculation, healing, player state</li>
           <li><strong>Card Actions</strong> - Pick cards, resolve effects (health/weapon/enemy)</li>
+          <li><strong>Game Controller</strong> - Complete game orchestration and flow</li>
         </ul>
         
-        <h3 style={{ marginTop: '20px' }}>🚧 Coming Next:</h3>
-        <ul>
-          <li>Game Controller - Main game loop and flow orchestration</li>
-          <li>UI Components - Play the actual game!</li>
-        </ul>
+        <h3 style={{ marginTop: '20px' }}>🎮 Ready to Play!</h3>
+        <p>All core game logic is complete. Next: Build the UI!</p>
       </div>
     </div>
   );
