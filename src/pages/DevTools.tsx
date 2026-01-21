@@ -1,6 +1,7 @@
 // Development tools page
 
 import { Link } from 'react-router-dom';
+import { Footer } from '../components/Footer';
 import { runAllTests } from '../game/runAllTests';
 
 export function DevTools() {
@@ -78,6 +79,8 @@ export function DevTools() {
           <li><a href="/deck-demo.html" target="_blank" rel="noreferrer">Deck System Demo</a></li>
         </ul>
       </div>
+
+      <Footer />
     </div>
   );
 }

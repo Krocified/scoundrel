@@ -1,6 +1,7 @@
 // Game rules page
 
 import { Link } from 'react-router-dom';
+import { Footer } from '../components/Footer';
 
 export function Rules() {
   return (
@@ -475,6 +476,8 @@ export function Rules() {
           Start Your Adventure →
         </Link>
       </div>
+
+      <Footer />
     </div>
   );
 }

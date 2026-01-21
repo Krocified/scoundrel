@@ -10,6 +10,7 @@ import { RoomCard } from './RoomCard';
 import { SkipButtons } from './SkipButtons';
 import { WeaponDisplay } from './WeaponDisplay';
 import { GameLog } from './GameLog';
+import { Footer } from './Footer';
 import { PickedCardPlaceholder } from './PickedCardPlaceholder';
 
 export function GameBoard() {
@@ -184,6 +185,8 @@ export function GameBoard() {
             </div>
           </>
         )}
+
+        <Footer />
       </div>
     </>
   );

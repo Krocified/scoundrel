@@ -2,7 +2,7 @@
 
 > A strategic single-player dungeon crawler card game built with React + TypeScript
 
-**[Play Live Demo](#) | [Read the Rules](/rules)**
+**[Play Live Demo](https://kro-scoundrel.vercel.app/) | [Read the Rules](https://kro-scoundrel.vercel.app/rules)**
 
 ---
 
