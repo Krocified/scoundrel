@@ -46,12 +46,12 @@ function App() {
           <li><strong>Room Manager</strong> - Room initialization, skip mechanic</li>
           <li><strong>Weapon System</strong> - Equip, durability tracking, usage limits</li>
           <li><strong>Combat System</strong> - Damage calculation, healing, player state</li>
+          <li><strong>Card Actions</strong> - Pick cards, resolve effects (health/weapon/enemy)</li>
         </ul>
         
         <h3 style={{ marginTop: '20px' }}>🚧 Coming Next:</h3>
         <ul>
-          <li>Card Actions - Handle picking cards and resolving effects</li>
-          <li>Game Controller - Main game loop and flow</li>
+          <li>Game Controller - Main game loop and flow orchestration</li>
           <li>UI Components - Play the actual game!</li>
         </ul>
       </div>

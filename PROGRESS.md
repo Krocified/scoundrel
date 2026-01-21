@@ -71,7 +71,22 @@
 - ✅ `getHpPercentage()` - Get HP % for UI
 - ✅ **Complex weapon logic:** No weapon, fresh weapon, worn weapon scenarios
 
-### 6. Test Infrastructure
+### 6. Card Action Handler
+**Files created:**
+- `src/game/cardActions.ts` - Card picking and effect resolution
+- `src/game/cardActions.test.ts` - Comprehensive card action tests
+
+**Features implemented:**
+- ✅ `pickCard()` - Pick card from room and resolve effect instantly
+- ✅ **Health potion:** Heal player (capped at 20 HP)
+- ✅ **Weapon:** Equip weapon (replaces current)
+- ✅ **Enemy:** Calculate damage, apply to player, update weapon durability
+- ✅ Track defeated enemies for scoring
+- ✅ Detect player death (HP <= 0)
+- ✅ `isRoomComplete()` - Check if 3 cards picked
+- ✅ `getLeftoverCard()` - Get remaining card after room completion
+
+### 7. Test Infrastructure
 **Files created:**
 - `src/game/runAllTests.ts` - Test runner for all systems
 - Updated `src/App.tsx` - Added "Run All Tests" button
@@ -92,15 +107,14 @@ None currently
 
 ## 📋 To Do
 
-### 7. Card Action Handler
-- `pickCard()` - Handle picking a card and resolving its effect (health/weapon/enemy)
-
 ### 8. Game Controller
-- `initializeGame()` - Set up new game
-- `processCardPick()` - Handle card pick action
-- `processRoomSkip()` - Handle room skip action
-- `calculateFinalScore()` - Calculate final score
+- `initializeGame()` - Set up new game with shuffled deck
+- `processCardPick()` - Handle card pick and advance game state
+- `processRoomSkip()` - Handle room skip with directional ordering
+- `advanceToNextRoom()` - Transition between rooms
+- `calculateFinalScore()` - Calculate final score (HP + enemies defeated)
 - `getGameStats()` - Get current game statistics
+- Win/loss condition checking
 
 ### 9. UI Components
 - Minimal text-based UI for testing
@@ -138,6 +152,8 @@ scoundrel/
 │   │   ├── weaponSystem.test.ts # ✅ Weapon tests
 │   │   ├── combat.ts            # ✅ Combat system
 │   │   ├── combat.test.ts       # ✅ Combat tests
+│   │   ├── cardActions.ts       # ✅ Card actions
+│   │   ├── cardActions.test.ts  # ✅ Card actions tests
 │   │   └── runAllTests.ts       # ✅ Test runner
 │   ├── App.tsx                  # Main app with test button
 │   └── main.tsx                 # Entry point
@@ -148,7 +164,6 @@ scoundrel/
 
 ## Next Steps
 
-1. **Card Action Handler** - Implement pickCard() to resolve effects
-2. **Game Controller** - Orchestrate game flow and state
-3. **UI** - Build playable interface
-4. **Polish** - Final testing and refinement
+1. **Game Controller** - Orchestrate complete game flow (pick, skip, room transitions, win/loss)
+2. **UI Components** - Build playable interface with card display and actions
+3. **Polish** - Final testing, refinement, and game balance

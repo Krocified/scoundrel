@@ -5,6 +5,7 @@ import { testCardUtils } from './cardUtils.test';
 import { testRoomManager } from './roomManager.test';
 import { testWeaponSystem } from './weaponSystem.test';
 import { testCombat } from './combat.test';
+import { testCardActions } from './cardActions.test';
 
 export function runAllTests() {
   console.log('\n');
@@ -27,6 +28,9 @@ export function runAllTests() {
     console.log('\n');
     
     testCombat();
+    console.log('\n');
+    
+    testCardActions();
     console.log('\n');
 
     console.log('═'.repeat(60));
