@@ -14,10 +14,14 @@ export function GameLog({ log }: Readonly<GameLogProps>) {
             padding: 12px !important;
             font-size: 12px !important;
           }
+          
+          .game-log-title {
+            display: none !important;
+          }
         }
       `}</style>
       <div>
-        <h3 style={{ margin: '0 0 10px 0' }}>Game Log</h3>
+        <h3 className="game-log-title" style={{ margin: '0 0 10px 0' }}>Game Log</h3>
         <div
           id="game-log"
           className="game-log-container"

@@ -123,6 +123,15 @@ export function GameBoard() {
           .header-buttons a {
             flex: 1 !important;
           }
+          
+          .current-room-title {
+            font-size: 16px !important;
+            text-align: center !important;
+          }
+          
+          .footer-spacer {
+            margin-top: 100px !important;
+          }
         }
       `}</style>
       <div className="game-board-container" style={{ padding: '20px', maxWidth: '1400px', margin: '0 auto', fontFamily: 'monospace' }}>
@@ -187,7 +196,7 @@ export function GameBoard() {
         {!isGameOver && (
           <>
             <div style={{ marginBottom: '15px' }}>
-              <h2 style={{ marginBottom: '10px', marginTop: 0 }}>Current Room ({game.cardsPickedThisRoom}/3 picked)</h2>
+              <h2 className="current-room-title" style={{ marginBottom: '10px', marginTop: 0 }}>Current Room ({game.cardsPickedThisRoom}/3 picked)</h2>
               
               {/* Mobile-only deck count text */}
               <div className="deck-count-mobile">
@@ -262,7 +271,9 @@ export function GameBoard() {
           </>
         )}
 
-        <Footer />
+        <div className="footer-spacer" style={{ marginTop: '20px' }}>
+          <Footer />
+        </div>
       </div>
     </>
   );
