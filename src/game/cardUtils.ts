@@ -1,6 +1,7 @@
 // Card utility functions for classification and value extraction
 
 import type { Card, CardType } from '../types/game';
+import { getCurrentDeckConfig } from '../config/deckCustomization';
 
 /**
  * Get the type of a card based on its suit
@@ -50,7 +51,7 @@ export function getCardRankDisplay(card: Card): string {
 }
 
 /**
- * Get a suit symbol for display
+ * Get a suit symbol for display (emoji - for text/logging purposes)
  */
 export function getSuitSymbol(suit: Card['suit']): string {
   switch (suit) {
@@ -63,6 +64,14 @@ export function getSuitSymbol(suit: Card['suit']): string {
     case 'clubs':
       return '♣';
   }
+}
+
+/**
+ * Get the image path for a suit symbol
+ */
+export function getSuitImagePath(suit: Card['suit']): string {
+  const config = getCurrentDeckConfig();
+  return config.suitImages[suit];
 }
 
 /**

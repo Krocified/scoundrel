@@ -2,7 +2,8 @@
 
 import React from 'react';
 import type { Card } from '../types/game';
-import { getSuitSymbol, getCardType } from '../game/cardUtils';
+import { getSuitImagePath, getCardType } from '../game/cardUtils';
+import { getCurrentDeckConfig } from '../config/deckCustomization';
 
 interface RoomCardProps {
   card: Card;
@@ -13,6 +14,7 @@ interface RoomCardProps {
 
 export function RoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<RoomCardProps>) {
   const cardType = getCardType(card);
+  const deckConfig = getCurrentDeckConfig();
   let color = '#4caf50'; // enemy default
   let tooltipText = 'Fight enemy!';
   
@@ -45,8 +47,9 @@ export function RoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<Ro
             padding: 12px !important;
           }
           
-          .room-card-suit {
-            font-size: 32px !important;
+          .room-card-suit img {
+            width: 32px !important;
+            height: 32px !important;
           }
           
           .room-card-rank {
@@ -82,10 +85,22 @@ export function RoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<Ro
       }}
     >
       <div style={{ flex: '1', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-        <div className="room-card-suit" style={{ fontSize: '48px', color }}>
-          {getSuitSymbol(card.suit)}
+        <div className="room-card-suit" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <img 
+            src={getSuitImagePath(card.suit)} 
+            alt={card.suit}
+            style={{ width: '48px', height: '48px', objectFit: 'contain' }}
+          />
         </div>
-        <div className="room-card-rank" style={{ fontSize: '32px', fontWeight: 'bold', marginTop: '10px' }}>
+        <div 
+          className="room-card-rank" 
+          style={{ 
+            fontSize: `${deckConfig.cardFontSize}px`, 
+            fontFamily: deckConfig.cardFont,
+            fontWeight: 'bold', 
+            marginTop: '10px' 
+          }}
+        >
           {card.rank}
         </div>
         <div className="room-card-type" style={{ fontSize: '12px', marginTop: '10px', color: '#666' }}>

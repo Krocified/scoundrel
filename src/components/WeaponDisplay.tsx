@@ -1,6 +1,8 @@
 // Weapon display component
 
 import type { Card } from '../types/game';
+import { getSuitImagePath } from '../game/cardUtils';
+import { getCurrentDeckConfig } from '../config/deckCustomization';
 
 interface WeaponDisplayProps {
   weapon: Card | null;
@@ -8,6 +10,7 @@ interface WeaponDisplayProps {
 }
 
 export function WeaponDisplay({ weapon, weaponDurability }: Readonly<WeaponDisplayProps>) {
+  const deckConfig = getCurrentDeckConfig();
   return (
     <>
       <style>{`
@@ -28,6 +31,15 @@ export function WeaponDisplay({ weapon, weaponDurability }: Readonly<WeaponDispl
           .weapon-icon {
             font-size: 36px !important;
             margin-bottom: 0 !important;
+          }
+          
+          .weapon-icon img {
+            width: 36px !important;
+            height: 36px !important;
+          }
+          
+          .weapon-icon span {
+            font-size: 36px !important;
           }
           
           .weapon-label {
@@ -73,8 +85,25 @@ export function WeaponDisplay({ weapon, weaponDurability }: Readonly<WeaponDispl
         <div className="weapon-label" style={{ fontSize: '12px', opacity: 0.9, marginBottom: '8px', fontWeight: 'bold' }}>
           EQUIPPED WEAPON
         </div>
-        <div className="weapon-icon" style={{ fontSize: '48px', fontWeight: 'bold', marginBottom: '10px' }}>
-          {weapon ? `♦ ${weapon.rank}` : '—'}
+        <div className="weapon-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '10px' }}>
+          {weapon ? (
+            <>
+              <img 
+                src={getSuitImagePath(weapon.suit)} 
+                alt={weapon.suit}
+                style={{ width: '48px', height: '48px', objectFit: 'contain' }}
+              />
+              <span style={{ 
+                fontSize: '48px', 
+                fontWeight: 'bold',
+                fontFamily: deckConfig.cardFont 
+              }}>
+                {weapon.rank}
+              </span>
+            </>
+          ) : (
+            <span>—</span>
+          )}
         </div>
         
         {/* Status */}
