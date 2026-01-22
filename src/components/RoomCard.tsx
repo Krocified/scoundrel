@@ -61,14 +61,13 @@ export function RoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<Ro
         }
       `}</style>
       <div
-        className="room-card"
-      role="button"
-      tabIndex={isGamePlaying ? 0 : -1}
-      className={isGamePlaying ? 'card-hover-enabled' : ''}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      title={tooltipText}
-      style={{
+        className={`room-card ${isGamePlaying ? 'card-hover-enabled' : ''}`}
+        role="button"
+        tabIndex={isGamePlaying ? 0 : -1}
+        onClick={handleClick}
+        onKeyDown={handleKeyDown}
+        title={tooltipText}
+        style={{
         background: 'white',
         border: `3px solid ${color}`,
         borderRadius: '8px',
