@@ -16,6 +16,8 @@ const deckConfigs: Record<string, DeckCustomization> = {
     },
     cardFont: 'Georgia, serif',
     cardFontSize: 32,
+    useTextSuits: true,
+    useDistinctColors: true,
   },
 };
 
@@ -36,4 +38,13 @@ export function getDeckConfig(theme: string = currentDeckTheme): DeckCustomizati
  */
 export function getCurrentDeckConfig(): DeckCustomization {
   return getDeckConfig(currentDeckTheme);
+}
+
+/**
+ * Get the current deck configuration with overrides
+ * Useful for runtime settings like color mode
+ */
+export function getCurrentDeckConfigWithOverrides(overrides?: Partial<DeckCustomization>): DeckCustomization {
+  const baseConfig = getDeckConfig(currentDeckTheme);
+  return { ...baseConfig, ...overrides };
 }

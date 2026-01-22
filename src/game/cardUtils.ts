@@ -1,6 +1,6 @@
 // Card utility functions for classification and value extraction
 
-import type { Card, CardType } from '../types/game';
+import type { Card, CardType, Suit } from '../types/game';
 import { getCurrentDeckConfig } from '../config/deckCustomization';
 
 /**
@@ -93,5 +93,30 @@ export function getSuitColor(suit: Card['suit']): string {
     case 'spades':
     case 'clubs':
       return '#00ff00'; // green (enemies)
+  }
+}
+
+/**
+ * Get the display color for a suit based on color mode
+ * If useDistinctColors is true, colors match card borders by type
+ * Otherwise, uses traditional suit colors (red/black)
+ */
+export function getSuitDisplayColor(suit: Suit, useDistinctColors: boolean): string {
+  if (useDistinctColors) {
+    // Match card border colors by card type
+    const cardType = getCardType({ suit, rank: 2, id: '' });
+    if (cardType === 'health') return '#e91e63'; // red/pink
+    if (cardType === 'weapon') return '#2196f3'; // blue
+    return '#4caf50'; // green (enemies)
+  } else {
+    // Traditional suit colors
+    switch (suit) {
+      case 'hearts':
+      case 'diamonds':
+        return '#ff0000'; // red
+      case 'spades':
+      case 'clubs':
+        return '#000000'; // black
+    }
   }
 }

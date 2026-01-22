@@ -12,6 +12,7 @@ import { WeaponDisplay } from './WeaponDisplay';
 import { GameLog } from './GameLog';
 import { Footer } from './Footer';
 import { PickedCardPlaceholder } from './PickedCardPlaceholder';
+import { ColorModeToggle } from './ColorModeToggle';
 
 export function GameBoard() {
   const [game, setGame] = useState(() => initializeGame());
@@ -137,7 +138,10 @@ export function GameBoard() {
       <div className="game-board-container" style={{ padding: '20px', maxWidth: '1400px', margin: '0 auto', fontFamily: 'monospace' }}>
         {/* Header with Title and Buttons */}
         <div className="header-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <h1 style={{ margin: 0 }}>🃏 SCOUNDREL</h1>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <h1 style={{ margin: 0 }}>🃏 SCOUNDREL</h1>
+            <ColorModeToggle />
+          </div>
           <div className="header-buttons" style={{ display: 'flex', gap: '10px' }}>
             <button
               onClick={handleNewGame}

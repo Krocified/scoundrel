@@ -2,8 +2,9 @@
 
 import React from 'react';
 import type { Card } from '../types/game';
-import { getSuitImagePath, getCardType } from '../game/cardUtils';
+import { getSuitImagePath, getSuitSymbol, getSuitDisplayColor, getCardType } from '../game/cardUtils';
 import { getCurrentDeckConfig } from '../config/deckCustomization';
+import { useDeckCustomization } from '../contexts/DeckCustomizationContext';
 
 interface RoomCardProps {
   card: Card;
@@ -14,15 +15,16 @@ interface RoomCardProps {
 
 export function RoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<RoomCardProps>) {
   const cardType = getCardType(card);
+  const { settings } = useDeckCustomization();
   const deckConfig = getCurrentDeckConfig();
-  let color = '#4caf50'; // enemy default
-  let tooltipText = 'Fight enemy!';
   
+  // Border color matches suit display color (responds to distinct colors toggle)
+  const color = getSuitDisplayColor(card.suit, settings.useDistinctColors);
+  
+  let tooltipText = 'Fight enemy!';
   if (cardType === 'health') {
-    color = '#e91e63';
     tooltipText = 'Drink health potion!';
   } else if (cardType === 'weapon') {
-    color = '#2196f3';
     tooltipText = 'Equip weapon!';
   }
 
@@ -45,6 +47,10 @@ export function RoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<Ro
         @media (max-width: 768px) {
           .room-card {
             padding: 12px !important;
+          }
+          
+          .room-card-suit span {
+            font-size: 32px !important;
           }
           
           .room-card-suit img {
@@ -86,11 +92,20 @@ export function RoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<Ro
     >
       <div style={{ flex: '1', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
         <div className="room-card-suit" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <img 
-            src={getSuitImagePath(card.suit)} 
-            alt={card.suit}
-            style={{ width: '48px', height: '48px', objectFit: 'contain' }}
-          />
+          {deckConfig.useTextSuits ? (
+            <span style={{ 
+              fontSize: '48px', 
+              color: getSuitDisplayColor(card.suit, settings.useDistinctColors)
+            }}>
+              {getSuitSymbol(card.suit)}
+            </span>
+          ) : (
+            <img 
+              src={getSuitImagePath(card.suit)} 
+              alt={card.suit}
+              style={{ width: '48px', height: '48px', objectFit: 'contain' }}
+            />
+          )}
         </div>
         <div 
           className="room-card-rank" 

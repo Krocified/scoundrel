@@ -1,8 +1,9 @@
 // Weapon display component
 
 import type { Card } from '../types/game';
-import { getSuitImagePath } from '../game/cardUtils';
+import { getSuitImagePath, getSuitSymbol, getSuitDisplayColor } from '../game/cardUtils';
 import { getCurrentDeckConfig } from '../config/deckCustomization';
+import { useDeckCustomization } from '../contexts/DeckCustomizationContext';
 
 interface WeaponDisplayProps {
   weapon: Card | null;
@@ -10,6 +11,7 @@ interface WeaponDisplayProps {
 }
 
 export function WeaponDisplay({ weapon, weaponDurability }: Readonly<WeaponDisplayProps>) {
+  const { settings } = useDeckCustomization();
   const deckConfig = getCurrentDeckConfig();
   return (
     <>
@@ -72,12 +74,12 @@ export function WeaponDisplay({ weapon, weaponDurability }: Readonly<WeaponDispl
         }
       `}</style>
       <div className="weapon-display-container" style={{
-        background: weapon ? '#2196f3' : '#ccc',
+        background: weapon ? '#132840' : '#ccc',
         color: 'white',
         padding: '20px',
         borderRadius: '8px',
         textAlign: 'center',
-        border: `3px solid ${weapon ? '#1976d2' : '#999'}`,
+        border: `3px solid ${weapon ? '#c8d5e6' : '#999'}`,
         display: 'flex',
         flexDirection: 'column'
       }}>
@@ -88,11 +90,20 @@ export function WeaponDisplay({ weapon, weaponDurability }: Readonly<WeaponDispl
         <div className="weapon-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '10px' }}>
           {weapon ? (
             <>
-              <img 
-                src={getSuitImagePath(weapon.suit)} 
-                alt={weapon.suit}
-                style={{ width: '48px', height: '48px', objectFit: 'contain' }}
-              />
+              {deckConfig.useTextSuits ? (
+                <span style={{ 
+                  fontSize: '48px', 
+                  color: getSuitDisplayColor(weapon.suit, settings.useDistinctColors)
+                }}>
+                  {getSuitSymbol(weapon.suit)}
+                </span>
+              ) : (
+                <img 
+                  src={getSuitImagePath(weapon.suit)} 
+                  alt={weapon.suit}
+                  style={{ width: '48px', height: '48px', objectFit: 'contain' }}
+                />
+              )}
               <span style={{ 
                 fontSize: '48px', 
                 fontWeight: 'bold',

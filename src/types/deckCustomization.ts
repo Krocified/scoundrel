@@ -8,4 +8,6 @@ export interface DeckCustomization {
   suitImages: Record<Suit, string>;
   cardFont: string;
   cardFontSize: number;
+  useTextSuits: boolean; // If true, render suits as text (emoji); if false, use images
+  useDistinctColors: boolean; // If true, colors match card borders; if false, traditional suit colors
 }
