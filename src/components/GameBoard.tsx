@@ -115,6 +115,29 @@ export function GameBoard() {
             align-items: flex-start !important;
           }
           
+          .header-title-desktop {
+            display: none !important;
+          }
+          
+          .header-title-row {
+            width: 100% !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+          }
+          
+          .header-title-mobile {
+            display: block !important;
+          }
+          
+          .color-toggle-desktop {
+            display: none !important;
+          }
+          
+          .color-toggle-mobile {
+            display: flex !important;
+          }
+          
           .header-buttons {
             width: 100%;
             justify-content: stretch !important;
@@ -123,6 +146,7 @@ export function GameBoard() {
           .header-buttons button,
           .header-buttons a {
             flex: 1 !important;
+            text-align: center !important;
           }
           
           .current-room-title {
@@ -138,11 +162,18 @@ export function GameBoard() {
       <div className="game-board-container" style={{ padding: '20px', maxWidth: '1400px', margin: '0 auto', fontFamily: 'monospace' }}>
         {/* Header with Title and Buttons */}
         <div className="header-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <h1 style={{ margin: 0 }}>🃏 SCOUNDREL</h1>
-            <ColorModeToggle />
+          <div className="header-title-row" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+            <h1 className="header-title-desktop" style={{ margin: 0 }}>🃏 SCOUNDREL</h1>
+            <h1 className="header-title-mobile" style={{ margin: 0, display: 'none' }}>🃏 SCOUNDREL</h1>
+            <div className="color-toggle-mobile" style={{ display: 'none' }}>
+              <ColorModeToggle compact={true} />
+            </div>
           </div>
-          <div className="header-buttons" style={{ display: 'flex', gap: '10px' }}>
+          <div className="header-buttons" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div className="color-toggle-desktop">
+              <ColorModeToggle />
+            </div>
+            <span className="color-toggle-desktop" style={{ color: '#ccc', fontSize: '18px' }}>|</span>
             <button
               onClick={handleNewGame}
               style={{
@@ -167,7 +198,8 @@ export function GameBoard() {
                 borderRadius: '4px',
                 textDecoration: 'none',
                 fontWeight: 'bold',
-                display: 'inline-block'
+                display: 'inline-block',
+                textAlign: 'center'
               }}
             >
               View Rules
