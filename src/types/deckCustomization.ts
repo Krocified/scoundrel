@@ -6,6 +6,7 @@ export interface DeckCustomization {
   deckTheme: string;
   cardBackImage: string;
   suitImages: Record<Suit, string>;
+  bossImages: Record<string, string>;
   cardFont: string;
   cardFontSize: number;
   useTextSuits: boolean; // If true, render suits as text (emoji); if false, use images
