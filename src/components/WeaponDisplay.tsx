@@ -1,7 +1,12 @@
 // Weapon display component
 
 import type { Card } from '../types/game';
-import { getSuitImagePath, getSuitSymbol, getSuitDisplayColor } from '../game/cardUtils';
+import {
+  getSuitImagePath,
+  getSuitSymbol,
+  getSuitDisplayColorDistinct,
+  getSuitDisplayColorTraditional,
+} from '../game/cardUtils';
 import { getCurrentDeckConfig } from '../config/deckCustomization';
 import { useDeckCustomization } from '../contexts/DeckCustomizationContext';
 
@@ -93,7 +98,9 @@ export function WeaponDisplay({ weapon, weaponDurability }: Readonly<WeaponDispl
               {deckConfig.useTextSuits ? (
                 <span style={{ 
                   fontSize: '48px', 
-                  color: getSuitDisplayColor(weapon.suit, settings.useDistinctColors)
+                  color: settings.useDistinctColors
+                    ? getSuitDisplayColorDistinct(weapon.suit)
+                    : getSuitDisplayColorTraditional(weapon.suit),
                 }}>
                   {getSuitSymbol(weapon.suit)}
                 </span>

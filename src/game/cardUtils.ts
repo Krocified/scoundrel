@@ -75,6 +75,35 @@ export function getSuitImagePath(suit: Card['suit']): string {
 }
 
 /**
+ * Get the boss image path for face cards (J, Q, K) of spades and clubs
+ * Returns null if the card doesn't have a boss image
+ */
+export function getBossImagePath(card: Card): string | null {
+  // Only spades and clubs have boss images, and only for face cards (J, Q, K)
+  if (card.suit !== 'spades' && card.suit !== 'clubs') {
+    return null;
+  }
+  
+  if (card.rank < 11 || card.rank > 13) {
+    return null;
+  }
+  
+  const config = getCurrentDeckConfig();
+  let rankName: 'jack' | 'queen' | 'king';
+
+  if (card.rank === 11) {
+    rankName = 'jack';
+  } else if (card.rank === 12) {
+    rankName = 'queen';
+  } else {
+    rankName = 'king';
+  }
+
+  const bossKey = `${rankName}_of_${card.suit}`;
+  return config.bossImages[bossKey] || null;
+}
+
+/**
  * Get a full display string for a card (e.g., "♥5", "♠K")
  */
 export function getCardDisplay(card: Card): string {
@@ -97,26 +126,26 @@ export function getSuitColor(suit: Card['suit']): string {
 }
 
 /**
- * Get the display color for a suit based on color mode
- * If useDistinctColors is true, colors match card borders by type
- * Otherwise, uses traditional suit colors (red/black)
+ * Get the display color for a suit using the \"distinct\" palette
+ * (matches card border colors by card type).
  */
-export function getSuitDisplayColor(suit: Suit, useDistinctColors: boolean): string {
-  if (useDistinctColors) {
-    // Match card border colors by card type
-    const cardType = getCardType({ suit, rank: 2, id: '' });
-    if (cardType === 'health') return '#e91e63'; // red/pink
-    if (cardType === 'weapon') return '#2196f3'; // blue
-    return '#4caf50'; // green (enemies)
-  } else {
-    // Traditional suit colors
-    switch (suit) {
-      case 'hearts':
-      case 'diamonds':
-        return '#ff0000'; // red
-      case 'spades':
-      case 'clubs':
-        return '#000000'; // black
-    }
+export function getSuitDisplayColorDistinct(suit: Suit): string {
+  const cardType = getCardType({ suit, rank: 2, id: '' });
+  if (cardType === 'health') return '#e91e63'; // red/pink
+  if (cardType === 'weapon') return '#2196f3'; // blue
+  return '#4caf50'; // green (enemies)
+}
+
+/**
+ * Get the traditional red/black suit colors.
+ */
+export function getSuitDisplayColorTraditional(suit: Suit): string {
+  switch (suit) {
+    case 'hearts':
+    case 'diamonds':
+      return '#ff0000'; // red
+    case 'spades':
+    case 'clubs':
+      return '#000000'; // black
   }
 }
