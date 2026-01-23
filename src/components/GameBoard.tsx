@@ -183,7 +183,9 @@ export function GameBoard() {
                 border: 'none',
                 borderRadius: '4px',
                 cursor: 'pointer',
-                fontWeight: 'bold'
+                fontWeight: 'bold',
+                fontFamily: 'inherit',
+                fontSize: '12px'
               }}
             >
               New Game
@@ -199,7 +201,9 @@ export function GameBoard() {
                 textDecoration: 'none',
                 fontWeight: 'bold',
                 display: 'inline-block',
-                textAlign: 'center'
+                textAlign: 'center',
+                fontFamily: 'inherit',
+                fontSize: '12px'
               }}
             >
               View Rules

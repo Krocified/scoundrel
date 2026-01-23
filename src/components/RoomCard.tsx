@@ -2,7 +2,7 @@
 
 import React from 'react';
 import type { Card } from '../types/game';
-import { getSuitImagePath, getSuitSymbol, getSuitDisplayColor, getCardType } from '../game/cardUtils';
+import { getSuitImagePath, getSuitSymbol, getSuitDisplayColor, getCardType, getCardRankDisplay } from '../game/cardUtils';
 import { getCurrentDeckConfig } from '../config/deckCustomization';
 import { useDeckCustomization } from '../contexts/DeckCustomizationContext';
 
@@ -47,6 +47,8 @@ export function RoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<Ro
         @media (max-width: 768px) {
           .room-card {
             padding: 12px !important;
+            min-width: 0 !important;
+            max-width: 100% !important;
           }
           
           .room-card-suit span {
@@ -61,6 +63,8 @@ export function RoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<Ro
           .room-card-rank {
             font-size: 24px !important;
             margin-top: 5px !important;
+            min-width: 1.2em !important;
+            text-align: center !important;
           }
           
           .room-card-type {
@@ -88,37 +92,61 @@ export function RoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<Ro
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
+        position: 'relative',
       }}
     >
-      <div style={{ flex: '1', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-        <div className="room-card-suit" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {deckConfig.useTextSuits ? (
-            <span style={{ 
-              fontSize: '48px', 
-              color: getSuitDisplayColor(card.suit, settings.useDistinctColors)
-            }}>
-              {getSuitSymbol(card.suit)}
-            </span>
-          ) : (
-            <img 
-              src={getSuitImagePath(card.suit)} 
-              alt={card.suit}
-              style={{ width: '48px', height: '48px', objectFit: 'contain' }}
-            />
-          )}
-        </div>
-        <div 
-          className="room-card-rank" 
-          style={{ 
+      {/* Middle section: rank and suit inline */}
+      <div style={{ 
+        flex: '1', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        position: 'relative',
+        padding: '10px 0'
+      }}>
+        <div style={{ 
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: '4px',
+          justifyContent: 'center'
+        }}>
+          <div className="room-card-rank" style={{ 
             fontSize: `${deckConfig.cardFontSize}px`, 
             fontFamily: deckConfig.cardFont,
-            fontWeight: 'bold', 
-            marginTop: '10px' 
-          }}
-        >
-          {card.rank}
+            fontWeight: 'bold',
+            lineHeight: 1,
+            minWidth: '1.2em',
+            textAlign: 'center',
+            display: 'inline-block'
+          }}>
+            {getCardRankDisplay(card)}
+          </div>
+          <div className="room-card-suit" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {deckConfig.useTextSuits ? (
+              <span style={{ 
+                fontSize: `${deckConfig.cardFontSize+10}px`, 
+                color: getSuitDisplayColor(card.suit, settings.useDistinctColors),
+                lineHeight: 1
+              }}>
+                {getSuitSymbol(card.suit)}
+              </span>
+            ) : (
+              <img 
+                src={getSuitImagePath(card.suit)} 
+                alt={card.suit}
+                style={{ width: '20px', height: '20px', objectFit: 'contain' }}
+              />
+            )}
+          </div>
         </div>
-        <div className="room-card-type" style={{ fontSize: '12px', marginTop: '10px', color: '#666' }}>
+        <div className="room-card-type" style={{ 
+          fontSize: '12px', 
+          marginTop: '10px', 
+          color: '#666',
+          bottom: '8px'
+        }}>
           {(() => {
             if (cardType === 'health') return 'HEAL';
             if (cardType === 'weapon') return 'WEAPON';
