@@ -32,7 +32,7 @@ const deckConfigs: Record<string, DeckCustomization> = {
       'queen_of_clubs': '/assets/cards/esoteric/bosses/queen-of-clubs.svg',
       'king_of_clubs': '/assets/cards/esoteric/bosses/king-of-clubs.svg',
     },
-    cardFont: 'Baskerville, "Baskerville Old Face", "Hoefler Text", Garamond, "Times New Roman", serif',
+    cardFont: '"Pirata One", system-ui',
     cardFontSize: 36,
     useTextSuits: true,
     useDistinctColors: true,
