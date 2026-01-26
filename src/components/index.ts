@@ -11,3 +11,4 @@ export { WeaponDisplay } from './WeaponDisplay';
 export { GameLog } from './GameLog';
 export { PickedCardPlaceholder } from './PickedCardPlaceholder';
 export { ColorModeToggle } from './ColorModeToggle';
+export { NewGameButton } from './NewGameButton';

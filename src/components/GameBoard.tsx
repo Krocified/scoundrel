@@ -13,6 +13,7 @@ import { GameLog } from './GameLog';
 import { Footer } from './Footer';
 import { PickedCardPlaceholder } from './PickedCardPlaceholder';
 import { ColorModeToggle } from './ColorModeToggle';
+import { NewGameButton } from './NewGameButton';
 
 export function GameBoard() {
   const [game, setGame] = useState(() => initializeGame());
@@ -174,22 +175,7 @@ export function GameBoard() {
               <ColorModeToggle />
             </div>
             <span className="color-toggle-desktop" style={{ color: '#ccc', fontSize: '18px' }}>|</span>
-            <button
-              onClick={handleNewGame}
-              style={{
-                padding: '10px 20px',
-                background: '#607d8b',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                fontFamily: 'inherit',
-                fontSize: '12px'
-              }}
-            >
-              New Game
-            </button>
+            <NewGameButton onClick={handleNewGame} />
             <Link
               to="/rules"
               style={{

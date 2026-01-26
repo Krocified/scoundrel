@@ -1,5 +1,7 @@
 // Game over screen component
 
+import { NewGameButton } from './NewGameButton';
+
 interface GameOverScreenProps {
   gameStatus: 'won' | 'lost';
   finalScore: number;
@@ -18,7 +20,7 @@ export function GameOverScreen({
   roomsCleared,
   roomsSkipped,
   onNewGame
-}: GameOverScreenProps) {
+}: Readonly<GameOverScreenProps>) {
   return (
     <div style={{
       background: gameStatus === 'won' ? '#4caf50' : '#f44336',
@@ -32,22 +34,7 @@ export function GameOverScreen({
       <h3>Final Score: {finalScore}</h3>
       <p>HP: {hp} + Enemies Defeated: {defeatedEnemies}</p>
       <p>Rooms Cleared: {roomsCleared} | Rooms Skipped: {roomsSkipped}</p>
-      <button
-        onClick={onNewGame}
-        style={{
-          marginTop: '20px',
-          padding: '12px 24px',
-          fontSize: '16px',
-          background: 'white',
-          color: '#333',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer',
-          fontWeight: 'bold'
-        }}
-      >
-        New Game
-      </button>
+      <NewGameButton onClick={onNewGame} style={{ marginTop: '20px' }} />
     </div>
   );
 }
