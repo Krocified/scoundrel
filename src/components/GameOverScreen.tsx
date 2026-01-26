@@ -69,7 +69,9 @@ export function GameOverScreen({
         </div>
       </div>
       <h3>Final Score: {finalScore}</h3>
-      <NewGameButton onClick={onNewGame} style={{ marginTop: '20px' }} />
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+        <NewGameButton onClick={onNewGame} />
+      </div>
     </div>
   );
 }

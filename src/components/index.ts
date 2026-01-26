@@ -13,3 +13,5 @@ export { PickedCardPlaceholder } from './PickedCardPlaceholder';
 export { ColorModeToggle } from './ColorModeToggle';
 export { NewGameButton } from './NewGameButton';
 export { Title } from './Title';
+export { HamburgerMenu } from './HamburgerMenu';
+export { IconButton } from './IconButton';

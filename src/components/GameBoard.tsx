@@ -1,7 +1,6 @@
 // Main game board component
 
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { initializeGame, processCardPick, processRoomSkip, getGameStats, calculateFinalScore } from '../game/gameController';
 import { PlayerStats } from './PlayerStats';
 import { GameOverScreen } from './GameOverScreen';
@@ -12,9 +11,9 @@ import { WeaponDisplay } from './WeaponDisplay';
 import { GameLog } from './GameLog';
 import { Footer } from './Footer';
 import { PickedCardPlaceholder } from './PickedCardPlaceholder';
-import { ColorModeToggle } from './ColorModeToggle';
 import { NewGameButton } from './NewGameButton';
 import { Title } from './Title';
+import { HamburgerMenu } from './HamburgerMenu';
 
 export function GameBoard() {
   const [game, setGame] = useState(() => initializeGame());
@@ -124,20 +123,12 @@ export function GameBoard() {
           .header-title-row {
             width: 100% !important;
             display: flex !important;
-            justify-content: space-between !important;
+            justify-content: flex-start !important;
             align-items: center !important;
           }
           
           .header-title-mobile {
             display: block !important;
-          }
-          
-          .color-toggle-desktop {
-            display: none !important;
-          }
-          
-          .color-toggle-mobile {
-            display: flex !important;
           }
           
           .header-buttons {
@@ -165,36 +156,12 @@ export function GameBoard() {
         {/* Header with Title and Buttons */}
         <div className="header-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <div className="header-title-row" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+            <HamburgerMenu />
             <Title className="header-title-desktop" />
             <Title className="header-title-mobile" style={{ display: 'none' }} />
-            <div className="color-toggle-mobile" style={{ display: 'none' }}>
-              <ColorModeToggle compact={true} />
-            </div>
           </div>
           <div className="header-buttons" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div className="color-toggle-desktop">
-              <ColorModeToggle />
-            </div>
-            <span className="color-toggle-desktop" style={{ color: '#ccc', fontSize: '18px' }}>|</span>
             <NewGameButton onClick={handleNewGame} />
-            <Link
-              to="/rules"
-              style={{
-                padding: '10px 20px',
-                background: '#9c27b0',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                textDecoration: 'none',
-                fontWeight: 'bold',
-                display: 'inline-block',
-                textAlign: 'center',
-                fontFamily: 'inherit',
-                fontSize: '12px'
-              }}
-            >
-              View Rules
-            </Link>
           </div>
         </div>
 
