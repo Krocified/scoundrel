@@ -11,7 +11,7 @@ import {
   getCardRankDisplay,
   getBossImagePath,
 } from '../../game/cardUtils';
-import { getCurrentDeckConfig } from '../../config/deckCustomization';
+import { getDeckConfig } from '../../config/deckCustomization';
 import { useDeckCustomization } from '../../contexts/DeckCustomizationContext';
 
 interface PCRoomCardProps {
@@ -24,7 +24,7 @@ interface PCRoomCardProps {
 export function PCRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<PCRoomCardProps>) {
   const cardType = getCardType(card);
   const { settings } = useDeckCustomization();
-  const deckConfig = getCurrentDeckConfig();
+  const deckConfig = getDeckConfig(settings.deckTheme);
   const bossImagePath = getBossImagePath(card);
   const isFaceCard = card.rank > 10;
 

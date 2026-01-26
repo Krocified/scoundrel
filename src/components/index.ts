@@ -15,3 +15,4 @@ export { NewGameButton } from './NewGameButton';
 export { Title } from './Title';
 export { HamburgerMenu } from './HamburgerMenu';
 export { IconButton } from './IconButton';
+export { DeckThemeSelector } from './DeckThemeSelector';

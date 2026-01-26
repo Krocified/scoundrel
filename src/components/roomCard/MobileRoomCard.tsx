@@ -10,7 +10,7 @@ import {
   getCardType,
   getCardRankDisplay,
 } from '../../game/cardUtils';
-import { getCurrentDeckConfig } from '../../config/deckCustomization';
+import { getDeckConfig } from '../../config/deckCustomization';
 import { useDeckCustomization } from '../../contexts/DeckCustomizationContext';
 
 interface MobileRoomCardProps {
@@ -23,7 +23,7 @@ interface MobileRoomCardProps {
 export function MobileRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<MobileRoomCardProps>) {
   const cardType = getCardType(card);
   const { settings } = useDeckCustomization();
-  const deckConfig = getCurrentDeckConfig();
+  const deckConfig = getDeckConfig(settings.deckTheme);
 
   return (
     <>

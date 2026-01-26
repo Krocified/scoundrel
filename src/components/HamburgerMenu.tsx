@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { ColorModeToggle } from './ColorModeToggle';
 import { IconButton } from './IconButton';
+import { DeckThemeSelector } from './DeckThemeSelector';
 
 export function HamburgerMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -156,6 +157,11 @@ export function HamburgerMenu() {
           </button>
         </div>
 
+        {/* Deck Theme Selector */}
+        <div>
+          <DeckThemeSelector />
+        </div>
+
         {/* Distinct Colors Toggle */}
         <div>
           <ColorModeToggle />
@@ -186,6 +192,36 @@ export function HamburgerMenu() {
           }}>
             Learn how to play Scoundrel. Note: Navigating away or refreshing will reset your current dungeon run.
           </p>
+        </div>
+
+        {/* Issue Reporting Link */}
+        <div style={{
+          marginTop: 'auto',
+          paddingTop: '20px',
+          borderTop: '1px solid #ddd'
+        }}>
+          <a
+            href="https://github.com/Krocified/scoundrel/issues"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontSize: '11px',
+              color: '#667eea',
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.textDecoration = 'underline';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.textDecoration = 'none';
+            }}
+          >
+            <span>🐛</span>
+            <span>Report an issue</span>
+          </a>
         </div>
       </div>
 

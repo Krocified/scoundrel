@@ -7,7 +7,7 @@ import {
   getSuitDisplayColorDistinct,
   getSuitDisplayColorTraditional,
 } from '../game/cardUtils';
-import { getCurrentDeckConfig } from '../config/deckCustomization';
+import { getDeckConfig } from '../config/deckCustomization';
 import { useDeckCustomization } from '../contexts/DeckCustomizationContext';
 
 interface WeaponDisplayProps {
@@ -17,7 +17,7 @@ interface WeaponDisplayProps {
 
 export function WeaponDisplay({ weapon, weaponDurability }: Readonly<WeaponDisplayProps>) {
   const { settings } = useDeckCustomization();
-  const deckConfig = getCurrentDeckConfig();
+  const deckConfig = getDeckConfig(settings.deckTheme);
   return (
     <>
       <style>{`

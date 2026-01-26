@@ -5,11 +5,13 @@ import type { ReactNode } from 'react';
 
 interface DeckCustomizationSettings {
   useDistinctColors: boolean;
+  deckTheme: string;
 }
 
 interface DeckCustomizationContextType {
   settings: DeckCustomizationSettings;
   toggleDistinctColors: () => void;
+  setDeckTheme: (theme: string) => void;
 }
 
 const DeckCustomizationContext = createContext<DeckCustomizationContextType | undefined>(undefined);
@@ -27,8 +29,8 @@ export function DeckCustomizationProvider({ children }: Readonly<{ children: Rea
         console.error('Failed to parse deck settings from localStorage', e);
       }
     }
-    // Default to distinct colors
-    return { useDistinctColors: true };
+    // Default to distinct colors and classic theme
+    return { useDistinctColors: true, deckTheme: 'classic' };
   });
 
   // Save to localStorage whenever settings change
@@ -40,7 +42,11 @@ export function DeckCustomizationProvider({ children }: Readonly<{ children: Rea
     setSettings(prev => ({ ...prev, useDistinctColors: !prev.useDistinctColors }));
   };
 
-  const value = useMemo(() => ({ settings, toggleDistinctColors }), [settings]);
+  const setDeckTheme = (theme: string) => {
+    setSettings(prev => ({ ...prev, deckTheme: theme }));
+  };
+
+  const value = useMemo(() => ({ settings, toggleDistinctColors, setDeckTheme }), [settings]);
 
   return (
     <DeckCustomizationContext.Provider value={value}>

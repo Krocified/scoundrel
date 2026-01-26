@@ -1,6 +1,7 @@
 // Deck visualization component
 
-import { getCurrentDeckConfig } from '../config/deckCustomization';
+import { getDeckConfig } from '../config/deckCustomization';
+import { useDeckCustomization } from '../contexts/DeckCustomizationContext';
 
 interface DeckDisplayProps {
   cardsInDeck: number;
@@ -8,7 +9,8 @@ interface DeckDisplayProps {
 
 export function DeckDisplay({ cardsInDeck }: Readonly<DeckDisplayProps>) {
   const stackDepth = Math.min(5, Math.ceil(cardsInDeck / 10));
-  const deckConfig = getCurrentDeckConfig();
+  const { settings } = useDeckCustomization();
+  const deckConfig = getDeckConfig(settings.deckTheme);
 
   return (
     <div 
