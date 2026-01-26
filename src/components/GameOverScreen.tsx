@@ -6,7 +6,7 @@ interface GameOverScreenProps {
   gameStatus: 'won' | 'lost';
   finalScore: number;
   hp: number;
-  defeatedEnemies: number;
+  defeatedEnemiesValue: number;
   roomsCleared: number;
   roomsSkipped: number;
   onNewGame: () => void;
@@ -16,7 +16,7 @@ export function GameOverScreen({
   gameStatus,
   finalScore,
   hp,
-  defeatedEnemies,
+  defeatedEnemiesValue,
   roomsCleared,
   roomsSkipped,
   onNewGame
@@ -31,9 +31,44 @@ export function GameOverScreen({
       marginBottom: '20px'
     }}>
       <h2>{gameStatus === 'won' ? '🎉 VICTORY!' : '💀 GAME OVER'}</h2>
+      <div style={{
+        maxWidth: '250px',
+        margin: '20px auto',
+        textAlign: 'left'
+      }}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          marginBottom: '8px'
+        }}>
+          <span>Remaining HP</span>
+          <span style={{ fontWeight: 'bold' }}>{hp}</span>
+        </div>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          marginBottom: '8px'
+        }}>
+          <span>Combat Score</span>
+          <span style={{ fontWeight: 'bold' }}>{defeatedEnemiesValue}</span>
+        </div>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          marginBottom: '8px'
+        }}>
+          <span>Rooms Cleared</span>
+          <span style={{ fontWeight: 'bold' }}>{roomsCleared}</span>
+        </div>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between'
+        }}>
+          <span>Rooms Skipped</span>
+          <span style={{ fontWeight: 'bold' }}>{roomsSkipped}</span>
+        </div>
+      </div>
       <h3>Final Score: {finalScore}</h3>
-      <p>HP: {hp} + Enemies Defeated: {defeatedEnemies}</p>
-      <p>Rooms Cleared: {roomsCleared} | Rooms Skipped: {roomsSkipped}</p>
       <NewGameButton onClick={onNewGame} style={{ marginTop: '20px' }} />
     </div>
   );

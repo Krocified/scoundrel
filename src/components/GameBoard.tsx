@@ -14,6 +14,7 @@ import { Footer } from './Footer';
 import { PickedCardPlaceholder } from './PickedCardPlaceholder';
 import { ColorModeToggle } from './ColorModeToggle';
 import { NewGameButton } from './NewGameButton';
+import { Title } from './Title';
 
 export function GameBoard() {
   const [game, setGame] = useState(() => initializeGame());
@@ -164,8 +165,8 @@ export function GameBoard() {
         {/* Header with Title and Buttons */}
         <div className="header-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <div className="header-title-row" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-            <h1 className="header-title-desktop" style={{ margin: 0 }}>🃏 SCOUNDREL</h1>
-            <h1 className="header-title-mobile" style={{ margin: 0, display: 'none' }}>🃏 SCOUNDREL</h1>
+            <Title className="header-title-desktop" />
+            <Title className="header-title-mobile" style={{ display: 'none' }} />
             <div className="color-toggle-mobile" style={{ display: 'none' }}>
               <ColorModeToggle compact={true} />
             </div>
@@ -212,7 +213,7 @@ export function GameBoard() {
             gameStatus={game.gameStatus as 'won' | 'lost'}
             finalScore={calculateFinalScore(game)}
             hp={stats.hp}
-            defeatedEnemies={stats.defeatedEnemies}
+            defeatedEnemiesValue={stats.defeatedEnemiesValue}
             roomsCleared={stats.roomsCleared}
             roomsSkipped={stats.roomsSkipped}
             onNewGame={handleNewGame}

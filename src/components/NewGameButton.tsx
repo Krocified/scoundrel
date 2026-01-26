@@ -11,8 +11,8 @@ export function NewGameButton({ onClick, style }: Readonly<NewGameButtonProps>) 
       onClick={onClick}
       style={{
         padding: '10px 20px',
-        background: '#607d8b',
-        color: 'white',
+        background: '#f5f5f5',
+        color: '#333',
         border: 'none',
         borderRadius: '4px',
         cursor: 'pointer',

@@ -197,6 +197,7 @@ export function getGameStats(gameState: GameState) {
     cardsInRoom: gameState.currentRoom.length,
     cardsPickedThisRoom: gameState.cardsPickedThisRoom,
     defeatedEnemies: gameState.defeatedEnemies.length,
+    defeatedEnemiesValue: gameState.defeatedEnemies.reduce((sum, rank) => sum + rank, 0),
     currentScore: calculateFinalScore(gameState),
     gameStatus: gameState.gameStatus,
   };

@@ -50,7 +50,7 @@ export function PlayerStats({
       <div>
         <strong>Score:</strong> {currentScore}
         <br />
-        <small>HP({hp}) + Enemies({defeatedEnemies})</small>
+        <small>Enemies defeated: {defeatedEnemies}</small>
       </div>
       
       <div>
