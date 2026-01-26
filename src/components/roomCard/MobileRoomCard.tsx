@@ -100,7 +100,7 @@ export function MobileRoomCard({ card, index, isGamePlaying, onPickCard }: Reado
                 </span>
               ) : (
                 <img 
-                  src={getSuitImagePath(card.suit)} 
+                  src={getSuitImagePath(card.suit, deckConfig)} 
                   alt={card.suit}
                   style={{ width: '20px', height: '20px', objectFit: 'contain' }}
                 />

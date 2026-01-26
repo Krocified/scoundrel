@@ -106,7 +106,7 @@ export function WeaponDisplay({ weapon, weaponDurability }: Readonly<WeaponDispl
                 </span>
               ) : (
                 <img 
-                  src={getSuitImagePath(weapon.suit)} 
+                  src={getSuitImagePath(weapon.suit, deckConfig)} 
                   alt={weapon.suit}
                   style={{ width: '48px', height: '48px', objectFit: 'contain' }}
                 />

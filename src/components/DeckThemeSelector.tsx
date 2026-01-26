@@ -28,7 +28,7 @@ export function DeckThemeSelector() {
           }}
         >
           <option value="classic">Classic</option>
-          {/* Future themes will be added here */}
+          <option value="esoteric">Esoteric</option>
         </select>
       </div>
       <p style={{

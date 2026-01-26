@@ -1,7 +1,7 @@
 // Card utility functions for classification and value extraction
 
 import type { Card, CardType, Suit } from '../types/game';
-import { getCurrentDeckConfig } from '../config/deckCustomization';
+import type { DeckCustomization } from '../types/deckCustomization';
 
 /**
  * Get the type of a card based on its suit
@@ -69,16 +69,15 @@ export function getSuitSymbol(suit: Card['suit']): string {
 /**
  * Get the image path for a suit symbol
  */
-export function getSuitImagePath(suit: Card['suit']): string {
-  const config = getCurrentDeckConfig();
-  return config.suitImages[suit];
+export function getSuitImagePath(suit: Card['suit'], deckConfig: DeckCustomization): string {
+  return deckConfig.suitImages?.[suit] || '';
 }
 
 /**
  * Get the boss image path for face cards (J, Q, K) of spades and clubs
  * Returns null if the card doesn't have a boss image
  */
-export function getBossImagePath(card: Card): string | null {
+export function getBossImagePath(card: Card, deckConfig: DeckCustomization): string | null {
   // Only spades and clubs have boss images, and only for face cards (J, Q, K)
   if (card.suit !== 'spades' && card.suit !== 'clubs') {
     return null;
@@ -88,7 +87,6 @@ export function getBossImagePath(card: Card): string | null {
     return null;
   }
   
-  const config = getCurrentDeckConfig();
   let rankName: 'jack' | 'queen' | 'king';
 
   if (card.rank === 11) {
@@ -100,7 +98,7 @@ export function getBossImagePath(card: Card): string | null {
   }
 
   const bossKey = `${rankName}_of_${card.suit}`;
-  return config.bossImages[bossKey] || null;
+  return deckConfig.bossImages[bossKey] || null;
 }
 
 /**

@@ -25,7 +25,7 @@ export function PCRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<
   const cardType = getCardType(card);
   const { settings } = useDeckCustomization();
   const deckConfig = getDeckConfig(settings.deckTheme);
-  const bossImagePath = getBossImagePath(card);
+  const bossImagePath = getBossImagePath(card, deckConfig);
   const isFaceCard = card.rank > 10;
 
   return (
@@ -65,7 +65,7 @@ export function PCRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<
               </span>
             ) : (
               <img 
-                src={getSuitImagePath(card.suit)} 
+                src={getSuitImagePath(card.suit, deckConfig)} 
                 alt={card.suit}
                 style={{ width: '20px', height: '20px', objectFit: 'contain' }}
               />
@@ -133,7 +133,7 @@ export function PCRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<
                 </span>
               ) : (
                 <img 
-                  src={getSuitImagePath(card.suit)} 
+                  src={getSuitImagePath(card.suit, deckConfig)} 
                   alt={card.suit}
                   style={{ width: '20px', height: '20px', objectFit: 'contain' }}
                 />
