@@ -6,33 +6,53 @@ import { initializeFirstRoom, prepareNextRoom, skipRoom } from './roomManager';
 import { pickCard, isRoomComplete, getLeftoverCard } from './cardActions';
 
 /**
- * Initialize a new game
+ * Initialize a new game with optional power-ups
  */
-export function initializeGame(): GameState {
-  // Create and shuffle deck
-  const deck = shuffleDeck(createDeck());
-  
+export function initializeGame(powerUps: string[] = []): GameState {
+  let deck = shuffleDeck(createDeck());
+
+  // Build initial player state, applying power-ups
+  let maxHp = 20;
+  let hp = 20;
+  let equippedWeapon = null;
+  let weaponMaxEnemy = null;
+
+  if (powerUps.includes('vitality')) {
+    maxHp = 25;
+    hp = 25;
+  }
+
+  if (powerUps.includes('weapon-cache')) {
+    // Find the first diamond card in deck and equip it
+    const weaponIdx = deck.findIndex(c => c.suit === 'diamonds');
+    if (weaponIdx !== -1) {
+      equippedWeapon = deck[weaponIdx];
+      weaponMaxEnemy = null;
+      deck = [...deck.slice(0, weaponIdx), ...deck.slice(weaponIdx + 1)];
+    }
+  }
+
   // Initialize first room
   const { room, remainingDeck } = initializeFirstRoom(deck);
-  
-  // Create initial game state
+
   const gameState: GameState = {
     deck: remainingDeck,
     currentRoom: room,
     leftoverCard: null,
     player: {
-      hp: 20,
-      maxHp: 20,
-      equippedWeapon: null,
-      weaponMaxEnemy: null,
+      hp,
+      maxHp,
+      equippedWeapon,
+      weaponMaxEnemy,
     },
     cardsPickedThisRoom: 0,
     gameStatus: 'playing',
     roomsCleared: 0,
     roomsSkipped: 0,
     defeatedEnemies: [],
+    activePowerUps: powerUps,
   };
-  
+
   return gameState;
 }
 
@@ -161,12 +181,22 @@ export function advanceToNextRoom(gameState: GameState): GameState {
   
   // Prepare next room
   const { room, remainingDeck } = prepareNextRoom(gameState.deck, leftover);
-  
+
+  // Apply regeneration power-up: heal 1 HP after each room cleared
+  let player = gameState.player;
+  if (gameState.activePowerUps.includes('regeneration')) {
+    player = {
+      ...player,
+      hp: Math.min(player.maxHp, player.hp + 1),
+    };
+  }
+
   return {
     ...gameState,
     deck: remainingDeck,
     currentRoom: room,
     leftoverCard: leftover,
+    player,
     cardsPickedThisRoom: 0,
     roomsCleared: gameState.roomsCleared + 1,
   };
