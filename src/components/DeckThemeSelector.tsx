@@ -7,35 +7,45 @@ export function DeckThemeSelector() {
 
   return (
     <div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        <label htmlFor="deck-theme-select" style={{ fontWeight: 'bold', fontSize: '14px' }}>
-          Deck Theme
-        </label>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <select
           id="deck-theme-select"
           value={settings.deckTheme}
           onChange={(e) => setDeckTheme(e.target.value)}
           style={{
-            padding: '8px 12px',
-            background: '#f5f5f5',
-            color: '#333',
-            border: '2px solid #ddd',
-            borderRadius: '4px',
+            padding: '10px 14px',
+            background: 'var(--bg-input)',
+            color: 'var(--text-primary)',
+            border: '1px solid var(--accent-border)',
+            borderRadius: '6px',
             fontFamily: 'inherit',
             fontSize: '14px',
             cursor: 'pointer',
-            outline: 'none'
+            outline: 'none',
+            transition: 'all 0.2s ease',
+          }}
+          onFocus={e => {
+            e.currentTarget.style.borderColor = 'var(--accent)';
+            e.currentTarget.style.background = 'var(--bg-hover)';
+          }}
+          onBlur={e => {
+            e.currentTarget.style.borderColor = 'var(--accent-border)';
+            e.currentTarget.style.background = 'var(--bg-input)';
           }}
         >
-          <option value="classic">Classic</option>
-          <option value="esoteric">Esoteric</option>
+          <option value="classic" style={{ background: 'var(--bg-panel-solid)', color: 'var(--text-primary)' }}>
+            Classic
+          </option>
+          <option value="esoteric" style={{ background: 'var(--bg-panel-solid)', color: 'var(--text-primary)' }}>
+            Esoteric
+          </option>
         </select>
       </div>
       <p style={{
-        margin: '8px 0 0 0',
-        fontSize: '11px',
-        color: '#666',
-        lineHeight: '1.4'
+        margin: '10px 0 0 0',
+        fontSize: '12px',
+        color: 'var(--text-muted)',
+        lineHeight: '1.5'
       }}>
         Changes card visuals, fonts, and artwork.
       </p>

@@ -13,6 +13,7 @@ import {
 } from '../../game/cardUtils';
 import { getDeckConfig } from '../../config/deckCustomization';
 import { useDeckCustomization } from '../../contexts/DeckCustomizationContext';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface PCRoomCardProps {
   card: Card;
@@ -24,9 +25,21 @@ interface PCRoomCardProps {
 export function PCRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<PCRoomCardProps>) {
   const cardType = getCardType(card);
   const { settings } = useDeckCustomization();
+  const { isDark } = useTheme();
   const deckConfig = getDeckConfig(settings.deckTheme);
   const bossImagePath = getBossImagePath(card, deckConfig);
   const isFaceCard = card.rank > 10;
+
+  const accentColor = settings.useDistinctColors
+    ? getSuitDisplayColorDistinct(card.suit)
+    : getSuitDisplayColorTraditional(card.suit, isDark);
+
+  const labelText = (() => {
+    if (cardType === 'health') return 'HEAL';
+    if (cardType === 'weapon') return 'WEAPON';
+    if (cardType === 'joker') return 'JOKER';
+    return 'ENEMY';
+  })();
 
   return (
     <BaseRoomCard card={card} index={index} isGamePlaying={isGamePlaying} onPickCard={onPickCard}>
@@ -48,7 +61,8 @@ export function PCRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<
             lineHeight: 1,
             minWidth: '1.2em',
             textAlign: 'center',
-            display: 'inline-block'
+            display: 'inline-block',
+            color: accentColor,
           }}>
             {getCardRankDisplay(card)}
           </div>
@@ -56,9 +70,7 @@ export function PCRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<
             {deckConfig.useTextSuits ? (
               <span style={{ 
                 fontSize: `${deckConfig.cardFontSize + 10}px`, 
-                color: settings.useDistinctColors
-                  ? getSuitDisplayColorDistinct(card.suit)
-                  : getSuitDisplayColorTraditional(card.suit),
+                color: accentColor,
                 lineHeight: 1
               }}>
                 {getSuitSymbol(card.suit)}
@@ -116,7 +128,8 @@ export function PCRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<
               lineHeight: 1,
               minWidth: '1.2em',
               textAlign: 'center',
-              display: 'inline-block'
+              display: 'inline-block',
+              color: accentColor,
             }}>
               {getCardRankDisplay(card)}
             </div>
@@ -124,9 +137,7 @@ export function PCRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<
               {deckConfig.useTextSuits ? (
                 <span style={{ 
                   fontSize: `${deckConfig.cardFontSize + 10}px`, 
-                  color: settings.useDistinctColors
-                    ? getSuitDisplayColorDistinct(card.suit)
-                    : getSuitDisplayColorTraditional(card.suit),
+                  color: accentColor,
                   lineHeight: 1
                 }}>
                   {getSuitSymbol(card.suit)}
@@ -146,14 +157,13 @@ export function PCRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<
         <div className="room-card-type" style={{ 
           fontSize: '12px', 
           marginTop: (isFaceCard && bossImagePath) ? '5px' : '10px', 
-          color: '#666',
+          color: accentColor,
+          opacity: 0.85,
+          fontWeight: 'bold',
+          letterSpacing: '1px',
           bottom: '8px'
         }}>
-          {(() => {
-            if (cardType === 'health') return 'HEAL';
-            if (cardType === 'weapon') return 'WEAPON';
-            return 'ENEMY';
-          })()}
+          {labelText}
         </div>
       </div>
     </BaseRoomCard>

@@ -1,10 +1,14 @@
 // Game log component
 
+import { useTheme } from '../contexts/ThemeContext';
+
 interface GameLogProps {
   log: string[];
 }
 
 export function GameLog({ log }: Readonly<GameLogProps>) {
+  const { isDark } = useTheme();
+
   return (
     <>
       <style>{`
@@ -20,20 +24,21 @@ export function GameLog({ log }: Readonly<GameLogProps>) {
           }
         }
       `}</style>
-      <div>
-        <h3 className="game-log-title" style={{ margin: '0 0 10px 0' }}>Game Log</h3>
+      <div style={{ height: '100%' }}>
         <div
           id="game-log"
           className="game-log-container"
           style={{
-            background: '#000',
-            color: '#0f0',
+            background: isDark ? '#000' : '#f8f8f8',
+            color: isDark ? '#0f0' : '#2a2a3a',
             padding: '15px',
             borderRadius: '8px',
-            height: '250px',
+            height: '100%',
             overflowY: 'auto',
             fontFamily: 'monospace',
-            fontSize: '14px'
+            fontSize: '14px',
+            border: '1px solid var(--border)',
+            boxSizing: 'border-box',
           }}
         >
         {log.map((entry, i) => (

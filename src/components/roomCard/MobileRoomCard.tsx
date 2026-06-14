@@ -12,6 +12,7 @@ import {
 } from '../../game/cardUtils';
 import { getDeckConfig } from '../../config/deckCustomization';
 import { useDeckCustomization } from '../../contexts/DeckCustomizationContext';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface MobileRoomCardProps {
   card: Card;
@@ -23,7 +24,19 @@ interface MobileRoomCardProps {
 export function MobileRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<MobileRoomCardProps>) {
   const cardType = getCardType(card);
   const { settings } = useDeckCustomization();
+  const { isDark } = useTheme();
   const deckConfig = getDeckConfig(settings.deckTheme);
+
+  const accentColor = settings.useDistinctColors
+    ? getSuitDisplayColorDistinct(card.suit)
+    : getSuitDisplayColorTraditional(card.suit, isDark);
+
+  const labelText = (() => {
+    if (cardType === 'health') return 'HEAL';
+    if (cardType === 'weapon') return 'WEAPON';
+    if (cardType === 'joker') return 'JOKER';
+    return 'ENEMY';
+  })();
 
   return (
     <>
@@ -83,7 +96,8 @@ export function MobileRoomCard({ card, index, isGamePlaying, onPickCard }: Reado
               lineHeight: 1,
               minWidth: '1.2em',
               textAlign: 'center',
-              display: 'inline-block'
+              display: 'inline-block',
+              color: accentColor,
             }}>
               {getCardRankDisplay(card)}
             </div>
@@ -91,9 +105,7 @@ export function MobileRoomCard({ card, index, isGamePlaying, onPickCard }: Reado
               {deckConfig.useTextSuits ? (
                 <span style={{ 
                   fontSize: `${deckConfig.cardFontSize + 10}px`, 
-                  color: settings.useDistinctColors
-                    ? getSuitDisplayColorDistinct(card.suit)
-                    : getSuitDisplayColorTraditional(card.suit),
+                  color: accentColor,
                   lineHeight: 1
                 }}>
                   {getSuitSymbol(card.suit)}
@@ -112,13 +124,12 @@ export function MobileRoomCard({ card, index, isGamePlaying, onPickCard }: Reado
           <div className="room-card-type" style={{ 
             fontSize: '12px', 
             marginTop: '10px', 
-            color: '#666'
+            color: accentColor,
+            opacity: 0.85,
+            fontWeight: 'bold',
+            letterSpacing: '1px',
           }}>
-            {(() => {
-              if (cardType === 'health') return 'HEAL';
-              if (cardType === 'weapon') return 'WEAPON';
-              return 'ENEMY';
-            })()}
+            {labelText}
           </div>
         </div>
       </BaseRoomCard>

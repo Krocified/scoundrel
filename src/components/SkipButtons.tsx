@@ -38,24 +38,28 @@ export function SkipButtons({ canSkip, cardsPickedThisRoom, onSkip }: Readonly<S
       <div className="skip-buttons-label" style={{ 
         fontSize: '12px', 
         fontWeight: 'bold', 
-        color: '#666',
+        color: 'var(--text-muted)',
         marginBottom: '5px',
-        textAlign: 'center'
+        textAlign: 'center',
+        textTransform: 'uppercase',
+        letterSpacing: '1px'
       }}>
-        SKIP ROOM
+        Skip Room
       </div>
       <button
         onClick={() => onSkip('left-to-right')}
         disabled={!canSkip}
         style={{
           padding: '12px',
-          background: canSkip ? '#ff9800' : '#ccc',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
+          background: canSkip ? 'var(--accent-dim)' : 'var(--bg-disabled)',
+          color: canSkip ? 'var(--accent)' : 'var(--text-disabled)',
+          border: `2px solid ${canSkip ? 'var(--accent-border)' : 'var(--border)'}`,
+          borderRadius: '6px',
           cursor: canSkip ? 'pointer' : 'not-allowed',
           fontSize: '13px',
-          fontWeight: 'bold'
+          fontWeight: 'bold',
+          fontFamily: 'inherit',
+          transition: 'all 0.2s'
         }}
       >
         ← L to R
@@ -65,20 +69,22 @@ export function SkipButtons({ canSkip, cardsPickedThisRoom, onSkip }: Readonly<S
         disabled={!canSkip}
         style={{
           padding: '12px',
-          background: canSkip ? '#ff9800' : '#ccc',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
+          background: canSkip ? 'var(--accent-dim)' : 'var(--bg-disabled)',
+          color: canSkip ? 'var(--accent)' : 'var(--text-disabled)',
+          border: `2px solid ${canSkip ? 'var(--accent-border)' : 'var(--border)'}`,
+          borderRadius: '6px',
           cursor: canSkip ? 'pointer' : 'not-allowed',
           fontSize: '13px',
-          fontWeight: 'bold'
+          fontWeight: 'bold',
+          fontFamily: 'inherit',
+          transition: 'all 0.2s'
         }}
       >
         R to L →
       </button>
       {!canSkip && cardsPickedThisRoom > 0 && (
         <small className="skip-buttons-message" style={{ 
-          color: '#999', 
+          color: 'var(--text-muted)', 
           fontSize: '10px',
           textAlign: 'center',
           marginTop: '5px'
