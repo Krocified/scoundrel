@@ -21,7 +21,7 @@ export function ColorModeToggle({ compact = false }: Readonly<ColorModeTogglePro
         height: '24px',
         borderRadius: '12px',
         border: 'none',
-        background: settings.useDistinctColors ? '#4caf50' : '#ccc',
+        background: settings.useDistinctColors ? 'var(--accent)' : 'var(--border-strong)',
         cursor: 'pointer',
         transition: 'background 0.2s',
         padding: 0,
@@ -36,9 +36,9 @@ export function ColorModeToggle({ compact = false }: Readonly<ColorModeTogglePro
           width: '20px',
           height: '20px',
           borderRadius: '50%',
-          background: 'white',
+          background: 'var(--bg-panel-solid)',
           transition: 'left 0.2s',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+          boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
         }}
       />
     </button>
@@ -54,9 +54,11 @@ export function ColorModeToggle({ compact = false }: Readonly<ColorModeTogglePro
   }
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px' }}>
-      <span style={{ fontWeight: 'bold' }}>Distinct Colors</span>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', color: 'var(--text-primary)' }}>
       {switchButton}
+      <span style={{ fontWeight: 'bold' }}>
+        {settings.useDistinctColors ? 'Distinct' : 'Traditional'}
+      </span>
     </div>
   );
 }

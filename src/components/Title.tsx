@@ -1,4 +1,6 @@
-// Title component with New Rocker font
+// Title component with Pirata One font
+
+import { useTheme } from '../contexts/ThemeContext';
 
 interface TitleProps {
   className?: string;
@@ -6,24 +8,21 @@ interface TitleProps {
 }
 
 export function Title({ className, style }: Readonly<TitleProps>) {
+  const { isDark } = useTheme();
+
   return (
-    <>
-      <style>{`
-        .new-rocker-regular {
-          font-family: "New Rocker", system-ui;
-          font-weight: 400;
-          font-style: normal;
-        }
-      `}</style>
-      <h1 
-        className={className ? `new-rocker-regular ${className}` : 'new-rocker-regular'}
-        style={{
-          margin: 0,
-          ...style
-        }}
-      >
-        🃏 Scoundrel
-      </h1>
-    </>
+    <h1
+      className={className}
+      style={{
+        margin: 0,
+        fontFamily: '"Pirata One", Georgia, serif',
+        fontWeight: 'normal',
+        color: isDark ? '#f5c842' : '#1a1a2e',
+        letterSpacing: '1px',
+        ...style,
+      }}
+    >
+      🃏 Scoundrel
+    </h1>
   );
 }
