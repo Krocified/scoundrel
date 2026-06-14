@@ -18,14 +18,22 @@ export function equipWeapon(player: PlayerState, weapon: Card): PlayerState {
  * Update weapon durability after defeating an enemy
  * Weapon can now only defeat enemies with rank <= enemyDefeated.rank
  */
-export function markWeaponUsed(player: PlayerState, enemyDefeated: Card): PlayerState {
+export function markWeaponUsed(
+  player: PlayerState,
+  enemyDefeated: Card,
+  activePowerUps: string[] = [],
+): PlayerState {
   if (!player.equippedWeapon) {
     throw new Error('Cannot mark weapon used: no weapon equipped');
   }
 
+  const limit = activePowerUps.includes('reinforced')
+    ? enemyDefeated.rank + 2
+    : enemyDefeated.rank;
+
   return {
     ...player,
-    weaponMaxEnemy: enemyDefeated.rank, // Weapon can now only defeat enemies <= this rank
+    weaponMaxEnemy: limit,
   };
 }
 

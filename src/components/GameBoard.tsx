@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { initializeGame, processCardPick, processRoomSkip, getGameStats, calculateFinalScore } from '../game/gameController';
+import { loadPowerUps } from '../game/powerUpStorage';
 import { PlayerStats } from './PlayerStats';
 import { GameOverScreen } from './GameOverScreen';
+import { PowerUpSelection } from './PowerUpSelection';
 import { DeckDisplay } from './DeckDisplay';
 import { RoomCard } from './RoomCard';
 import { SkipButtons } from './SkipButtons';
@@ -16,8 +18,10 @@ import { Title } from './Title';
 import { HamburgerMenu } from './HamburgerMenu';
 
 export function GameBoard() {
-  const [game, setGame] = useState(() => initializeGame());
+  const [storedPowerUps, setStoredPowerUps] = useState(() => loadPowerUps().unlockedPowerUps);
+  const [game, setGame] = useState(() => initializeGame(storedPowerUps));
   const [log, setLog] = useState<string[]>(['Game started! Pick 3 cards from the room.']);
+  const [showPowerUpSelection, setShowPowerUpSelection] = useState(false);
 
   const stats = getGameStats(game);
 
@@ -46,8 +50,19 @@ export function GameBoard() {
   };
 
   const handleNewGame = () => {
-    setGame(initializeGame());
+    const currentPowerUps = loadPowerUps().unlockedPowerUps;
+    setStoredPowerUps(currentPowerUps);
+    setGame(initializeGame(currentPowerUps));
     setLog(['New game started! Pick 3 cards from the room.']);
+    setShowPowerUpSelection(false);
+  };
+
+  const handleClaimReward = () => {
+    setShowPowerUpSelection(true);
+  };
+
+  const handlePowerUpSelect = (_selectedId: string) => {
+    handleNewGame();
   };
 
   // Auto-scroll log to bottom
@@ -173,6 +188,7 @@ export function GameBoard() {
           roomsCleared={stats.roomsCleared}
           roomsSkipped={stats.roomsSkipped}
           cardsInDeck={stats.cardsInDeck}
+          activePowerUps={game.activePowerUps}
         />
 
         {isGameOver && (
@@ -184,6 +200,13 @@ export function GameBoard() {
             roomsCleared={stats.roomsCleared}
             roomsSkipped={stats.roomsSkipped}
             onNewGame={handleNewGame}
+            onClaimReward={game.gameStatus === 'won' ? handleClaimReward : undefined}
+          />
+        )}
+        {game.gameStatus === 'won' && showPowerUpSelection && (
+          <PowerUpSelection
+            ownedPowerUps={storedPowerUps}
+            onSelect={handlePowerUpSelect}
           />
         )}
 
@@ -221,6 +244,7 @@ export function GameBoard() {
                         index={slotIndex}
                         isGamePlaying={game.gameStatus === 'playing'}
                         onPickCard={handlePickCard}
+                        activePowerUps={game.activePowerUps}
                       />
                     );
                   } else {

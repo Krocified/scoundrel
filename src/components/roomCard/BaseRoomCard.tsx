@@ -13,10 +13,11 @@ interface BaseRoomCardProps {
   index: number;
   isGamePlaying: boolean;
   onPickCard: (index: number) => void;
+  activePowerUps?: string[];
   children: React.ReactNode;
 }
 
-export function BaseRoomCard({ card, index, isGamePlaying, onPickCard, children }: Readonly<BaseRoomCardProps>) {
+export function BaseRoomCard({ card, index, isGamePlaying, onPickCard, activePowerUps = [], children }: Readonly<BaseRoomCardProps>) {
   const cardType = getCardType(card);
   const { settings } = useDeckCustomization();
   
@@ -45,6 +46,9 @@ export function BaseRoomCard({ card, index, isGamePlaying, onPickCard, children 
     }
   };
 
+  const showArmor = activePowerUps.includes('armor') && cardType === 'enemy';
+  const showReinforced = activePowerUps.includes('reinforced') && cardType === 'weapon';
+
   return (
     <div
       className={`room-card ${isGamePlaying ? 'card-hover-enabled' : ''}`}
@@ -68,6 +72,48 @@ export function BaseRoomCard({ card, index, isGamePlaying, onPickCard, children 
         position: 'relative',
       }}
     >
+      {showArmor && (
+        <div style={{
+          position: 'absolute',
+          top: '-8px',
+          right: '-8px',
+          background: '#e91e63',
+          color: 'white',
+          borderRadius: '50%',
+          width: '26px',
+          height: '26px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '14px',
+          fontWeight: 'bold',
+          zIndex: 2,
+          boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+        }} title="Armor: damage reduced by 1">
+          🛡
+        </div>
+      )}
+      {showReinforced && (
+        <div style={{
+          position: 'absolute',
+          bottom: '-8px',
+          right: '-8px',
+          background: '#2196f3',
+          color: 'white',
+          borderRadius: '50%',
+          width: '26px',
+          height: '26px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '12px',
+          fontWeight: 'bold',
+          zIndex: 2,
+          boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+        }} title="Reinforced: durability +2">
+          +2
+        </div>
+      )}
       {children}
     </div>
   );

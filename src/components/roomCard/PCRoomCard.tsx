@@ -19,9 +19,10 @@ interface PCRoomCardProps {
   index: number;
   isGamePlaying: boolean;
   onPickCard: (index: number) => void;
+  activePowerUps?: string[];
 }
 
-export function PCRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<PCRoomCardProps>) {
+export function PCRoomCard({ card, index, isGamePlaying, onPickCard, activePowerUps }: Readonly<PCRoomCardProps>) {
   const cardType = getCardType(card);
   const { settings } = useDeckCustomization();
   const deckConfig = getDeckConfig(settings.deckTheme);
@@ -29,7 +30,7 @@ export function PCRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<
   const isFaceCard = card.rank > 10;
 
   return (
-    <BaseRoomCard card={card} index={index} isGamePlaying={isGamePlaying} onPickCard={onPickCard}>
+    <BaseRoomCard card={card} index={index} isGamePlaying={isGamePlaying} onPickCard={onPickCard} activePowerUps={activePowerUps}>
       {/* Top-left corner for face cards */}
       {isFaceCard && (
         <div style={{ 

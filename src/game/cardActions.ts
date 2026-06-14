@@ -56,12 +56,12 @@ export function pickCard(
     }
 
     case 'enemy': {
-      const damageResult = calculateDamage(card, newPlayer);
+      const damageResult = calculateDamage(card, newPlayer, gameState.activePowerUps);
       newPlayer = applyDamage(newPlayer, damageResult.damage);
-      
+
       // Update weapon durability if weapon was used
       if (damageResult.weaponUsed && newPlayer.equippedWeapon) {
-        newPlayer = markWeaponUsed(newPlayer, card);
+        newPlayer = markWeaponUsed(newPlayer, card, gameState.activePowerUps);
       }
 
       // Track defeated enemy for scoring

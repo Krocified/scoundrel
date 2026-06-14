@@ -20,6 +20,7 @@ function createTestGameState(roomCards: Card[]): GameState {
     roomsCleared: 0,
     roomsSkipped: 0,
     defeatedEnemies: [],
+    activePowerUps: [],
   };
 }
 

@@ -29,4 +29,5 @@ export interface GameState {
   roomsCleared: number;
   roomsSkipped: number;
   defeatedEnemies: number[]; // ranks of all defeated enemies for scoring
+  activePowerUps: string[]; // power-up IDs affecting this run
 }
