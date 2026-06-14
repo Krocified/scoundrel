@@ -70,7 +70,31 @@ Scoundrel is a single-player dungeon crawler card game built as a web applicatio
 | Consistent power-up UI styling | P1 | Power selection and claim reward button use the same fonts and styling as the rest of the app |
 | Stacking runs | P2 | Multiple victories stack additional power-ups across sessions |
 
-### 4.5 Developer Tools
+### 4.5 Run Modifier System
+
+| Feature | Priority | Description |
+|---------|----------|-------------|
+| Pre-game modifier selection | P1 | Select 0-3 run modifiers before starting a run |
+| Juggernaut modifier | P1 | -2 damage taken (min 1), potions heal 50% |
+| Mutation modifier | P1 | +2 HP per room cleared, -8 Maximum HP |
+| Vampiric modifier | P1 | +1 HP per kill, hearts become monsters |
+| Modifier stacking | P1 | Multiple modifiers stack, each adds 1 Joker to dungeon deck |
+| Modifier display | P1 | Active modifiers shown as badges on scoreboard |
+
+### 4.6 Joker System
+
+| Feature | Priority | Description |
+|---------|----------|-------------|
+| Joker cards shuffled into deck | P1 | 1 random joker per selected modifier |
+| Joker activation on reveal | P1 | Joker effect fires immediately when room is formed |
+| Joker rooms cannot be skipped | P1 | Rooms containing jokers block the skip mechanic |
+| Champion joker | P1 | Solo boss encounter vs strongest remaining monster; defeat auto-clears room |
+| Predator joker | P1 | Room flooded with 4 copies of strongest monster; 2 max-rank weapons shuffled in |
+| Forge World joker | P1 | All weapons destroyed from deck and player; barehand damage halved |
+| Joker card visual | P1 | Purple-themed card with distinct joker styling |
+| Random joker assignment | P1 | Joker type randomly selected per run |
+
+### 4.7 Developer Tools
 
 | Feature | Priority | Description |
 |---------|----------|-------------|
@@ -149,7 +173,27 @@ I want my earned power-ups to persist between sessions
 So that I feel my progress is permanent
 ```
 
-### 6.4 Customization
+### 6.4 Run Modifiers & Jokers
+
+```
+As a post-completion player
+I want to select Run Modifiers before a new run
+So that I can change the game's difficulty and playstyle
+
+As a post-completion player
+I want modifiers to have strong benefits with real downsides
+So that runs feel meaningfully different, not just easier
+
+As a post-completion player
+I want each modifier to add a Joker into the dungeon
+So that I am punished for taking too much power
+
+As a post-completion player
+I want Jokers to dramatically alter the room or deck when found
+So that even a powerful run stays unpredictable
+```
+
+### 6.5 Customization
 
 ```
 As a returning player

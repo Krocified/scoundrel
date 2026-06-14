@@ -1,11 +1,13 @@
 // Main game board component
 
 import { useState, useEffect } from 'react';
+import type { RunModifierId, GameState } from '../types/game';
 import { initializeGame, processCardPick, processRoomSkip, getGameStats, calculateFinalScore } from '../game/gameController';
 import { loadPowerUps } from '../game/powerUpStorage';
 import { PlayerStats } from './PlayerStats';
 import { GameOverScreen } from './GameOverScreen';
 import { PowerUpSelection } from './PowerUpSelection';
+import { RunModifierSelection } from './RunModifierSelection';
 import { DeckDisplay } from './DeckDisplay';
 import { RoomCard } from './RoomCard';
 import { SkipButtons } from './SkipButtons';
@@ -16,17 +18,37 @@ import { PickedCardPlaceholder } from './PickedCardPlaceholder';
 import { NewGameButton } from './NewGameButton';
 import { Title } from './Title';
 import { HamburgerMenu } from './HamburgerMenu';
-
 export function GameBoard() {
+  const enableRunModifier = new URLSearchParams(window.location.search).get('runModifier') === '1';
+
   const [storedPowerUps, setStoredPowerUps] = useState(() => loadPowerUps().unlockedPowerUps);
-  const [game, setGame] = useState(() => initializeGame(storedPowerUps));
-  const [log, setLog] = useState<string[]>(['Game started! Pick 3 cards from the room.']);
+  const [showModifierSelection, setShowModifierSelection] = useState(enableRunModifier);
+  const [runModifiers, setRunModifiers] = useState<RunModifierId[]>([]);
+  const [game, setGame] = useState<GameState | null>(() => {
+    if (enableRunModifier) return null;
+    return initializeGame(loadPowerUps().unlockedPowerUps, []).gameState;
+  });
+  const [log, setLog] = useState<string[]>(() => {
+    if (enableRunModifier) return ['Game started! Pick 3 cards from the room.'];
+    const { jokerLogs } = initializeGame(loadPowerUps().unlockedPowerUps, []);
+    return ['Game started! Pick 3 cards from the room.', ...jokerLogs];
+  });
   const [showPowerUpSelection, setShowPowerUpSelection] = useState(false);
 
-  const stats = getGameStats(game);
+  const startGame = (modifiers: RunModifierId[]) => {
+    const currentPowerUps = loadPowerUps().unlockedPowerUps;
+    setStoredPowerUps(currentPowerUps);
+    setRunModifiers(modifiers);
+    const { gameState, jokerLogs } = initializeGame(currentPowerUps, modifiers);
+    setGame(gameState);
+    const initialLogs = ['Game started! Pick 3 cards from the room.', ...jokerLogs];
+    setLog(initialLogs);
+    setShowModifierSelection(false);
+    setShowPowerUpSelection(false);
+  };
 
   const handlePickCard = (index: number) => {
-    if (game.gameStatus !== 'playing') return;
+    if (!game || game.gameStatus !== 'playing') return;
     
     try {
       const result = processCardPick(game, index);
@@ -38,7 +60,7 @@ export function GameBoard() {
   };
 
   const handleSkip = (direction: 'left-to-right' | 'right-to-left') => {
-    if (game.gameStatus !== 'playing') return;
+    if (!game || game.gameStatus !== 'playing') return;
     
     try {
       const result = processRoomSkip(game, direction);
@@ -50,26 +72,64 @@ export function GameBoard() {
   };
 
   const handleNewGame = () => {
-    const currentPowerUps = loadPowerUps().unlockedPowerUps;
-    setStoredPowerUps(currentPowerUps);
-    setGame(initializeGame(currentPowerUps));
-    setLog(['New game started! Pick 3 cards from the room.']);
-    setShowPowerUpSelection(false);
+    if (enableRunModifier) {
+      setShowModifierSelection(true);
+      setGame(null);
+      setLog(['Game started!']);
+      setShowPowerUpSelection(false);
+    } else {
+      startGame([]);
+    }
   };
 
   const handleClaimReward = () => {
-    setShowPowerUpSelection(true);
+    if (game) setShowPowerUpSelection(true);
   };
 
   const handlePowerUpSelect = (_selectedId: string) => {
-    handleNewGame();
+    startGame(runModifiers);
   };
 
-  // Auto-scroll log to bottom
+  // Auto-scroll log to bottom (must be before early return for hooks consistency)
   useEffect(() => {
     const logEl = document.getElementById('game-log');
     if (logEl) logEl.scrollTop = logEl.scrollHeight;
   }, [log]);
+
+  if (showModifierSelection) {
+    return (
+      <>
+        <div style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '16px',
+          maxWidth: '1400px',
+          margin: '0 auto',
+          width: '100%',
+          fontFamily: 'monospace',
+          background: 'var(--bg-page)',
+          color: 'var(--text-secondary)',
+          overflow: 'auto'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
+            <Title />
+          </div>
+          <RunModifierSelection
+            onStart={startGame}
+            onSkip={() => startGame([])}
+          />
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
+  if (!game) return null;
+
+  const stats = getGameStats(game);
 
   const isGameOver = game.gameStatus !== 'playing';
   const canSkip = game.cardsPickedThisRoom === 0 && game.currentRoom.length === 4;
@@ -77,10 +137,6 @@ export function GameBoard() {
   return (
     <>
       <style>{`
-        .card-hover-enabled:hover {
-          transform: translateY(-5px);
-        }
-        
         .deck-count-mobile {
           display: none;
         }
@@ -161,15 +217,23 @@ export function GameBoard() {
             font-size: 16px !important;
             text-align: center !important;
           }
-          
-          .footer-spacer {
-            margin-top: 100px !important;
-          }
         }
       `}</style>
-      <div className="game-board-container" style={{ padding: '20px', maxWidth: '1400px', margin: '0 auto', fontFamily: 'monospace' }}>
+      <div className="game-board-container" style={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        padding: '20px 20px 8px 20px',
+        maxWidth: '1400px',
+        margin: '0 auto',
+        width: '100%',
+        fontFamily: 'monospace',
+        background: 'var(--bg-page)',
+        color: 'var(--text-secondary)',
+        overflow: 'auto'
+      }}>
         {/* Header with Title and Buttons */}
-        <div className="header-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <div className="header-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
           <div className="header-title-row" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
             <HamburgerMenu />
             <Title className="header-title-desktop" />
@@ -189,6 +253,7 @@ export function GameBoard() {
           roomsSkipped={stats.roomsSkipped}
           cardsInDeck={stats.cardsInDeck}
           activePowerUps={game.activePowerUps}
+          runModifiers={game.runModifiers}
         />
 
         {isGameOver && (
@@ -212,8 +277,8 @@ export function GameBoard() {
 
         {!isGameOver && (
           <>
-            <div style={{ marginBottom: '15px' }}>
-              <h2 className="current-room-title" style={{ marginBottom: '10px', marginTop: 0 }}>Current Room ({game.cardsPickedThisRoom}/3 picked)</h2>
+            <div style={{ marginBottom: '18px' }}>
+              <h2 className="current-room-title" style={{ marginBottom: '12px', marginTop: 0, color: 'var(--text-primary)', fontSize: '16px' }}>Current Room ({game.cardsPickedThisRoom}/3 picked)</h2>
               
               {/* Mobile-only deck count text */}
               <div className="deck-count-mobile">
@@ -222,11 +287,13 @@ export function GameBoard() {
               
               <div className="room-grid-desktop" style={{ 
                 display: 'grid', 
-                gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 150px', 
-                columnGap: '15px',
-                height: '280px'
+                gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 140px', 
+                columnGap: '14px',
+                height: '280px',
+                marginBottom: '16px',
+                alignItems: 'center'
               }}>
-                <div className="deck-display-desktop" style={{ marginRight: '15px' }}>
+                <div className="deck-display-desktop" style={{ marginRight: '10px', alignSelf: 'stretch', height: '100%' }}>
                   <DeckDisplay cardsInDeck={stats.cardsInDeck} />
                 </div>
 
@@ -251,7 +318,7 @@ export function GameBoard() {
                   }
                 })}
 
-                <div className="skip-buttons-desktop" style={{ marginLeft: '15px' }}>
+                <div className="skip-buttons-desktop" style={{ marginLeft: '10px', alignSelf: 'stretch', height: '100%' }}>
                   <SkipButtons
                     canSkip={canSkip}
                     cardsPickedThisRoom={game.cardsPickedThisRoom}
@@ -272,26 +339,33 @@ export function GameBoard() {
 
             <div className="weapon-log-grid" style={{ 
               display: 'grid', 
-              gridTemplateColumns: '300px 1fr',
+              gridTemplateColumns: '220px 1fr',
               gap: '20px',
-              marginBottom: '20px',
-              marginTop: '65px',
-              maxHeight: '250px'
+              marginBottom: '4px',
+              marginTop: '48px'
             }}>
-              <WeaponDisplay
-                weapon={stats.weapon}
-                weaponDurability={stats.weaponDurability}
-              />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <h3 style={{ margin: 0, fontSize: '14px', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Weapon</h3>
+                <div style={{ height: '160px' }}>
+                  <WeaponDisplay
+                    weapon={stats.weapon}
+                    weaponDurability={stats.weaponDurability}
+                  />
+                </div>
+              </div>
 
-              <GameLog log={log} />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <h3 style={{ margin: 0, fontSize: '14px', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Game Log</h3>
+                <div style={{ height: '160px' }}>
+                  <GameLog log={log} />
+                </div>
+              </div>
             </div>
           </>
         )}
 
-        <div className="footer-spacer" style={{ marginTop: '20px' }}>
-          <Footer />
-        </div>
       </div>
+      <Footer />
     </>
   );
 }
