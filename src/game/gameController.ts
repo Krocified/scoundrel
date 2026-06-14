@@ -1,14 +1,23 @@
 // Game controller - orchestrates the complete game flow
 
-import type { GameState } from '../types/game';
-import { createDeck, shuffleDeck } from './deck';
+import type { GameState, RunModifierId } from '../types/game';
+import { createDeck, shuffleDeck, createJokerCard } from './deck';
 import { initializeFirstRoom, prepareNextRoom, skipRoom } from './roomManager';
 import { pickCard, isRoomComplete, getLeftoverCard } from './cardActions';
+import { processJokerRoom, roomHasJoker, isChampionRoom } from './jokerProcessor';
+
+export interface GameInitResult {
+  gameState: GameState;
+  jokerLogs: string[];
+}
 
 /**
- * Initialize a new game with optional power-ups
+ * Initialize a new game with optional power-ups and run modifiers
  */
-export function initializeGame(powerUps: string[] = []): GameState {
+export function initializeGame(
+  powerUps: string[] = [],
+  runModifiers: RunModifierId[] = []
+): GameInitResult {
   let deck = shuffleDeck(createDeck());
 
   // Build initial player state, applying power-ups
@@ -22,8 +31,13 @@ export function initializeGame(powerUps: string[] = []): GameState {
     hp = 25;
   }
 
+  // Mutation: -8 Maximum HP
+  if (runModifiers.includes('mutation')) {
+    maxHp = Math.max(1, maxHp - 8);
+    hp = Math.min(hp, maxHp);
+  }
+
   if (powerUps.includes('weapon-cache')) {
-    // Find the first diamond card in deck and equip it
     const weaponIdx = deck.findIndex(c => c.suit === 'diamonds');
     if (weaponIdx !== -1) {
       equippedWeapon = deck[weaponIdx];
@@ -32,10 +46,17 @@ export function initializeGame(powerUps: string[] = []): GameState {
     }
   }
 
+  // Shuffle 1 joker into deck per selected run modifier
+  const jokerIds: Array<import('../types/game').JokerId> = ['champion', 'predator', 'forge-world'];
+  for (const _modId of runModifiers) {
+    const randomJoker = jokerIds[Math.floor(Math.random() * jokerIds.length)];
+    deck = shuffleDeck([...deck, createJokerCard(randomJoker)]);
+  }
+
   // Initialize first room
   const { room, remainingDeck } = initializeFirstRoom(deck);
 
-  const gameState: GameState = {
+  let gameState: GameState = {
     deck: remainingDeck,
     currentRoom: room,
     leftoverCard: null,
@@ -51,9 +72,19 @@ export function initializeGame(powerUps: string[] = []): GameState {
     roomsSkipped: 0,
     defeatedEnemies: [],
     activePowerUps: powerUps,
+    runModifiers,
+    barehandHalfDamage: false,
   };
 
-  return gameState;
+  // Process any jokers that appeared in the first room
+  const jokerResult = processJokerRoom(gameState);
+  const jokerLogs: string[] = [];
+  if (jokerResult) {
+    gameState = jokerResult.gameState;
+    jokerLogs.push(...jokerResult.logs);
+  }
+
+  return { gameState, jokerLogs };
 }
 
 /**
@@ -68,6 +99,8 @@ export function processCardPick(
 ): { gameState: GameState; log: string[] } {
   const log: string[] = [];
   
+  const isChampion = isChampionRoom(gameState.currentRoom) && cardIndex === 0;
+  
   // Pick the card
   const { newGameState, message } = pickCard(gameState, cardIndex);
   log.push(message);
@@ -80,18 +113,45 @@ export function processCardPick(
     return { gameState: updatedState, log };
   }
   
-  // Check if room is complete
+  const logRoomHeals = (state: GameState, hpBefore: number) => {
+    const hpDiff = state.player.hp - hpBefore;
+    if (state.runModifiers.includes('mutation') && hpDiff >= 2) {
+      log.push('Mutation restored 2 HP.');
+    }
+    if (state.activePowerUps.includes('regeneration') && hpDiff >= 1) {
+      if (hpDiff > 2 || (hpDiff === 1 && !state.runModifiers.includes('mutation'))) {
+        log.push('Regeneration restored 1 HP.');
+      }
+    }
+  };
+
+  // Champion room: defeating the champion auto-clears the room
+  if (isChampion) {
+    log.push('⚔️ Champion defeated! Room auto-cleared.');
+    if (updatedState.cardsPickedThisRoom >= 1) {
+      const hpBefore = updatedState.player.hp;
+      updatedState = advanceToNextRoom(updatedState);
+      logRoomHeals(updatedState, hpBefore);
+
+      if (updatedState.gameStatus === 'won') {
+        log.push('🎉 Victory! You cleared all rooms!');
+      } else if (updatedState.currentRoom.length > 0) {
+        log.push(`Next room: ${updatedState.currentRoom.length} cards revealed.`);
+      }
+
+      return { gameState: updatedState, log };
+    }
+  }
+
+  // Normal room completion check
   if (isRoomComplete(updatedState)) {
     const leftover = getLeftoverCard(updatedState);
     log.push(`Room cleared! Leftover card: ${leftover?.suit} ${leftover?.rank}`);
-    
+
     const hpBefore = updatedState.player.hp;
     updatedState = advanceToNextRoom(updatedState);
-    
-    if (updatedState.activePowerUps.includes('regeneration') && updatedState.player.hp > hpBefore) {
-      log.push(`Regeneration restored 1 HP.`);
-    }
-    
+    logRoomHeals(updatedState, hpBefore);
+
     if (updatedState.gameStatus === 'won') {
       log.push('🎉 Victory! You cleared all rooms!');
     } else if (updatedState.currentRoom.length > 0) {
@@ -124,6 +184,11 @@ export function processRoomSkip(
     throw new Error('Can only skip rooms with 4 cards');
   }
   
+  // Joker rooms cannot be skipped
+  if (roomHasJoker(gameState.currentRoom)) {
+    throw new Error('Cannot skip a room containing a Joker!');
+  }
+  
   log.push(`Skipped room (${direction}). Cards returned to bottom of deck.`);
   
   // Return cards to bottom of deck
@@ -146,7 +211,7 @@ export function processRoomSkip(
   // Prepare next room (4 new cards, no leftover after skip)
   const { room, remainingDeck } = prepareNextRoom(updatedDeck, null);
   
-  const updatedState: GameState = {
+  let updatedState: GameState = {
     ...gameState,
     deck: remainingDeck,
     currentRoom: room,
@@ -155,7 +220,14 @@ export function processRoomSkip(
     roomsSkipped: gameState.roomsSkipped + 1,
   };
   
-  log.push(`Next room: ${room.length} cards revealed.`);
+  // Process any jokers in the new room
+  const jokerResult = processJokerRoom(updatedState);
+  if (jokerResult) {
+    updatedState = jokerResult.gameState;
+    log.push(...jokerResult.logs);
+  }
+  
+  log.push(`Next room: ${updatedState.currentRoom.length} cards revealed.`);
   
   return { gameState: updatedState, log };
 }
@@ -186,8 +258,10 @@ export function advanceToNextRoom(gameState: GameState): GameState {
   // Prepare next room
   const { room, remainingDeck } = prepareNextRoom(gameState.deck, leftover);
 
-  // Apply regeneration power-up: heal 1 HP after each room cleared
+  // Apply heals after room clear
   let player = gameState.player;
+  
+  // Regeneration power-up: heal 1 HP
   if (gameState.activePowerUps.includes('regeneration')) {
     player = {
       ...player,
@@ -195,7 +269,15 @@ export function advanceToNextRoom(gameState: GameState): GameState {
     };
   }
 
-  return {
+  // Mutation: heal 2 HP after clearing each room
+  if (gameState.runModifiers.includes('mutation')) {
+    player = {
+      ...player,
+      hp: Math.min(player.maxHp, player.hp + 2),
+    };
+  }
+
+  let newState: GameState = {
     ...gameState,
     deck: remainingDeck,
     currentRoom: room,
@@ -204,6 +286,14 @@ export function advanceToNextRoom(gameState: GameState): GameState {
     cardsPickedThisRoom: 0,
     roomsCleared: gameState.roomsCleared + 1,
   };
+
+  // Process any jokers in the new room
+  const jokerResult = processJokerRoom(newState);
+  if (jokerResult) {
+    newState = jokerResult.gameState;
+  }
+
+  return newState;
 }
 
 /**

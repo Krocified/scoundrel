@@ -1,6 +1,6 @@
 // Deck initialization and shuffling for Scoundrel
 
-import type { Card, Suit, Rank } from '../types/game';
+import type { Card, Suit, Rank, JokerId } from '../types/game';
 
 /**
  * Creates the full 42-card Scoundrel deck
@@ -48,6 +48,18 @@ export function shuffleDeck(cards: Card[]): Card[] {
   }
   
   return shuffled;
+}
+
+/**
+ * Create a joker card for a given joker type
+ */
+export function createJokerCard(jokerId: JokerId): Card {
+  return {
+    suit: 'joker',
+    rank: 0 as Rank,
+    id: `joker-${jokerId}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    jokerId,
+  };
 }
 
 /**

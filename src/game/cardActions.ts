@@ -8,7 +8,7 @@ import { equipWeapon, markWeaponUsed } from './weaponSystem';
 export interface CardActionResult {
   newGameState: GameState;
   message: string;
-  cardType: 'health' | 'weapon' | 'enemy';
+  cardType: 'health' | 'weapon' | 'enemy' | 'joker';
 }
 
 /**
@@ -30,7 +30,18 @@ export function pickCard(
   }
 
   const card = gameState.currentRoom[cardIndex];
-  const cardType = getCardType(card);
+  let cardType = getCardType(card);
+
+  // Vampiric modifier: hearts become monsters
+  const isVampiric = gameState.runModifiers.includes('vampiric');
+  if (isVampiric && card.suit === 'hearts') {
+    cardType = 'enemy';
+  }
+
+  // Joker card becomes an enemy encounter
+  if (cardType === 'joker') {
+    cardType = 'enemy';
+  }
 
   let newPlayer = gameState.player;
   let message = '';
@@ -40,9 +51,17 @@ export function pickCard(
   switch (cardType) {
     case 'health': {
       const oldHp = newPlayer.hp;
-      newPlayer = healPlayer(newPlayer, card.rank);
+      const isJuggernaut = gameState.runModifiers.includes('juggernaut');
+      let healAmount: number = card.rank;
+      let healNote = '';
+      // Juggernaut: potions heal 50%
+      if (isJuggernaut) {
+        healAmount = Math.max(1, Math.floor(healAmount / 2));
+        healNote = ' (Juggernaut: halved)';
+      }
+      newPlayer = healPlayer(newPlayer, healAmount);
       const healed = newPlayer.hp - oldHp;
-      message = `Picked health potion (${card.rank}). Healed ${healed} HP. HP: ${newPlayer.hp}/${newPlayer.maxHp}`;
+      message = `Picked health potion (${card.rank}). Healed ${healed} HP.${healNote} HP: ${newPlayer.hp}/${newPlayer.maxHp}`;
       break;
     }
 
@@ -56,7 +75,7 @@ export function pickCard(
     }
 
     case 'enemy': {
-      const damageResult = calculateDamage(card, newPlayer, gameState.activePowerUps);
+      const damageResult = calculateDamage(card, newPlayer, gameState.activePowerUps, gameState.barehandHalfDamage);
       newPlayer = applyDamage(newPlayer, damageResult.damage);
 
       // Update weapon durability if weapon was used
@@ -67,7 +86,19 @@ export function pickCard(
       // Track defeated enemy for scoring
       defeatedEnemies.push(card.rank);
 
-      message = `Fought enemy (${card.rank}). ${damageResult.message} HP: ${newPlayer.hp}/${newPlayer.maxHp}`;
+      // Vampiric: heal 1 HP when defeating a monster
+      if (isVampiric && newPlayer.hp > 0) {
+        const oldHp = newPlayer.hp;
+        newPlayer = healPlayer(newPlayer, 1);
+        const healed = newPlayer.hp - oldHp;
+        if (healed > 0) {
+          message = `Fought enemy (${card.rank}). ${damageResult.message} Vampiric healed ${healed} HP. HP: ${newPlayer.hp}/${newPlayer.maxHp}`;
+        } else {
+          message = `Fought enemy (${card.rank}). ${damageResult.message} HP: ${newPlayer.hp}/${newPlayer.maxHp}`;
+        }
+      } else {
+        message = `Fought enemy (${card.rank}). ${damageResult.message} HP: ${newPlayer.hp}/${newPlayer.maxHp}`;
+      }
       break;
     }
   }

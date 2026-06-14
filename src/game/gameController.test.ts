@@ -14,7 +14,7 @@ export function testGameController() {
 
   // Test 1: Initialize game
   console.log('Test 1: Initialize new game...');
-  let game = initializeGame();
+  let { gameState: game, jokerLogs: _jokerLogs1 } = initializeGame();
   console.log(`  Deck size: ${game.deck.length}`);
   console.log(`  Room size: ${game.currentRoom.length}`);
   console.log(`  Player HP: ${game.player.hp}/${game.player.maxHp}`);
@@ -85,7 +85,7 @@ export function testGameController() {
 
   // Test 6: Game over - player death
   console.log('Test 6: Player death scenario...');
-  game = initializeGame();
+  ({ gameState: game } = initializeGame());
   game.player.hp = 1; // Low HP
   
   // Find an enemy card to pick
@@ -101,7 +101,7 @@ export function testGameController() {
 
   // Test 7: Try to skip after picking cards (should fail)
   console.log('Test 7: Cannot skip after picking cards...');
-  game = initializeGame();
+  ({ gameState: game } = initializeGame());
   const { gameState: partialGame } = processCardPick(game, 0);
   
   let skipError = false;
@@ -116,7 +116,7 @@ export function testGameController() {
 
   // Test 8: Multi-room progression
   console.log('Test 8: Progress through multiple rooms...');
-  game = initializeGame();
+  ({ gameState: game } = initializeGame());
   
   // Play through a few rooms
   for (let i = 0; i < 3; i++) {

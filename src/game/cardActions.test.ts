@@ -21,6 +21,8 @@ function createTestGameState(roomCards: Card[]): GameState {
     roomsSkipped: 0,
     defeatedEnemies: [],
     activePowerUps: [],
+    runModifiers: [],
+    barehandHalfDamage: false,
   };
 }
 
