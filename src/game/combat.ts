@@ -20,18 +20,25 @@ export function calculateDamage(
 ): DamageResult {
   const enemyValue = enemy.rank;
 
+  const hasArmor = activePowerUps.includes('armor');
+
   // No weapon equipped
   if (!player.equippedWeapon) {
     let damage: number = enemyValue;
+    let armorNote = '';
 
-    if (activePowerUps.includes('armor') && damage > 0) {
-      damage = Math.max(1, damage - 1);
+    if (hasArmor && damage > 0) {
+      const reduced = Math.max(1, damage - 1);
+      if (reduced < damage) {
+        armorNote = ' (Armor reduced damage by 1)';
+        damage = reduced;
+      }
     }
 
     return {
       damage,
       weaponUsed: false,
-      message: `No weapon! Took ${damage} damage from enemy.`,
+      message: `No weapon! Took ${damage} damage from enemy.${armorNote}`,
     };
   }
 
@@ -42,29 +49,39 @@ export function calculateDamage(
 
   if (!canUse) {
     let damage: number = enemyValue;
+    let armorNote = '';
 
-    if (activePowerUps.includes('armor') && damage > 0) {
-      damage = Math.max(1, damage - 1);
+    if (hasArmor && damage > 0) {
+      const reduced = Math.max(1, damage - 1);
+      if (reduced < damage) {
+        armorNote = ' (Armor reduced damage by 1)';
+        damage = reduced;
+      }
     }
 
     return {
       damage,
       weaponUsed: false,
-      message: `Weapon too worn! Can't defeat rank ${enemyValue} enemy. Took ${damage} damage.`,
+      message: `Weapon too worn! Can't defeat rank ${enemyValue} enemy. Took ${damage} damage.${armorNote}`,
     };
   }
 
   // Weapon can be used: damage = max(0, enemy - weapon)
   let damage = Math.max(0, enemyValue - weaponValue);
+  let armorNote = '';
 
-  if (activePowerUps.includes('armor') && damage > 0) {
-    damage = Math.max(1, damage - 1);
+  if (hasArmor && damage > 0) {
+    const reduced = Math.max(1, damage - 1);
+    if (reduced < damage) {
+      armorNote = ' (Armor reduced damage by 1)';
+      damage = reduced;
+    }
   }
 
   return {
     damage,
     weaponUsed: true,
-    message: `Used weapon (${weaponValue}) vs enemy (${enemyValue}). Took ${damage} damage.`,
+    message: `Used weapon (${weaponValue}) vs enemy (${enemyValue}). Took ${damage} damage.${armorNote}`,
   };
 }
 

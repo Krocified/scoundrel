@@ -46,7 +46,6 @@ export function BaseRoomCard({ card, index, isGamePlaying, onPickCard, activePow
     }
   };
 
-  const showArmor = activePowerUps.includes('armor') && cardType === 'enemy';
   const showReinforced = activePowerUps.includes('reinforced') && cardType === 'weapon';
 
   return (
@@ -72,27 +71,6 @@ export function BaseRoomCard({ card, index, isGamePlaying, onPickCard, activePow
         position: 'relative',
       }}
     >
-      {showArmor && (
-        <div style={{
-          position: 'absolute',
-          top: '-8px',
-          right: '-8px',
-          background: '#e91e63',
-          color: 'white',
-          borderRadius: '50%',
-          width: '26px',
-          height: '26px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '14px',
-          fontWeight: 'bold',
-          zIndex: 2,
-          boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
-        }} title="Armor: damage reduced by 1">
-          🛡
-        </div>
-      )}
       {showReinforced && (
         <div style={{
           position: 'absolute',

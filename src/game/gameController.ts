@@ -85,8 +85,12 @@ export function processCardPick(
     const leftover = getLeftoverCard(updatedState);
     log.push(`Room cleared! Leftover card: ${leftover?.suit} ${leftover?.rank}`);
     
-    // Advance to next room
+    const hpBefore = updatedState.player.hp;
     updatedState = advanceToNextRoom(updatedState);
+    
+    if (updatedState.activePowerUps.includes('regeneration') && updatedState.player.hp > hpBefore) {
+      log.push(`Regeneration restored 1 HP.`);
+    }
     
     if (updatedState.gameStatus === 'won') {
       log.push('🎉 Victory! You cleared all rooms!');

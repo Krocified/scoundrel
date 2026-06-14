@@ -28,6 +28,8 @@ export function PlayerStats({
     .map(id => POWER_UPS.find(p => p.id === id))
     .filter(Boolean);
 
+  const hasArmor = activePowerUps.includes('armor');
+
   return (
     <div style={{
       background: '#f5f5f5',
@@ -42,6 +44,24 @@ export function PlayerStats({
       }}>
         <div>
           <strong>HP:</strong> {hp}/{maxHp}
+          {hasArmor && (
+            <span
+              style={{
+                display: 'inline-block',
+                marginLeft: '8px',
+                padding: '1px 6px',
+                fontSize: '11px',
+                fontWeight: 'bold',
+                background: '#e91e63',
+                color: 'white',
+                borderRadius: '4px',
+                verticalAlign: 'middle',
+              }}
+              title="Armor: all damage reduced by 1 (minimum 1)"
+            >
+              🛡 -1
+            </span>
+          )}
           <div style={{
             background: '#ddd',
             height: '20px',
