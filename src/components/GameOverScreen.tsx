@@ -10,6 +10,7 @@ interface GameOverScreenProps {
   roomsCleared: number;
   roomsSkipped: number;
   onNewGame: () => void;
+  onClaimReward?: () => void;
 }
 
 export function GameOverScreen({
@@ -19,7 +20,8 @@ export function GameOverScreen({
   defeatedEnemiesValue,
   roomsCleared,
   roomsSkipped,
-  onNewGame
+  onNewGame,
+  onClaimReward,
 }: Readonly<GameOverScreenProps>) {
   return (
     <div style={{
@@ -69,8 +71,29 @@ export function GameOverScreen({
         </div>
       </div>
       <h3>Final Score: {finalScore}</h3>
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginTop: '20px' }}>
         <NewGameButton onClick={onNewGame} />
+        {gameStatus === 'won' && onClaimReward && (
+          <button
+            onClick={onClaimReward}
+            style={{
+              background: '#f5f5f5',
+              color: '#333',
+              border: '2px solid #ddd',
+              padding: '12px 16px',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '14px',
+              fontFamily: 'inherit',
+              transition: 'all 0.2s',
+            }}
+            onMouseEnter={e => { (e.target as HTMLButtonElement).style.borderColor = '#bbb'; (e.target as HTMLButtonElement).style.background = '#e8e8e8'; }}
+            onMouseLeave={e => { (e.target as HTMLButtonElement).style.borderColor = '#ddd'; (e.target as HTMLButtonElement).style.background = '#f5f5f5'; }}
+          >
+            Claim Reward
+          </button>
+        )}
       </div>
     </div>
   );

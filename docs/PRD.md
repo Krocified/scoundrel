@@ -63,6 +63,8 @@ Scoundrel is a single-player dungeon crawler card game built as a web applicatio
 | Post-victory power selection | P1 | On win, player chooses 1 of 3 random power-ups |
 | Persistent meta-progression | P1 | Selected powers saved to localStorage and carried into subsequent runs |
 | Power-up effects | P1 | Each power modifies gameplay (e.g., bonus HP, starting weapon, damage boost) |
+| Power-up display on scoreboard | P1 | Visible but non-intrusive power-up indicators on the scoreboard with a toggle to show/hide |
+| Consistent power-up UI styling | P1 | Power selection and claim reward button use the same fonts and styling as the rest of the app |
 | Stacking runs | P2 | Multiple victories stack additional power-ups across sessions |
 
 ### 4.5 Developer Tools
