@@ -18,11 +18,6 @@ export const POWER_UPS: PowerUp[] = [
     description: "All damage taken reduced by 1 (minimum 1)",
   },
   {
-    id: "reinforced",
-    name: "Reinforced",
-    description: "Weapon durability limit increased by 2",
-  },
-  {
     id: "regeneration",
     name: "Regeneration",
     description: "Heal 1 HP after clearing each room",

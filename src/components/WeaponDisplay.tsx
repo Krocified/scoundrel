@@ -86,7 +86,8 @@ export function WeaponDisplay({ weapon, weaponDurability }: Readonly<WeaponDispl
         textAlign: 'center',
         border: `3px solid ${weapon ? '#c8d5e6' : '#999'}`,
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        position: 'relative',
       }}>
       <div className="weapon-main-info" style={{ display: 'flex', flexDirection: 'column' }}>
         <div className="weapon-label" style={{ fontSize: '12px', opacity: 0.9, marginBottom: '8px', fontWeight: 'bold' }}>

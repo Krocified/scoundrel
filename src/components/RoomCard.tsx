@@ -10,7 +10,6 @@ interface RoomCardProps {
   index: number;
   isGamePlaying: boolean;
   onPickCard: (index: number) => void;
-  activePowerUps?: string[];
 }
 
 /**
@@ -51,12 +50,12 @@ function useIsMobile(): boolean {
  * RoomCard component that automatically switches between PC and mobile layouts
  * based on viewport width
  */
-export function RoomCard({ card, index, isGamePlaying, onPickCard, activePowerUps }: Readonly<RoomCardProps>) {
+export function RoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<RoomCardProps>) {
   const isMobile = useIsMobile();
 
   if (isMobile) {
-    return <MobileRoomCard card={card} index={index} isGamePlaying={isGamePlaying} onPickCard={onPickCard} activePowerUps={activePowerUps} />;
+    return <MobileRoomCard card={card} index={index} isGamePlaying={isGamePlaying} onPickCard={onPickCard} />;
   }
 
-  return <PCRoomCard card={card} index={index} isGamePlaying={isGamePlaying} onPickCard={onPickCard} activePowerUps={activePowerUps} />;
+  return <PCRoomCard card={card} index={index} isGamePlaying={isGamePlaying} onPickCard={onPickCard} />;
 }

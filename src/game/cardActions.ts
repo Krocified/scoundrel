@@ -61,7 +61,7 @@ export function pickCard(
 
       // Update weapon durability if weapon was used
       if (damageResult.weaponUsed && newPlayer.equippedWeapon) {
-        newPlayer = markWeaponUsed(newPlayer, card, gameState.activePowerUps);
+        newPlayer = markWeaponUsed(newPlayer, card);
       }
 
       // Track defeated enemy for scoring

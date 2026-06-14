@@ -21,19 +21,14 @@ export function equipWeapon(player: PlayerState, weapon: Card): PlayerState {
 export function markWeaponUsed(
   player: PlayerState,
   enemyDefeated: Card,
-  activePowerUps: string[] = [],
 ): PlayerState {
   if (!player.equippedWeapon) {
     throw new Error('Cannot mark weapon used: no weapon equipped');
   }
 
-  const limit = activePowerUps.includes('reinforced')
-    ? enemyDefeated.rank + 2
-    : enemyDefeated.rank;
-
   return {
     ...player,
-    weaponMaxEnemy: limit,
+    weaponMaxEnemy: enemyDefeated.rank,
   };
 }
 

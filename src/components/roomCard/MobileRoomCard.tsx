@@ -18,10 +18,9 @@ interface MobileRoomCardProps {
   index: number;
   isGamePlaying: boolean;
   onPickCard: (index: number) => void;
-  activePowerUps?: string[];
 }
 
-export function MobileRoomCard({ card, index, isGamePlaying, onPickCard, activePowerUps }: Readonly<MobileRoomCardProps>) {
+export function MobileRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<MobileRoomCardProps>) {
   const cardType = getCardType(card);
   const { settings } = useDeckCustomization();
   const deckConfig = getDeckConfig(settings.deckTheme);
@@ -58,7 +57,7 @@ export function MobileRoomCard({ card, index, isGamePlaying, onPickCard, activeP
           }
         }
       `}</style>
-      <BaseRoomCard card={card} index={index} isGamePlaying={isGamePlaying} onPickCard={onPickCard} activePowerUps={activePowerUps}>
+      <BaseRoomCard card={card} index={index} isGamePlaying={isGamePlaying} onPickCard={onPickCard}>
         {/* Simple centered content for all cards */}
         <div style={{ 
           flex: '1', 

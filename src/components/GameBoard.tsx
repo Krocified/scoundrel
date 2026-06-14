@@ -244,7 +244,6 @@ export function GameBoard() {
                         index={slotIndex}
                         isGamePlaying={game.gameStatus === 'playing'}
                         onPickCard={handlePickCard}
-                        activePowerUps={game.activePowerUps}
                       />
                     );
                   } else {
