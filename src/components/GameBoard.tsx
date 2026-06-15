@@ -173,12 +173,21 @@ export function GameBoard() {
           
           .weapon-log-grid {
             grid-template-columns: 1fr !important;
-            gap: 15px !important;
-            margin-top: 20px !important;
+            gap: 12px !important;
+            margin-top: 16px !important;
+            margin-bottom: 8px !important;
+          }
+          
+          .weapon-log-grid > div > div {
+            height: 120px !important;
           }
           
           .game-board-container {
             padding: 10px !important;
+          }
+          
+          .current-room-title {
+            margin-bottom: 8px !important;
           }
           
           .header-container {
