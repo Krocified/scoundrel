@@ -161,6 +161,16 @@ export function GameBoard() {
             column-gap: 8px !important;
           }
           
+          .room-card {
+            width: 100% !important;
+            height: auto !important;
+          }
+          
+          .picked-card-placeholder {
+            width: 100% !important;
+            height: auto !important;
+          }
+          
           .skip-buttons-desktop {
             display: none !important;
           }
