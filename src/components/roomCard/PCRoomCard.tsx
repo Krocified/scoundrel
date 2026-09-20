@@ -3,17 +3,13 @@
 import type { Card } from '../../types/game';
 import { BaseRoomCard } from './BaseRoomCard';
 import {
-  getSuitImagePath,
   getSuitSymbol,
-  getSuitDisplayColorDistinct,
   getSuitDisplayColorTraditional,
   getCardType,
   getCardRankDisplay,
   getBossImagePath,
 } from '../../game/cardUtils';
-import { getDeckConfig } from '../../config/deckCustomization';
-import { useDeckCustomization } from '../../contexts/DeckCustomizationContext';
-import { useTheme } from '../../contexts/ThemeContext';
+import { deckConfig } from '../../config/deckCustomization';
 
 interface PCRoomCardProps {
   card: Card;
@@ -24,28 +20,19 @@ interface PCRoomCardProps {
 
 export function PCRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<PCRoomCardProps>) {
   const cardType = getCardType(card);
-  const { settings } = useDeckCustomization();
-  const { isDark } = useTheme();
-  const deckConfig = getDeckConfig(settings.deckTheme);
+  const accentColor = getSuitDisplayColorTraditional(card.suit);
   const bossImagePath = getBossImagePath(card, deckConfig);
   const isFaceCard = card.rank > 10;
 
-  const accentColor = settings.useDistinctColors
-    ? getSuitDisplayColorDistinct(card.suit)
-    : getSuitDisplayColorTraditional(card.suit, isDark);
-
-  const labelText = (() => {
-    if (cardType === 'health') return 'HEAL';
-    if (cardType === 'weapon') return 'WEAPON';
-    if (cardType === 'joker') return 'JOKER';
-    return 'ENEMY';
-  })();
+  let labelText = 'ENEMY';
+  if (cardType === 'health') labelText = 'HEAL';
+  else if (cardType === 'weapon') labelText = 'WEAPON';
 
   return (
     <BaseRoomCard card={card} index={index} isGamePlaying={isGamePlaying} onPickCard={onPickCard}>
       {/* Top-left corner for face cards */}
       {isFaceCard && (
-        <div style={{ 
+        <div style={{
           position: 'absolute',
           top: '8px',
           left: '8px',
@@ -54,8 +41,8 @@ export function PCRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<
           alignItems: 'center',
           gap: '4px'
         }}>
-          <div className="room-card-rank" style={{ 
-            fontSize: `${deckConfig.cardFontSize}px`, 
+          <div className="room-card-rank" style={{
+            fontSize: `${deckConfig.cardFontSize}px`,
             fontFamily: deckConfig.cardFont,
             fontWeight: 'bold',
             lineHeight: 1,
@@ -67,31 +54,23 @@ export function PCRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<
             {getCardRankDisplay(card)}
           </div>
           <div className="room-card-suit" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {deckConfig.useTextSuits ? (
-              <span style={{ 
-                fontSize: `${deckConfig.cardFontSize + 10}px`, 
-                color: accentColor,
-                lineHeight: 1
-              }}>
-                {getSuitSymbol(card.suit)}
-              </span>
-            ) : (
-              <img 
-                src={getSuitImagePath(card.suit, deckConfig)} 
-                alt={card.suit}
-                style={{ width: '20px', height: '20px', objectFit: 'contain' }}
-              />
-            )}
+            <span style={{
+              fontSize: `${deckConfig.cardFontSize + 10}px`,
+              color: accentColor,
+              lineHeight: 1
+            }}>
+              {getSuitSymbol(card.suit)}
+            </span>
           </div>
         </div>
       )}
 
       {/* Middle section */}
-      <div style={{ 
-        flex: '1', 
-        display: 'flex', 
-        flexDirection: 'column', 
-        justifyContent: 'center', 
+      <div style={{
+        flex: '1',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
         alignItems: 'center',
         position: 'relative',
         padding: '10px 0',
@@ -100,12 +79,12 @@ export function PCRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<
       }}>
         {isFaceCard && bossImagePath ? (
           // Boss image for face cards with boss art
-          <img 
-            src={bossImagePath} 
+          <img
+            src={bossImagePath}
             alt={`${getCardRankDisplay(card)} of ${card.suit}`}
-            style={{ 
-              width: '100%', 
-              height: 'auto', 
+            style={{
+              width: '100%',
+              height: 'auto',
               maxWidth: '78%',
               objectFit: 'contain',
               flex: '1',
@@ -114,15 +93,15 @@ export function PCRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<
           />
         ) : (
           // Centered rank + suit for number cards (and face cards without boss art)
-          <div style={{ 
+          <div style={{
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
             gap: '4px',
             justifyContent: 'center'
           }}>
-            <div className="room-card-rank" style={{ 
-              fontSize: `${deckConfig.cardFontSize}px`, 
+            <div className="room-card-rank" style={{
+              fontSize: `${deckConfig.cardFontSize}px`,
               fontFamily: deckConfig.cardFont,
               fontWeight: 'bold',
               lineHeight: 1,
@@ -134,31 +113,23 @@ export function PCRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<
               {getCardRankDisplay(card)}
             </div>
             <div className="room-card-suit" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              {deckConfig.useTextSuits ? (
-                <span style={{ 
-                  fontSize: `${deckConfig.cardFontSize + 10}px`, 
-                  color: accentColor,
-                  lineHeight: 1
-                }}>
-                  {getSuitSymbol(card.suit)}
-                </span>
-              ) : (
-                <img 
-                  src={getSuitImagePath(card.suit, deckConfig)} 
-                  alt={card.suit}
-                  style={{ width: '20px', height: '20px', objectFit: 'contain' }}
-                />
-              )}
+              <span style={{
+                fontSize: `${deckConfig.cardFontSize + 10}px`,
+                color: accentColor,
+                lineHeight: 1
+              }}>
+                {getSuitSymbol(card.suit)}
+              </span>
             </div>
           </div>
         )}
 
         {/* Card type text */}
-        <div className="room-card-type" style={{ 
-          fontSize: '12px', 
-          marginTop: (isFaceCard && bossImagePath) ? '5px' : '10px', 
+        <div className="room-card-type" style={{
+          fontSize: '12px',
+          marginTop: (isFaceCard && bossImagePath) ? '5px' : '10px',
           color: accentColor,
-          opacity: 0.85,
+          opacity: 0.75,
           fontWeight: 'bold',
           letterSpacing: '1px',
           bottom: '8px'

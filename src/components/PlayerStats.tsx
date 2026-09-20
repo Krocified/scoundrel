@@ -1,239 +1,117 @@
-import { useState } from "react";
-import { POWER_UPS } from "../game/powerUps";
-import { RUN_MODIFIERS } from "../config/runModifiers";
-import type { RunModifierId } from "../types/game";
+// Player status: separate felt islands, each with a title on top.
+// Colors are the audited set (see docs/UI-REFACTOR.md); re-check contrast before swapping.
 
 interface PlayerStatsProps {
   hp: number;
   maxHp: number;
-  currentScore: number;
-  defeatedEnemies: number;
-  roomsCleared: number;
-  roomsSkipped: number;
   cardsInDeck: number;
-  activePowerUps?: string[];
-  runModifiers?: RunModifierId[];
 }
 
 export function PlayerStats({
   hp,
   maxHp,
-  currentScore,
-  defeatedEnemies,
-  roomsCleared,
-  roomsSkipped,
   cardsInDeck,
-  activePowerUps = [],
-  runModifiers = [],
 }: Readonly<PlayerStatsProps>) {
-  const [showEffects, setShowEffects] = useState(false);
-
-  const activePowerUpNames = activePowerUps
-    .map((id) => POWER_UPS.find((p) => p.id === id))
-    .filter(Boolean);
-
-  const activeModifierDefs = runModifiers
-    .map((id) => RUN_MODIFIERS.find((m) => m.id === id))
-    .filter(Boolean);
-
-  const hasArmor = activePowerUps.includes("armor");
-  const hpPercent = (hp / maxHp) * 100;
-  const hasEffects = activePowerUpNames.length > 0 || activeModifierDefs.length > 0;
+  const hpRatio = Math.max(0, Math.min(1, hp / maxHp));
+  const fillColor = hpRatio > 0.6 ? '#4caf50' : hpRatio > 0.3 ? '#e07a5f' : '#e0555a';
 
   return (
     <>
       <style>{`
+        .ps {
+          display: flex;
+          align-items: stretch;
+          gap: 12px;
+          margin-bottom: 24px;
+        }
+        .ps-island {
+          background: #193b25;
+          border: 1px solid var(--border);
+          border-radius: 10px;
+          padding: 10px 14px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .ps-label {
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.6px;
+          text-transform: uppercase;
+          color: var(--text-muted);
+        }
+
+        .ps-island--deck { flex: 0 0 auto; min-width: 84px; }
+        .ps-deck-value {
+          font-size: 22px;
+          font-weight: 600;
+          line-height: 1;
+          color: var(--text-primary);
+          font-variant-numeric: tabular-nums;
+        }
+
+        .ps-island--hp { flex: 1 1 auto; min-width: 0; justify-content: center; }
+        .ps-hp-body { display: flex; align-items: center; gap: 12px; }
+        .ps-hp-value {
+          font-size: 15px;
+          font-weight: 600;
+          color: var(--text-primary);
+          font-variant-numeric: tabular-nums;
+          white-space: nowrap;
+        }
+        .ps-track {
+          flex: 1;
+          min-width: 0;
+          height: 12px;
+          padding: 2px;
+          background: #14301e;
+          border: 1px solid #5a9c6c;
+          border-radius: 4px;
+          box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+          overflow: hidden;
+        }
+        .ps-fill {
+          height: 100%;
+          border-radius: 2px;
+          transition: width 0.2s ease, background-color 0.2s ease;
+        }
+
         @media (max-width: 768px) {
-          .player-stats {
-            padding: 12px 14px !important;
-            margin-bottom: 16px !important;
-          }
-          .player-stats-top {
-            flex-wrap: wrap !important;
-            gap: 10px !important;
-          }
-          .player-stats-hp {
-            flex: 1 1 100% !important;
-            min-width: 0 !important;
-          }
-          .player-stats-pills {
-            flex: 1 !important;
-            justify-content: space-between !important;
-          }
-          .player-stats-pills > div {
-            flex: 1 !important;
-            min-width: 0 !important;
-            padding: 4px 6px !important;
-          }
-          .player-stats-pills > div span:first-child {
-            font-size: 8px !important;
-          }
-          .player-stats-pills > div span:last-child {
-            font-size: 12px !important;
-          }
+          .ps { flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+          .ps-island { padding: 8px 12px; gap: 6px; }
+          .ps-island--hp { order: -1; flex: 1 1 100%; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .ps-fill { transition: none; }
         }
       `}</style>
-      <div
-        className="player-stats"
-        style={{
-          background: "var(--bg-panel)",
-          padding: "18px 20px",
-          borderRadius: "12px",
-          marginBottom: "24px",
-          border: "1px solid var(--border)",
-          color: "var(--text-secondary)",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.06)",
-        }}
-      >
-        {/* Top row: HP bar + stats */}
-        <div className="player-stats-top" style={{ display: "flex", gap: "14px", alignItems: "center" }}>
-          {/* HP */}
-          <div className="player-stats-hp" style={{ flex: "1", minWidth: "120px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "3px" }}>
-              <span style={{ fontSize: "10px", fontWeight: "bold", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "1px" }}>
-                HP
-              </span>
-              <span style={{ fontSize: "13px", fontWeight: "bold", color: "var(--text-primary)" }}>
-                {hp}/{maxHp}
-              </span>
-            </div>
-            <div
-              style={{
-                background: "var(--bg-input)",
-                height: "8px",
-                borderRadius: "4px",
-                overflow: "hidden",
-                border: "1px solid var(--border)",
-              }}
-            >
-              <div
-                style={{
-                  background: hp > 30 ? "#4caf50" : hp > 12 ? "#ff9800" : "#f44336",
-                  height: "100%",
-                  width: `${hpPercent}%`,
-                  transition: "width 0.3s ease",
-                  borderRadius: "4px",
-                }}
-              />
-            </div>
-          </div>
 
-          {/* Compact stat pills */}
-          <div className="player-stats-pills" style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-            <StatPill label="Score" value={currentScore} />
-            <StatPill label="Enemies" value={defeatedEnemies} />
-            <StatPill label="Rooms" value={`${roomsCleared}/${roomsSkipped}`} />
-            <StatPill label="Deck" value={cardsInDeck} />
-          </div>
-
-          {/* Armor + Effects toggles */}
-          <div className="player-stats-effects" style={{ display: "flex", gap: "6px", alignItems: "center" }}>
-            {hasArmor && (
-              <span
-                style={{
-                  padding: "3px 8px",
-                  fontSize: "11px",
-                  fontWeight: "bold",
-                  background: "rgba(33, 150, 243, 0.12)",
-                  color: "#64b5f6",
-                  borderRadius: "12px",
-                  border: "1px solid rgba(33, 150, 243, 0.25)",
-                }}
-                title="Armor: all damage reduced by 1 (minimum 1)"
-              >
-                🛡 1
-              </span>
-            )}
-            {hasEffects && (
-              <button
-                onClick={() => setShowEffects((prev) => !prev)}
-                style={{
-                  padding: "3px 10px",
-                  fontSize: "11px",
-                  fontWeight: "bold",
-                  background: showEffects ? "var(--accent-dim)" : "var(--bg-input)",
-                  color: showEffects ? "var(--accent)" : "var(--text-muted)",
-                  border: `1px solid ${showEffects ? "var(--accent-border)" : "var(--border-strong)"}`,
-                  borderRadius: "12px",
-                  cursor: "pointer",
-                  fontFamily: "inherit",
-                  transition: "all 0.2s",
-                }}
-              >
-                ⚡ {activeModifierDefs.length + activePowerUpNames.length}
-              </button>
-            )}
-          </div>
+      <div className="ps">
+        <div className="ps-island ps-island--deck" title={`${cardsInDeck} cards left in deck`}>
+          <span className="ps-label">Deck</span>
+          <span className="ps-deck-value">{cardsInDeck}</span>
         </div>
 
-        {/* Active Effects row */}
-        {showEffects && hasEffects && (
-          <div
-            style={{
-              marginTop: "10px",
-              paddingTop: "10px",
-              borderTop: "1px solid var(--border)",
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "6px",
-              alignItems: "center",
-            }}
-          >
-            {activeModifierDefs.map((m) => (
-              <EffectChip key={m!.id} icon="⚡" name={m!.name} description={m!.description} color="var(--accent)" />
-            ))}
-            {activePowerUpNames.map((p) => (
-              <EffectChip key={p!.id} icon="⭐" name={p!.name} description={p!.description} color="#64b5f6" />
-            ))}
+        <div className="ps-island ps-island--hp">
+          <span className="ps-label">HP</span>
+          <div className="ps-hp-body">
+            <div
+              className="ps-track"
+              role="progressbar"
+              aria-label="Health"
+              aria-valuemin={0}
+              aria-valuemax={maxHp}
+              aria-valuenow={hp}
+            >
+              <div className="ps-fill" style={{ width: `${hpRatio * 100}%`, background: fillColor }} />
+            </div>
+            <span className="ps-hp-value">{hp}/{maxHp}</span>
           </div>
-        )}
+        </div>
       </div>
     </>
-  );
-}
-
-function StatPill({ label, value }: Readonly<{ label: string; value: string | number }>) {
-  return (
-    <div
-      style={{
-        background: "var(--bg-input)",
-        border: "1px solid var(--border)",
-        borderRadius: "8px",
-        padding: "5px 10px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        minWidth: "55px",
-      }}
-    >
-      <span style={{ fontSize: "9px", fontWeight: "bold", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.5px" }}>
-        {label}
-      </span>
-      <span style={{ fontSize: "14px", fontWeight: "bold", color: "var(--text-primary)" }}>
-        {value}
-      </span>
-    </div>
-  );
-}
-
-function EffectChip({ icon, name, description, color }: Readonly<{ icon: string; name: string; description: string; color: string }>) {
-  return (
-    <span
-      style={{
-        background: `${color}20`,
-        color,
-        padding: "4px 10px",
-        borderRadius: "14px",
-        fontSize: "11px",
-        fontWeight: "bold",
-        border: `1px solid ${color}40`,
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "4px",
-      }}
-      title={description}
-    >
-      {icon} {name}
-    </span>
   );
 }

@@ -1,15 +1,8 @@
 // Weapon display component
 
 import type { Card } from '../types/game';
-import {
-  getSuitImagePath,
-  getSuitSymbol,
-  getSuitDisplayColorDistinct,
-  getSuitDisplayColorTraditional,
-} from '../game/cardUtils';
-import { getDeckConfig } from '../config/deckCustomization';
-import { useDeckCustomization } from '../contexts/DeckCustomizationContext';
-import { useTheme } from '../contexts/ThemeContext';
+import { getSuitSymbol, getSuitDisplayColorTraditional } from '../game/cardUtils';
+import { deckConfig } from '../config/deckCustomization';
 
 interface WeaponDisplayProps {
   weapon: Card | null;
@@ -17,31 +10,23 @@ interface WeaponDisplayProps {
 }
 
 export function WeaponDisplay({ weapon, weaponDurability }: Readonly<WeaponDisplayProps>) {
-  const { settings } = useDeckCustomization();
-  const { isDark } = useTheme();
-  const deckConfig = getDeckConfig(settings.deckTheme);
-
-  const accentColor = weapon
-    ? (settings.useDistinctColors
-      ? getSuitDisplayColorDistinct(weapon.suit)
-      : getSuitDisplayColorTraditional(weapon.suit, isDark))
-    : 'var(--text-muted)';
+  const accentColor = weapon ? getSuitDisplayColorTraditional(weapon.suit) : 'var(--text-muted)';
 
   return (
     <div
       style={{
         background: weapon
-          ? (isDark ? 'rgba(19, 40, 64, 0.7)' : 'rgba(227, 242, 253, 0.9)')
+          ? 'linear-gradient(180deg, var(--card) 0%, var(--card-edge) 100%)'
           : 'var(--bg-input)',
-        color: 'var(--text-primary)',
+        color: weapon ? 'var(--ink)' : 'var(--text-primary)',
         padding: '18px',
-        borderRadius: '10px',
-        border: `2px solid ${weapon ? (isDark ? 'rgba(144, 202, 249, 0.5)' : '#64b5f6') : 'var(--border)'}`,
+        borderRadius: 'var(--radius-card)',
+        border: weapon ? '1px solid rgba(0, 0, 0, 0.18)' : '1px solid var(--border)',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         gap: '12px',
-        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.08)',
+        boxShadow: weapon ? 'var(--shadow-card)' : 'none',
         height: '100%',
         boxSizing: 'border-box',
       }}
@@ -50,22 +35,14 @@ export function WeaponDisplay({ weapon, weaponDurability }: Readonly<WeaponDispl
         <>
           {/* Main weapon rank + suit */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-            {deckConfig.useTextSuits ? (
-              <span style={{ fontSize: '42px', lineHeight: 1, color: accentColor }}>
-                {getSuitSymbol(weapon.suit)}
-              </span>
-            ) : (
-              <img
-                src={getSuitImagePath(weapon.suit, deckConfig)}
-                alt={weapon.suit}
-                style={{ width: '42px', height: '42px', objectFit: 'contain' }}
-              />
-            )}
+            <span style={{ fontSize: '42px', lineHeight: 1, color: accentColor }}>
+              {getSuitSymbol(weapon.suit)}
+            </span>
             <span style={{
               fontSize: '38px',
               fontWeight: 'bold',
               fontFamily: deckConfig.cardFont,
-              color: 'var(--text-primary)',
+              color: 'var(--ink)',
               lineHeight: 1,
             }}>
               {weapon.rank}
@@ -78,16 +55,16 @@ export function WeaponDisplay({ weapon, weaponDurability }: Readonly<WeaponDispl
             padding: '8px 12px',
             borderRadius: '8px',
             background: weaponDurability === null
-              ? (isDark ? 'rgba(76, 175, 80, 0.15)' : 'rgba(76, 175, 80, 0.1)')
-              : (isDark ? 'rgba(255, 152, 0, 0.15)' : 'rgba(255, 152, 0, 0.1)'),
-            border: `1px solid ${weaponDurability === null ? 'rgba(76, 175, 80, 0.4)' : 'rgba(255, 152, 0, 0.4)'}`,
+              ? 'rgba(76, 175, 80, 0.12)'
+              : 'rgba(181, 84, 58, 0.12)',
+            border: `1px solid ${weaponDurability === null ? 'rgba(76, 175, 80, 0.4)' : 'rgba(181, 84, 58, 0.4)'}`,
           }}>
             <div style={{
               fontSize: '12px',
               fontWeight: 'bold',
               textTransform: 'uppercase',
               letterSpacing: '0.5px',
-              color: weaponDurability === null ? '#4caf50' : '#ff9800',
+              color: weaponDurability === null ? '#2e7d32' : '#b5543a',
               marginBottom: '2px',
             }}>
               {weaponDurability === null ? 'Fresh' : 'Worn'}
@@ -95,7 +72,7 @@ export function WeaponDisplay({ weapon, weaponDurability }: Readonly<WeaponDispl
             {weaponDurability !== null && (
               <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: '4px' }}>
                 <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>max damage</span>
-                <span style={{ fontSize: '22px', fontWeight: 'bold', color: '#ff9800', lineHeight: 1 }}>
+                <span style={{ fontSize: '22px', fontWeight: 'bold', color: '#b5543a', lineHeight: 1 }}>
                   {weaponDurability}
                 </span>
               </div>
@@ -104,7 +81,6 @@ export function WeaponDisplay({ weapon, weaponDurability }: Readonly<WeaponDispl
         </>
       ) : (
         <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
-          <div style={{ fontSize: '32px', marginBottom: '8px' }}>🛡️</div>
           <div style={{ fontSize: '16px', fontWeight: 'bold' }}>No weapon</div>
           <div style={{ fontSize: '12px', marginTop: '4px', opacity: 0.8 }}>Pick a diamond to equip</div>
         </div>

@@ -10,7 +10,6 @@ interface GameOverScreenProps {
   roomsCleared: number;
   roomsSkipped: number;
   onNewGame: () => void;
-  onClaimReward?: () => void;
 }
 
 export function GameOverScreen({
@@ -21,7 +20,6 @@ export function GameOverScreen({
   roomsCleared,
   roomsSkipped,
   onNewGame,
-  onClaimReward,
 }: Readonly<GameOverScreenProps>) {
   const isWin = gameStatus === 'won';
 
@@ -43,23 +41,6 @@ export function GameOverScreen({
       border: `2px solid ${isWin ? 'rgba(76, 175, 80, 0.5)' : 'rgba(244, 67, 54, 0.5)'}`,
       boxShadow: `0 8px 32px ${isWin ? 'rgba(76, 175, 80, 0.12)' : 'rgba(244, 67, 54, 0.12)'}`,
     }}>
-      <div
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '64px',
-          height: '64px',
-          borderRadius: '50%',
-          background: isWin ? 'rgba(76, 175, 80, 0.15)' : 'rgba(244, 67, 54, 0.15)',
-          border: `2px solid ${isWin ? 'rgba(76, 175, 80, 0.4)' : 'rgba(244, 67, 54, 0.4)'}`,
-          fontSize: '32px',
-          marginBottom: '16px',
-        }}
-      >
-        {isWin ? '🎉' : '💀'}
-      </div>
-
       <h2 style={{
         margin: '0 0 8px',
         color: isWin ? '#81c784' : '#e57373',
@@ -67,7 +48,7 @@ export function GameOverScreen({
         fontSize: '40px',
         letterSpacing: '1px',
       }}>
-        {isWin ? 'VICTORY!' : 'GAME OVER'}
+        {isWin ? 'VICTORY' : 'GAME OVER'}
       </h2>
 
       <p style={{ margin: '0 0 24px', color: 'var(--text-secondary)', fontSize: '15px' }}>
@@ -126,33 +107,6 @@ export function GameOverScreen({
 
       <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
         <NewGameButton onClick={onNewGame} />
-        {isWin && onClaimReward && (
-          <button
-            onClick={onClaimReward}
-            style={{
-              background: 'var(--accent-dim)',
-              color: 'var(--accent)',
-              border: '2px solid var(--accent-border)',
-              padding: '12px 20px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              fontSize: '14px',
-              fontFamily: 'inherit',
-              transition: 'all 0.2s',
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.background = 'rgba(245, 200, 66, 0.2)';
-              e.currentTarget.style.borderColor = 'var(--accent)';
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.background = 'var(--accent-dim)';
-              e.currentTarget.style.borderColor = 'var(--accent-border)';
-            }}
-          >
-            Claim Reward
-          </button>
-        )}
       </div>
     </div>
   );

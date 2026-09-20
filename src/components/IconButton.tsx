@@ -4,14 +4,17 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 interface IconButtonProps {
-  icon?: string;
+  icon?: React.ReactNode;
   children: React.ReactNode;
   onClick?: () => void;
   to?: string; // If provided, renders as Link instead of button
+  href?: string; // If provided, renders as a plain anchor (e.g. new tab)
+  target?: string;
+  rel?: string;
   style?: React.CSSProperties;
 }
 
-export function IconButton({ icon, children, onClick, to, style }: Readonly<IconButtonProps>) {
+export function IconButton({ icon, children, onClick, to, href, target, rel, style }: Readonly<IconButtonProps>) {
   const [isHovered, setIsHovered] = useState(false);
 
   const baseStyle: React.CSSProperties = {
@@ -36,10 +39,26 @@ export function IconButton({ icon, children, onClick, to, style }: Readonly<Icon
 
   const content = (
     <>
-      {icon && <span style={{ fontSize: '18px' }}>{icon}</span>}
+      {icon && <span style={{ display: 'inline-flex', alignItems: 'center' }}>{icon}</span>}
       <span>{children}</span>
     </>
   );
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        target={target}
+        rel={rel}
+        onClick={onClick}
+        style={baseStyle}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {content}
+      </a>
+    );
+  }
 
   if (to) {
     return (

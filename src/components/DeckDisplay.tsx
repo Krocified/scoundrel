@@ -1,7 +1,6 @@
 // Deck visualization component
 
-import { getDeckConfig } from '../config/deckCustomization';
-import { useDeckCustomization } from '../contexts/DeckCustomizationContext';
+import { deckConfig } from '../config/deckCustomization';
 
 interface DeckDisplayProps {
   cardsInDeck: number;
@@ -9,11 +8,9 @@ interface DeckDisplayProps {
 
 export function DeckDisplay({ cardsInDeck }: Readonly<DeckDisplayProps>) {
   const stackDepth = Math.min(5, Math.ceil(cardsInDeck / 10));
-  const { settings } = useDeckCustomization();
-  const deckConfig = getDeckConfig(settings.deckTheme);
 
   return (
-    <div 
+    <div
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -24,7 +21,7 @@ export function DeckDisplay({ cardsInDeck }: Readonly<DeckDisplayProps>) {
       }}
       title={`${cardsInDeck} cards left in deck`}
     >
-      <div style={{ 
+      <div style={{
         position: 'relative',
         width: '100%',
         aspectRatio: '2.5 / 3.5',

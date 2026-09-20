@@ -1,14 +1,10 @@
 // Game log component
 
-import { useTheme } from '../contexts/ThemeContext';
-
 interface GameLogProps {
   log: string[];
 }
 
 export function GameLog({ log }: Readonly<GameLogProps>) {
-  const { isDark } = useTheme();
-
   return (
     <>
       <style>{`
@@ -18,7 +14,7 @@ export function GameLog({ log }: Readonly<GameLogProps>) {
             padding: 12px !important;
             font-size: 12px !important;
           }
-          
+
           .game-log-title {
             display: none !important;
           }
@@ -29,8 +25,8 @@ export function GameLog({ log }: Readonly<GameLogProps>) {
           id="game-log"
           className="game-log-container"
           style={{
-            background: isDark ? '#000' : '#f8f8f8',
-            color: isDark ? '#0f0' : '#2a2a3a',
+            background: 'rgba(0, 0, 0, 0.28)',
+            color: 'var(--text-secondary)',
             padding: '15px',
             borderRadius: '8px',
             height: '100%',
@@ -38,6 +34,7 @@ export function GameLog({ log }: Readonly<GameLogProps>) {
             fontFamily: 'monospace',
             fontSize: '14px',
             border: '1px solid var(--border)',
+            boxShadow: 'inset 0 2px 10px rgba(0, 0, 0, 0.45)',
             boxSizing: 'border-box',
           }}
         >

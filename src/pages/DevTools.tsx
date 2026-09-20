@@ -13,7 +13,7 @@ export function DevTools() {
 
   return (
     <div style={{ background: 'var(--bg-page)', minHeight: '100vh' }}>
-      <div style={{ padding: '40px', fontFamily: 'monospace', maxWidth: '900px', margin: '0 auto', color: 'var(--text-secondary)' }}>
+      <div style={{ padding: '40px', maxWidth: '900px', margin: '0 auto', color: 'var(--text-secondary)' }}>
         <div style={{ marginBottom: '24px' }}>
           <Link 
             to="/" 
@@ -29,7 +29,7 @@ export function DevTools() {
               transition: 'all 0.2s ease',
             }}
             onMouseEnter={e => {
-              e.currentTarget.style.background = 'rgba(245, 200, 66, 0.2)';
+              e.currentTarget.style.background = 'rgba(207, 216, 220, 0.2)';
               e.currentTarget.style.borderColor = 'var(--accent)';
             }}
             onMouseLeave={e => {
@@ -42,7 +42,7 @@ export function DevTools() {
         </div>
 
         <h1 style={{ color: 'var(--accent)', fontFamily: '"Pirata One", Georgia, serif', fontSize: '42px', letterSpacing: '1px', marginBottom: '8px' }}>
-          🃏 Scoundrel - Development Tools
+          Scoundrel - Development Tools
         </h1>
         
         <div style={{ marginTop: '36px' }}>
@@ -58,7 +58,6 @@ export function DevTools() {
               border: '2px solid rgba(76, 175, 80, 0.35)',
               borderRadius: '6px',
               fontWeight: 'bold',
-              fontFamily: 'monospace',
               transition: 'all 0.2s ease',
             }}
             onMouseEnter={e => {

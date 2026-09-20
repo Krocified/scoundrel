@@ -1,6 +1,4 @@
-// Title component with Pirata One font
-
-import { useTheme } from '../contexts/ThemeContext';
+// Title component
 
 interface TitleProps {
   className?: string;
@@ -8,8 +6,6 @@ interface TitleProps {
 }
 
 export function Title({ className, style }: Readonly<TitleProps>) {
-  const { isDark } = useTheme();
-
   return (
     <h1
       className={className}
@@ -17,12 +13,12 @@ export function Title({ className, style }: Readonly<TitleProps>) {
         margin: 0,
         fontFamily: '"Pirata One", Georgia, serif',
         fontWeight: 'normal',
-        color: isDark ? '#f5c842' : '#1a1a2e',
+        color: 'var(--accent)',
         letterSpacing: '1px',
         ...style,
       }}
     >
-      🃏 Scoundrel
+      Scoundrel
     </h1>
   );
 }
