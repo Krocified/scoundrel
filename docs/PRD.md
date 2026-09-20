@@ -4,12 +4,27 @@
 
 Scoundrel is a single-player dungeon crawler card game built as a web application. It adapts the physical card game "Scoundrel" into a digital experience with a clean, responsive UI, strategic gameplay, and zero external game dependencies. The game uses a modified 42-card deck where players navigate rooms of enemies, weapons, and health potions in a roguelike format.
 
+## 1.5 Scope Reduction — UI Refactor (2026-09)
+
+Product direction changed: **meta layers are removed, UI locked to one crafted identity.**
+
+- **Removed:** dark/light theme toggle, deck-theme picker, suit-color mode,
+  power-up system, run modifiers, and jokers. Sections 4.4–4.6, 6.3–6.4 and the
+  related user stories below are **superseded** and kept only as historical record.
+- **UI:** single "green felt table" identity — green felt background, off-white
+  card faces, traditional red/black suit colors, gold accents, ledger-style game
+  log. No emoji-as-decoration, no translucent grey panels, no blanket monospace.
+- **Gameplay:** back to the core 42-card Scoundrel loop (rooms, weapons/durability,
+  HP, skip L→R / R→L, win/loss + score). Power-ups/modifiers/jokers deleted
+  end-to-end from code, config, types, tests, and Rules content.
+- Full detail: `docs/UI-REFACTOR.md`.
+
 ## 2. Product Goals
 
 - Deliver a faithful digital adaptation of the Scoundrel card game
 - Provide an intuitive, responsive interface for desktop and mobile
 - Ensure all game logic is correct, tested, and deterministic
-- Support extensibility (visual themes, deck customization, future power-ups)
+- Support extensibility (deck/visual refinements on the locked identity)
 - Deliver sub-second response times for all player actions
 
 ## 3. Target Audience
@@ -51,10 +66,10 @@ Scoundrel is a single-player dungeon crawler card game built as a web applicatio
 
 | Feature | Priority | Description |
 |---------|----------|-------------|
-| Color mode toggle | P1 | Distinct (blue/red/green) vs traditional (red/black) suit colors |
-| Deck theme selection | P1 | Classic / Esoteric visual themes |
-| Settings persistence | P1 | localStorage for prefs |
-| Dark fantasy visual theme | P0 | Default dark theme |
+| Color mode toggle | ~~P1~~ | ~~Distinct (blue/red/green) vs traditional (red/black) suit colors~~ — removed, see §1.5 |
+| Deck theme selection | ~~P1~~ | ~~Classic / Esoteric visual themes~~ — removed, see §1.5 |
+| Settings persistence | ~~P1~~ | ~~localStorage for prefs~~ — removed, see §1.5 |
+| ~~Dark fantasy visual theme~~ | ~~P0~~ | ~~Default dark theme~~ — replaced by locked green-felt identity, see §1.5 |
 
 ### 4.4 Power-Up System
 
@@ -213,7 +228,6 @@ So that the game feels fresh
 
 ## 8. Future Considerations (Post-MVP)
 
-- Additional deck themes (e.g., Sci-Fi, Medieval)
 - Achievement tracking
 - Game replay (export/import game state)
 - PWA with offline support
@@ -224,6 +238,6 @@ So that the game feels fresh
 
 - No external game engines or libraries
 - Game logic must be pure functions (testable, no side effects)
-- All state managed via React Context + useReducer
+- Game state managed via React `useState` in `GameBoard.tsx`
 - CSS-only styling (no CSS-in-JS, no preprocessors)
 - TypeScript strict mode with `verbatimModuleSyntax`

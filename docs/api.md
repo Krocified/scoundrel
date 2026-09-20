@@ -98,17 +98,6 @@ Unicode suit symbol.
 
 **Returns:** `string` — `"♥"` | `"♦"` | `"♠"` | `"♣"`
 
-### `getSuitImagePath(suit: Suit, deckConfig: DeckCustomization): string`
-
-Image path for suit icon from theme config.
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `suit` | `Suit` | Suit to look up |
-| `deckConfig` | `DeckCustomization` | Active theme config |
-
-**Returns:** `string` — Image path
-
 ### `getBossImagePath(card: Card, deckConfig: DeckCustomization): string | null`
 
 Boss image path for face cards (J/Q/K) of Spades/Clubs.
@@ -116,7 +105,7 @@ Boss image path for face cards (J/Q/K) of Spades/Clubs.
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `card` | `Card` | Card to check |
-| `deckConfig` | `DeckCustomization` | Active theme config |
+| `deckConfig` | `DeckCustomization` | Classic deck config |
 
 **Returns:** `string | null` — Image path or null for non-boss cards
 
@@ -130,35 +119,15 @@ Full display string combining suit symbol and rank.
 
 **Returns:** `string` — e.g. `"♥5"`, `"♠K"`
 
-### `getSuitColor(suit: Suit): string`
-
-Hex color string based on the active color mode (distinct vs traditional). Reads from DOM `[data-color-mode]` attribute.
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `suit` | `Suit` | Suit to get color for |
-
-**Returns:** `string` — Hex color
-
-### `getSuitDisplayColorDistinct(suit: Suit): string`
-
-Distinct color palette (unaffected by color mode toggle).
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `suit` | `Suit` | Suit |
-
-**Returns:** `string` — `"#e91e63"` (hearts), `"#2196f3"` (diamonds), `"#4caf50"` (spades/clubs)
-
 ### `getSuitDisplayColorTraditional(suit: Suit): string`
 
-Traditional red/black palette.
+Traditional red/black palette for light card faces.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `suit` | `Suit` | Suit |
 
-**Returns:** `string` — `"#d32f2f"` (hearts/diamonds), `"#212121"` (spades/clubs)
+**Returns:** `string` — `"#b3261e"` (hearts/diamonds), `"#1d1a16"` (spades/clubs)
 
 ---
 
@@ -581,13 +550,9 @@ interface GameState {
 ### `DeckCustomization`
 ```typescript
 interface DeckCustomization {
-  deckTheme: string
   cardBackImage: string
-  suitImages?: Record<Suit, string>
   bossImages: Record<string, string>
   cardFont: string
   cardFontSize: number
-  useTextSuits: boolean
-  useDistinctColors: boolean
 }
 ```

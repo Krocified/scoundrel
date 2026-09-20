@@ -11,9 +11,6 @@
 ┌──────────────────▼──────────────────────────────┐
 │              App.tsx (Router)                    │
 │  / → GameBoard  │  /dev → DevTools  │  /rules   │
-│         ┌───────┴───────┐                       │
-│         │ DeckCustomizationProvider             │
-│         │ (Context + localStorage)              │
 └──────────────────┬──────────────────────────────┘
                    │
         ┌──────────┴──────────┐
@@ -44,13 +41,10 @@ src/
 │
 ├── types/
 │   ├── game.ts                   Core domain types (Card, GameState, etc.)
-│   └── deckCustomization.ts      Theme config types
+│   └── deckCustomization.ts      Classic deck config types
 │
 ├── config/
-│   └── deckCustomization.ts      Theme definitions (classic, esoteric)
-│
-├── contexts/
-│   └── DeckCustomizationContext.tsx  Theme/color state + persistence
+│   └── deckCustomization.ts      Classic deck config (card back, boss art, fonts)
 │
 ├── game/                         7 logic modules + 7 test files
 │   ├── deck.ts                   Deck creation, shuffle, validation
@@ -63,7 +57,7 @@ src/
 │   ├── runAllTests.ts            Test runner aggregator
 │   └── *.test.ts                 Console.log-based tests
 │
-├── components/                   18 React components
+├── components/                   13 React components (+3 room-card variants)
 │   ├── GameBoard.tsx             Main game board
 │   ├── RoomCard.tsx              Viewport-adaptive card
 │   ├── roomCard/                 Card variants (Base, PC, Mobile)
@@ -78,17 +72,13 @@ src/
 │   ├── NewGameButton.tsx         New game trigger
 │   ├── Title.tsx                 App title
 │   ├── Footer.tsx                Credit footer
-│   ├── ColorModeToggle.tsx       Suit color toggle
-│   ├── DeckThemeSelector.tsx     Theme dropdown
-│   ├── HamburgerMenu.tsx         Settings panel
 │   └── index.ts                  Barrel exports
 │
 ├── pages/
 │   ├── DevTools.tsx              Test runner page
 │   └── Rules.tsx                 Game rules page
 │
-└── styles/
-    └── variables.css             CSS custom properties + dark theme
+└── index.css                     Global reset + green-felt palette
 ```
 
 ## 3. Data Flow
@@ -116,20 +106,11 @@ gameController.ts ──→ cardActions.ts ──→ combat.ts / weaponSystem.ts
   React re-renders all child components
 ```
 
-### 3.2 Configuration State (React Context)
+### 3.2 Deck Configuration (Static Import)
 
-Theme and color preferences flow from Context → components:
-
-```
-DeckCustomizationProvider
-     │
-     ├── ColorModeToggle (writes)
-     ├── DeckThemeSelector (writes)
-     │
-     ├── RoomCard (reads suit colors)
-     ├── DeckDisplay (reads card back image)
-     └── ... (other themed components)
-```
+There is no configuration context or localStorage persistence. Card faces use a single
+static classic deck config (`src/config/deckCustomization.ts`) imported directly by the
+card, deck, and weapon components. The app has one locked visual identity.
 
 ### 3.3 State Shape
 
@@ -163,11 +144,13 @@ Cards use a unified `RoomCard` component that detects viewport width and delegat
 
 ### 4.3 No State Management Library
 
-`useState` + `useReducer` in `GameBoard.tsx` is sufficient for single-player local state. Adding Redux/Zustand would add complexity without benefit.
+`useState` in `GameBoard.tsx` is sufficient for single-player local state. Adding
+Redux/Zustand would add complexity without benefit.
 
-### 4.4 CSS Custom Properties for Theming
+### 4.4 CSS Custom Properties
 
-Dark fantasy theme via `[data-theme]` attribute + CSS variables in `variables.css`. All components reference these variables, enabling theme changes without JS recalculation.
+The green-felt identity is defined once as CSS variables in `src/index.css` (`:root`).
+Components reference the variables; there is no runtime theme switching.
 
 ## 5. Game Loop Flow
 
@@ -239,7 +222,5 @@ Tests use `console.assert()` in browser — no test framework dependency. Each m
 
 ## 7. Extensibility Points
 
-- **Visual themes:** Add `[data-theme="..."]` CSS block + entry in `deckCustomization.ts`
-- **Card types:** Extend `CardType`, add handler in `cardActions.ts`, reducer in GameContext
-- **Power-ups:** Add reducer actions, new GameState fields, dispatch from components
-- **Deck themes:** Add entry to `deckCustomization.ts` config array
+- **Card types:** Extend `CardType`, add handler in `cardActions.ts`
+- **Card art / fonts:** Edit the single classic config in `deckCustomization.ts`

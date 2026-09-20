@@ -44,10 +44,9 @@ src/
 ├── game/          # Pure function game logic (no React)
 ├── components/    # React components
 ├── pages/         # Route-level page components
-├── contexts/      # React context providers
-├── config/        # Static configuration
+├── config/        # Static configuration (classic deck)
 ├── types/         # TypeScript type definitions
-└── styles/        # CSS custom properties
+└── index.css      # Global reset + green-felt palette
 ```
 
 ## Testing
@@ -97,16 +96,9 @@ Test files are imported and run by `src/game/runAllTests.ts`.
 4. Add UI handling in `src/components/GameBoard.tsx`
 5. Add tests in a new `.test.ts` file
 
-### New Visual Theme
-1. Add `[data-theme="my-theme"]` CSS block in `src/styles/variables.css`
-2. Add theme entry in `src/config/deckCustomization.ts`
-3. The `DeckCustomizationProvider` will pick it up automatically
-
-### New Power-Up
-1. Add reducer action type to game state
-2. Add new fields to `GameState` interface
-3. Implement reducer logic
-4. Dispatch from components as needed
+### Card Art / Fonts
+1. Edit the single classic config in `src/config/deckCustomization.ts`
+2. Assets live under `public/assets/cards/classic/`
 
 ## Architecture Principles
 
@@ -114,7 +106,7 @@ Test files are imported and run by `src/game/runAllTests.ts`.
 - **Single responsibility** — each module does one thing
 - **No game logic in components** — components only render state and dispatch actions
 - **Immutable state** — all state mutations return new objects
-- **CSS custom properties** for theming — no runtime style recalculation
+- **CSS custom properties** — one locked green-felt palette in `src/index.css`
 
 ## Common Pitfalls
 
