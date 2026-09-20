@@ -22,7 +22,7 @@ export function PlayerStats({
           display: flex;
           align-items: stretch;
           gap: 12px;
-          margin-bottom: 24px;
+          margin-bottom: 20px;
         }
         .ps-island {
           background: #193b25;

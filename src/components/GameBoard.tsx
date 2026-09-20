@@ -67,12 +67,13 @@ export function GameBoard() {
   return (
     <>
       <style>{`
+        .board-stack {
+          margin: auto 0;
+          width: 100%;
+        }
+
         .room-area {
-          flex: 1 1 auto;
-          min-height: 0;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
+          margin-bottom: 20px;
         }
 
         @media (max-width: 768px) {
@@ -159,7 +160,7 @@ export function GameBoard() {
         display: 'flex',
         flexDirection: 'column',
         padding: '20px 20px 8px 20px',
-        maxWidth: '1200px',
+        maxWidth: '1400px',
         margin: '0 auto',
         width: '100%',
         minHeight: 0,
@@ -167,8 +168,9 @@ export function GameBoard() {
         color: 'var(--text-secondary)',
         overflow: 'auto'
       }}>
+        <div className="board-stack">
         {/* Header with Title and Buttons */}
-        <div className="header-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+        <div className="header-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <div className="header-title-row" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
             <Title className="header-title-desktop" />
             <Title className="header-title-mobile" style={{ display: 'none' }} />
@@ -268,7 +270,7 @@ export function GameBoard() {
               gridTemplateColumns: '220px 1fr',
               gap: '20px',
               flex: '0 0 auto',
-              marginBottom: '4px'
+              marginTop: '20px'
             }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <h3 style={{ margin: 0, fontSize: '14px', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Weapon</h3>
@@ -290,6 +292,7 @@ export function GameBoard() {
           </>
         )}
 
+        </div>
       </div>
       <Footer />
     </>
