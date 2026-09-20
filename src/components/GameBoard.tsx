@@ -159,7 +159,7 @@ export function GameBoard() {
         display: 'flex',
         flexDirection: 'column',
         padding: '20px 20px 8px 20px',
-        maxWidth: '1400px',
+        maxWidth: '1200px',
         margin: '0 auto',
         width: '100%',
         minHeight: 0,
@@ -217,7 +217,6 @@ export function GameBoard() {
                 display: 'grid',
                 gridTemplateColumns: 'repeat(5, minmax(0, 1fr)) 132px',
                 columnGap: '14px',
-                height: 'clamp(240px, 40vh, 324px)',
                 alignItems: 'center'
               }}>
                 <div className="deck-display-desktop" style={{ alignSelf: 'stretch', height: '100%' }}>
