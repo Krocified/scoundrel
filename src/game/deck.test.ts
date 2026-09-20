@@ -57,7 +57,6 @@ export function testDeck() {
       diamonds: '♦',
       spades: '♠',
       clubs: '♣',
-      joker: '🃏',
     }[card.suit];
     const rankDisplay = card.rank <= 10 ? card.rank : ['J', 'Q', 'K'][card.rank - 11];
     console.log(`  [${i}] ${suitSymbol}${rankDisplay} (${card.suit}-${card.rank})`);

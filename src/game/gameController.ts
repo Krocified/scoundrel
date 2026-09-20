@@ -1,90 +1,35 @@
 // Game controller - orchestrates the complete game flow
 
-import type { GameState, RunModifierId } from '../types/game';
-import { createDeck, shuffleDeck, createJokerCard } from './deck';
+import type { GameState } from '../types/game';
+import { createDeck, shuffleDeck } from './deck';
 import { initializeFirstRoom, prepareNextRoom, skipRoom } from './roomManager';
 import { pickCard, isRoomComplete, getLeftoverCard } from './cardActions';
-import { processJokerRoom, roomHasJoker, isChampionRoom } from './jokerProcessor';
-
-export interface GameInitResult {
-  gameState: GameState;
-  jokerLogs: string[];
-}
 
 /**
- * Initialize a new game with optional power-ups and run modifiers
+ * Initialize a new game
  */
-export function initializeGame(
-  powerUps: string[] = [],
-  runModifiers: RunModifierId[] = []
-): GameInitResult {
-  let deck = shuffleDeck(createDeck());
-
-  // Build initial player state, applying power-ups
-  let maxHp = 20;
-  let hp = 20;
-  let equippedWeapon = null;
-  let weaponMaxEnemy = null;
-
-  if (powerUps.includes('vitality')) {
-    maxHp = 25;
-    hp = 25;
-  }
-
-  // Mutation: -8 Maximum HP
-  if (runModifiers.includes('mutation')) {
-    maxHp = Math.max(1, maxHp - 8);
-    hp = Math.min(hp, maxHp);
-  }
-
-  if (powerUps.includes('weapon-cache')) {
-    const weaponIdx = deck.findIndex(c => c.suit === 'diamonds');
-    if (weaponIdx !== -1) {
-      equippedWeapon = deck[weaponIdx];
-      weaponMaxEnemy = null;
-      deck = [...deck.slice(0, weaponIdx), ...deck.slice(weaponIdx + 1)];
-    }
-  }
-
-  // Shuffle 1 joker into deck per selected run modifier
-  const jokerIds: Array<import('../types/game').JokerId> = ['champion', 'predator', 'forge-world'];
-  for (const _modId of runModifiers) {
-    const randomJoker = jokerIds[Math.floor(Math.random() * jokerIds.length)];
-    deck = shuffleDeck([...deck, createJokerCard(randomJoker)]);
-  }
+export function initializeGame(): GameState {
+  const deck = shuffleDeck(createDeck());
 
   // Initialize first room
   const { room, remainingDeck } = initializeFirstRoom(deck);
 
-  let gameState: GameState = {
+  return {
     deck: remainingDeck,
     currentRoom: room,
     leftoverCard: null,
     player: {
-      hp,
-      maxHp,
-      equippedWeapon,
-      weaponMaxEnemy,
+      hp: 20,
+      maxHp: 20,
+      equippedWeapon: null,
+      weaponMaxEnemy: null,
     },
     cardsPickedThisRoom: 0,
     gameStatus: 'playing',
     roomsCleared: 0,
     roomsSkipped: 0,
     defeatedEnemies: [],
-    activePowerUps: powerUps,
-    runModifiers,
-    barehandHalfDamage: false,
   };
-
-  // Process any jokers that appeared in the first room
-  const jokerResult = processJokerRoom(gameState);
-  const jokerLogs: string[] = [];
-  if (jokerResult) {
-    gameState = jokerResult.gameState;
-    jokerLogs.push(...jokerResult.logs);
-  }
-
-  return { gameState, jokerLogs };
 }
 
 /**
@@ -98,49 +43,17 @@ export function processCardPick(
   cardIndex: number
 ): { gameState: GameState; log: string[] } {
   const log: string[] = [];
-  
-  const isChampion = isChampionRoom(gameState.currentRoom) && cardIndex === 0;
-  
+
   // Pick the card
   const { newGameState, message } = pickCard(gameState, cardIndex);
   log.push(message);
-  
+
   let updatedState = newGameState;
-  
+
   // Check if player died
   if (updatedState.gameStatus === 'lost') {
-    log.push('💀 You died! Game Over.');
+    log.push('You died! Game Over.');
     return { gameState: updatedState, log };
-  }
-  
-  const logRoomHeals = (state: GameState, hpBefore: number) => {
-    const hpDiff = state.player.hp - hpBefore;
-    if (state.runModifiers.includes('mutation') && hpDiff >= 2) {
-      log.push('Mutation restored 2 HP.');
-    }
-    if (state.activePowerUps.includes('regeneration') && hpDiff >= 1) {
-      if (hpDiff > 2 || (hpDiff === 1 && !state.runModifiers.includes('mutation'))) {
-        log.push('Regeneration restored 1 HP.');
-      }
-    }
-  };
-
-  // Champion room: defeating the champion auto-clears the room
-  if (isChampion) {
-    log.push('⚔️ Champion defeated! Room auto-cleared.');
-    if (updatedState.cardsPickedThisRoom >= 1) {
-      const hpBefore = updatedState.player.hp;
-      updatedState = advanceToNextRoom(updatedState);
-      logRoomHeals(updatedState, hpBefore);
-
-      if (updatedState.gameStatus === 'won') {
-        log.push('🎉 Victory! You cleared all rooms!');
-      } else if (updatedState.currentRoom.length > 0) {
-        log.push(`Next room: ${updatedState.currentRoom.length} cards revealed.`);
-      }
-
-      return { gameState: updatedState, log };
-    }
   }
 
   // Normal room completion check
@@ -148,17 +61,15 @@ export function processCardPick(
     const leftover = getLeftoverCard(updatedState);
     log.push(`Room cleared! Leftover card: ${leftover?.suit} ${leftover?.rank}`);
 
-    const hpBefore = updatedState.player.hp;
     updatedState = advanceToNextRoom(updatedState);
-    logRoomHeals(updatedState, hpBefore);
 
     if (updatedState.gameStatus === 'won') {
-      log.push('🎉 Victory! You cleared all rooms!');
+      log.push('Victory! You cleared all rooms!');
     } else if (updatedState.currentRoom.length > 0) {
       log.push(`Next room: ${updatedState.currentRoom.length} cards revealed.`);
     }
   }
-  
+
   return { gameState: updatedState, log };
 }
 
@@ -173,27 +84,22 @@ export function processRoomSkip(
   direction: 'left-to-right' | 'right-to-left'
 ): { gameState: GameState; log: string[] } {
   const log: string[] = [];
-  
+
   // Validate: can't skip if already picked cards
   if (gameState.cardsPickedThisRoom > 0) {
     throw new Error('Cannot skip room after picking cards');
   }
-  
+
   // Validate: need exactly 4 cards in room
   if (gameState.currentRoom.length !== 4) {
     throw new Error('Can only skip rooms with 4 cards');
   }
-  
-  // Joker rooms cannot be skipped
-  if (roomHasJoker(gameState.currentRoom)) {
-    throw new Error('Cannot skip a room containing a Joker!');
-  }
-  
+
   log.push(`Skipped room (${direction}). Cards returned to bottom of deck.`);
-  
+
   // Return cards to bottom of deck
   const updatedDeck = skipRoom(gameState.currentRoom, gameState.deck, direction);
-  
+
   // Check if we can form another room
   if (updatedDeck.length < 4) {
     // Not enough cards - game over (win!)
@@ -204,14 +110,14 @@ export function processRoomSkip(
       gameStatus: 'won',
       roomsSkipped: gameState.roomsSkipped + 1,
     };
-    log.push('🎉 Victory! Not enough cards to form another room.');
+    log.push('Victory! Not enough cards to form another room.');
     return { gameState: finalState, log };
   }
-  
+
   // Prepare next room (4 new cards, no leftover after skip)
   const { room, remainingDeck } = prepareNextRoom(updatedDeck, null);
-  
-  let updatedState: GameState = {
+
+  const updatedState: GameState = {
     ...gameState,
     deck: remainingDeck,
     currentRoom: room,
@@ -219,16 +125,9 @@ export function processRoomSkip(
     cardsPickedThisRoom: 0,
     roomsSkipped: gameState.roomsSkipped + 1,
   };
-  
-  // Process any jokers in the new room
-  const jokerResult = processJokerRoom(updatedState);
-  if (jokerResult) {
-    updatedState = jokerResult.gameState;
-    log.push(...jokerResult.logs);
-  }
-  
+
   log.push(`Next room: ${updatedState.currentRoom.length} cards revealed.`);
-  
+
   return { gameState: updatedState, log };
 }
 
@@ -241,9 +140,9 @@ export function advanceToNextRoom(gameState: GameState): GameState {
   if (!isRoomComplete(gameState)) {
     throw new Error('Cannot advance: room not complete');
   }
-  
+
   const leftover = getLeftoverCard(gameState);
-  
+
   // Check if we can form another room
   const needCards = leftover ? 3 : 4;
   if (gameState.deck.length < needCards) {
@@ -254,46 +153,18 @@ export function advanceToNextRoom(gameState: GameState): GameState {
       roomsCleared: gameState.roomsCleared + 1,
     };
   }
-  
+
   // Prepare next room
   const { room, remainingDeck } = prepareNextRoom(gameState.deck, leftover);
 
-  // Apply heals after room clear
-  let player = gameState.player;
-  
-  // Regeneration power-up: heal 1 HP
-  if (gameState.activePowerUps.includes('regeneration')) {
-    player = {
-      ...player,
-      hp: Math.min(player.maxHp, player.hp + 1),
-    };
-  }
-
-  // Mutation: heal 2 HP after clearing each room
-  if (gameState.runModifiers.includes('mutation')) {
-    player = {
-      ...player,
-      hp: Math.min(player.maxHp, player.hp + 2),
-    };
-  }
-
-  let newState: GameState = {
+  return {
     ...gameState,
     deck: remainingDeck,
     currentRoom: room,
     leftoverCard: leftover,
-    player,
     cardsPickedThisRoom: 0,
     roomsCleared: gameState.roomsCleared + 1,
   };
-
-  // Process any jokers in the new room
-  const jokerResult = processJokerRoom(newState);
-  if (jokerResult) {
-    newState = jokerResult.gameState;
-  }
-
-  return newState;
 }
 
 /**

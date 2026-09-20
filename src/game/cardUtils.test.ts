@@ -7,7 +7,7 @@ import {
   getCardValue,
   getSuitSymbol,
   getCardDisplay,
-  getSuitColor,
+  getSuitDisplayColorTraditional,
 } from './cardUtils';
 
 // Helper to get card from deck (throws if not found)
@@ -67,10 +67,10 @@ export function testCardUtils() {
 
   // Test 4: Suit symbols and colors
   console.log('Test 4: Suit symbols and colors...');
-  console.log(`  Hearts: ${getSuitSymbol('hearts')} (color: ${getSuitColor('hearts')})`);
-  console.log(`  Diamonds: ${getSuitSymbol('diamonds')} (color: ${getSuitColor('diamonds')})`);
-  console.log(`  Spades: ${getSuitSymbol('spades')} (color: ${getSuitColor('spades')})`);
-  console.log(`  Clubs: ${getSuitSymbol('clubs')} (color: ${getSuitColor('clubs')})`);
+  console.log(`  Hearts: ${getSuitSymbol('hearts')} (color: ${getSuitDisplayColorTraditional('hearts')})`);
+  console.log(`  Diamonds: ${getSuitSymbol('diamonds')} (color: ${getSuitDisplayColorTraditional('diamonds')})`);
+  console.log(`  Spades: ${getSuitSymbol('spades')} (color: ${getSuitDisplayColorTraditional('spades')})`);
+  console.log(`  Clubs: ${getSuitSymbol('clubs')} (color: ${getSuitDisplayColorTraditional('clubs')})`);
   console.log('✓ All symbols and colors generated\n');
 
   // Test 5: Verify all cards in deck

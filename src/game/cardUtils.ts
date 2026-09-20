@@ -10,7 +10,6 @@ import type { DeckCustomization } from '../types/deckCustomization';
  * Spades/Clubs = enemies
  */
 export function getCardType(card: Card): CardType {
-  if (card.suit === 'joker') return 'joker';
   switch (card.suit) {
     case 'hearts':
       return 'health';
@@ -35,18 +34,6 @@ export function getCardValue(card: Card): number {
  * 2-10 show as numbers, 11=J, 12=Q, 13=K
  */
 export function getCardRankDisplay(card: Card): string {
-  if (card.jokerId === 'champion') {
-    return `★${card.rank}`;
-  }
-  if (card.jokerId === 'predator') {
-    return `P${card.rank}`;
-  }
-  if (card.jokerId === 'forge-world') {
-    return 'FW';
-  }
-  if (card.suit === 'joker') {
-    return '★';
-  }
   if (card.rank <= 10) {
     return card.rank.toString();
   }
@@ -76,16 +63,7 @@ export function getSuitSymbol(suit: Card['suit']): string {
       return '♠';
     case 'clubs':
       return '♣';
-    case 'joker':
-      return '🃏';
   }
-}
-
-/**
- * Get the image path for a suit symbol
- */
-export function getSuitImagePath(suit: Card['suit'], deckConfig: DeckCustomization): string {
-  return deckConfig.suitImages?.[suit] || '';
 }
 
 /**
@@ -124,47 +102,15 @@ export function getCardDisplay(card: Card): string {
 }
 
 /**
- * Get a color for the card suit (for UI styling)
+ * Get the traditional red/black suit color for light card faces.
  */
-export function getSuitColor(suit: Card['suit']): string {
-  switch (suit) {
-    case 'hearts':
-      return '#ff4444'; // red
-    case 'diamonds':
-      return '#4499ff'; // blue
-    case 'spades':
-    case 'clubs':
-      return '#00ff00'; // green (enemies)
-    case 'joker':
-      return '#9c27b0'; // purple
-  }
-}
-
-/**
- * Get the display color for a suit using the \"distinct\" palette
- * (matches card border colors by card type).
- */
-export function getSuitDisplayColorDistinct(suit: Suit): string {
-  if (suit === 'joker') return '#9c27b0';
-  const cardType = getCardType({ suit, rank: 2, id: '' });
-  if (cardType === 'health') return '#e91e63'; // red/pink
-  if (cardType === 'weapon') return '#2196f3'; // blue
-  return '#4caf50'; // green (enemies)
-}
-
-/**
- * Get the traditional red/black suit colors.
- * Use darkBackground=false for light card faces, true for dark UI elements.
- */
-export function getSuitDisplayColorTraditional(suit: Suit, darkBackground = true): string {
+export function getSuitDisplayColorTraditional(suit: Suit): string {
   switch (suit) {
     case 'hearts':
     case 'diamonds':
-      return darkBackground ? '#ff5252' : '#d32f2f'; // bright red on dark, dark red on light
+      return '#b3261e'; // dark red
     case 'spades':
     case 'clubs':
-      return darkBackground ? '#b0b0c8' : '#1a1a2e'; // light gray on dark, near-black on light
-    case 'joker':
-      return darkBackground ? '#ce93d8' : '#7b1fa2'; // light purple on dark, dark purple on light
+      return '#17181a'; // near-black
   }
 }
