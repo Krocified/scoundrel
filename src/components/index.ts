@@ -6,7 +6,7 @@ export { GameOverScreen } from './GameOverScreen';
 export { DeckDisplay } from './DeckDisplay';
 export { Footer } from './Footer';
 export { RoomCard } from './RoomCard';
-export { SkipButtons } from './SkipButtons';
+export { RoomMat } from './RoomMat';
 export { WeaponDisplay } from './WeaponDisplay';
 export { GameLog } from './GameLog';
 export { PickedCardPlaceholder } from './PickedCardPlaceholder';

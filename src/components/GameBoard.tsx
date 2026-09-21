@@ -5,14 +5,11 @@ import type { GameState } from '../types/game';
 import { initializeGame, processCardPick, processRoomSkip, getGameStats, calculateFinalScore } from '../game/gameController';
 import { PlayerStats } from './PlayerStats';
 import { GameOverScreen } from './GameOverScreen';
-import { DeckDisplay } from './DeckDisplay';
-import { RoomCard } from './RoomCard';
-import { SkipButtons } from './SkipButtons';
 import { WeaponDisplay } from './WeaponDisplay';
 import { GameLog } from './GameLog';
 import { Footer } from './Footer';
-import { PickedCardPlaceholder } from './PickedCardPlaceholder';
 import { NewGameButton } from './NewGameButton';
+import { RoomMat } from './RoomMat';
 import { IconButton } from './IconButton';
 import { Title } from './Title';
 
@@ -72,41 +69,7 @@ export function GameBoard() {
           width: 100%;
         }
 
-        .room-area {
-          margin-bottom: 20px;
-        }
-
         @media (max-width: 768px) {
-          .deck-display-desktop {
-            display: none !important;
-          }
-
-          .room-grid-desktop {
-            grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-            height: auto !important;
-            column-gap: 8px !important;
-          }
-
-          .room-card {
-            width: 100% !important;
-            height: auto !important;
-          }
-
-          .picked-card-placeholder {
-            width: 100% !important;
-            height: auto !important;
-          }
-
-          .skip-buttons-desktop {
-            display: none !important;
-          }
-
-          .skip-buttons-mobile {
-            display: flex !important;
-            margin-top: 15px;
-            margin-bottom: 15px;
-          }
-
           .weapon-log-grid {
             grid-template-columns: 1fr !important;
             gap: 12px !important;
@@ -214,56 +177,14 @@ export function GameBoard() {
 
         {!isGameOver && (
           <>
-            <div className="room-area">
-              <div className="room-grid-desktop" style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(5, minmax(0, 1fr)) 132px',
-                columnGap: '14px',
-                alignItems: 'center'
-              }}>
-                <div className="deck-display-desktop" style={{ alignSelf: 'stretch', height: '100%' }}>
-                  <DeckDisplay cardsInDeck={stats.cardsInDeck} />
-                </div>
-
-                {/* Render 4 slots: cards + placeholders for picked cards */}
-                {Array.from({ length: 4 }, (_, i) => ({ slotIndex: i, id: `slot-${i}` })).map(({ slotIndex, id }) => {
-                  // If we have a card at this slot index in currentRoom, show it
-                  // Otherwise show placeholder
-                  const card = game.currentRoom[slotIndex];
-
-                  if (card) {
-                    return (
-                      <RoomCard
-                        key={card.id}
-                        card={card}
-                        index={slotIndex}
-                        isGamePlaying={game.gameStatus === 'playing'}
-                        onPickCard={handlePickCard}
-                      />
-                    );
-                  } else {
-                    return <PickedCardPlaceholder key={`placeholder-${id}`} />;
-                  }
-                })}
-
-                <div className="skip-buttons-desktop" style={{ alignSelf: 'stretch', height: '100%' }}>
-                  <SkipButtons
-                    canSkip={canSkip}
-                    cardsPickedThisRoom={game.cardsPickedThisRoom}
-                    onSkip={handleSkip}
-                  />
-                </div>
-              </div>
-
-              {/* Mobile-only skip buttons below cards */}
-              <div className="skip-buttons-mobile" style={{ display: 'none' }}>
-                <SkipButtons
-                  canSkip={canSkip}
-                  cardsPickedThisRoom={game.cardsPickedThisRoom}
-                  onSkip={handleSkip}
-                />
-              </div>
-            </div>
+            <RoomMat
+              cards={game.currentRoom}
+              isGamePlaying={game.gameStatus === 'playing'}
+              canSkip={canSkip}
+              cardsInDeck={stats.cardsInDeck}
+              onPickCard={handlePickCard}
+              onSkip={handleSkip}
+            />
 
             <div className="weapon-log-grid" style={{
               display: 'grid',

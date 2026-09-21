@@ -79,9 +79,9 @@ export function PlayerStats({
         }
 
         @media (max-width: 768px) {
-          .ps { flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+          .ps { flex-wrap: nowrap; gap: 10px; margin-bottom: 16px; }
           .ps-island { padding: 8px 12px; gap: 6px; }
-          .ps-island--hp { order: -1; flex: 1 1 100%; }
+          .ps-island--hp { min-width: 0; }
         }
 
         @media (prefers-reduced-motion: reduce) {

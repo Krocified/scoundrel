@@ -29,6 +29,24 @@
   --ink: #17181a;
   --shadow-card: 0 6px 18px rgba(0, 0, 0, 0.35);
   --radius-card: 10px;
+
+  --success: #4caf50;
+  --surface-raised: #193b25;
+  --surface-sunken: #14301e;
+  --focus-ring: 0 0 0 3px var(--accent-dim);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 html,
