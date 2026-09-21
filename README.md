@@ -1,200 +1,124 @@
-# 🃏 Scoundrel
+# Scoundrel
 
-> A strategic single-player dungeon crawler card game built with React + TypeScript
+A single-player dungeon-crawler card game built with React + TypeScript.
 
-**[Play Live Demo](https://kro-scoundrel.vercel.app/) | [Read the Rules](#-how-to-play)**
+**[Play the live demo](https://scoundrel-by-kro.vercel.app/)** | **[Read the rules](#how-to-play)**
 
----
+## About
 
-## 🎮 About
+Scoundrel is a solo card game played with a modified 42-card deck. Each room deals four
+cards: enemies, weapons, and health potions. Pick three, leave the fourth for the next
+room, and survive to the end of the deck.
 
-Scoundrel is a roguelike card game where you navigate through dangerous rooms filled with enemies, weapons, and health potions. Using a modified 42-card deck, every decision matters—pick the wrong card and you might not survive!
+- 42-card deck, 20 HP. No Aces, and no face Hearts or Diamonds.
+- Weapon durability. A weapon can only defeat enemies up to the rank it last fought.
+- Sweep-to-skip. Drag the room aside, click a gutter, or press the arrow keys to defer
+  the whole room to the bottom of the deck.
+- Score based on remaining HP plus the ranks of every enemy you defeated.
 
-**Key Features:**
-- 🎯 Strategic card selection with permanent consequences
-- ⚔️ Unique weapon durability system
-- 🔄 Room skipping mechanic with directional control
-- 📊 Score-based progression system
-- 🎨 Clean, intuitive UI with real-time feedback
-
----
-
-## 🚀 Quick Start
+## Quick start
 
 ```bash
-# Install dependencies
 npm install
-
-# Start development server
 npm run dev
-
-# Open http://localhost:5173
 ```
 
-That's it! Start playing immediately.
+Open http://localhost:5173.
 
----
+## How to play
 
-## 🎲 How to Play
+### The basics
 
-### The Basics
-- You start with **20 HP**
-- Each room reveals **4 cards** from the deck
-- You must pick **exactly 3 cards**, one at a time
-- The 4th card carries over to the next room
+- You start with **20 HP**.
+- Each room reveals **4 cards** from the deck.
+- You must pick **exactly 3 cards**, one at a time.
+- The 4th card carries over to the next room.
 
-### Card Types
+### Card types
 
 | Suit | Type | Effect |
 |------|------|--------|
-| ♥ Hearts | Health Potion | Restore HP equal to card value (max 20) |
-| ♦ Diamonds | Weapon | Equip to reduce enemy damage |
-| ♠ Spades | Enemy | Fight! Take damage based on card value |
-| ♣ Clubs | Enemy | Fight! Take damage based on card value |
+| ♥ Hearts | Health Potion | Restore HP equal to the card rank (max 20) |
+| ♦ Diamonds | Weapon | Equip it to reduce enemy damage |
+| ♠ Spades | Enemy | Fight. Take damage based on the card rank |
+| ♣ Clubs | Enemy | Fight. Take damage based on the card rank |
 
-### Combat System
+### Combat
 
-**Without a weapon:**
-- Damage = Enemy Value
-- Example: ♠10 deals 10 damage
+**Without a weapon:** damage equals the enemy rank. A ♠10 deals 10.
 
-**With a weapon:**
-- Damage = Enemy Value - Weapon Value
-- Example: ♠10 vs ♦7 weapon = 3 damage
-- **Weapon durability decreases after use!**
+**With a weapon:** damage equals the enemy rank minus the weapon rank. A ♠10 against a ♦7
+weapon deals 3. The weapon then wears down (see below).
 
-### Weapon Durability
-After defeating an enemy, your weapon can only defeat enemies with values **≤** the one you just fought.
+### Weapon durability
 
-**Example:**
-1. Equip ♦7 weapon (fresh)
-2. Defeat ♠10 enemy → weapon now limited to enemies ≤10
-3. Can still defeat another ♠10
-4. Cannot defeat ♠11 or higher (weapon becomes useless)
+After you defeat an enemy, the weapon can only defeat enemies with ranks **less than or
+equal to** the one you just fought.
 
-### Skip Mechanic
-Before picking any cards, you can **skip the entire room**:
-- **Left → Right**: Cards return to bottom in order 1,2,3,4
-- **Right → Left**: Cards return to bottom in order 4,3,2,1
+1. Equip a ♦7 weapon (fresh).
+2. Defeat a ♠10 enemy. The weapon is now limited to enemies of rank 10 or lower.
+3. It can still defeat another ♠10.
+4. It cannot defeat a ♠11 or higher, and becomes useless.
 
-Use this strategically when all cards are bad!
+### Skipping a room
 
-### Win & Lose Conditions
+Before picking any card, you can sweep the entire room away:
 
-**🎉 Victory:** Deck runs out with fewer than 4 cards remaining
+- **Left to right:** the leftmost card returns first, the rightmost is buried deepest.
+- **Right to left:** the rightmost card returns first, the leftmost is buried deepest.
 
-**💀 Defeat:** HP reaches 0
+Sweep by dragging the room off the mat, clicking a gutter arrow, or pressing `←` / `→`.
+Once you have picked a card, skipping is off the table for that room.
+
+### Win and lose
+
+- **Victory:** the deck runs out with fewer than 4 cards remaining.
+- **Defeat:** your HP reaches 0.
 
 ### Scoring
+
 ```
-Final Score = Remaining HP + Sum of All Defeated Enemy Values
+Final Score = Remaining HP + Sum of all defeated enemy ranks
 ```
 
-Higher scores indicate better strategic play!
+## Tech stack
 
----
+- **React 18** with TypeScript
+- **Vite** for the build and dev server
+- **React Router** for the `/`, `/dev`, and `/rules` routes
+- Plain CSS with design tokens, no UI framework and no CSS-in-JS
+- Game logic in `src/game/` is pure functions with no side effects
 
-## 🏗️ Tech Stack
+## Design
 
-- **React 18** - UI framework
-- **TypeScript** - Type safety
-- **Vite** - Build tool & dev server
-- **React Router** - Client-side routing
-- **Pure CSS** - No UI frameworks, clean inline styles
+The UI follows a locked green-felt table identity. Tokens live in `src/index.css`, component
+styles in `src/styles/`, and the rules are written up in [docs/design.md](docs/design.md).
 
-**No game dependencies** - All game logic is custom-built!
+## Testing
 
----
+Tests are `console.assert` functions in `src/game/*.test.ts`, with no test framework.
 
-## 🧪 Testing
+1. Start the dev server: `npm run dev`.
+2. Open `/dev`.
+3. Click **Run All Tests**.
+4. Check the browser console (F12) for results.
 
-All game systems are thoroughly tested with comprehensive unit tests.
+Covered: deck creation and shuffling, card classification, room management and skipping,
+weapon equip and durability, combat, card resolution, and the game controller.
 
-**Run tests:**
-1. Start dev server: `npm run dev`
-2. Navigate to `/dev`
-3. Click "Run All Tests"
-4. Check browser console (F12) for results
-
-**Test Coverage:**
-- ✅ Deck creation & shuffling
-- ✅ Card type classification
-- ✅ Room management & skip mechanic
-- ✅ Weapon equip & durability
-- ✅ Combat & damage calculation
-- ✅ Card action resolution
-- ✅ Game controller & win/loss
-
----
-
-## 🛠️ Development Commands
+## Commands
 
 ```bash
-# Development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
-
-# Lint code
-npm run lint
+npm run dev       # dev server
+npm run build     # typecheck (tsc -b) then production build
+npm run preview   # preview the production build
+npm run lint      # eslint
 ```
 
----
+## Game rules
 
-## 📝 Game Rules
+The full rules are at `/rules` in the app and in [GAME_RULES.md](GAME_RULES.md).
 
-For complete rules, visit `/rules` in the app or see [GAME_RULES.md](GAME_RULES.md).
+## License
 
----
-
-## 🎨 Design Philosophy
-
-**Code:**
-- Component-based architecture
-- Pure functions for game logic (no side effects)
-- TypeScript for type safety
-- Comprehensive test coverage
-- Clean, readable code
-
-**UI:**
-- Minimal and functional design
-- Card-first visual hierarchy
-- Real-time feedback
-- No clutter, just gameplay
-- Accessible (keyboard navigation, tooltips)
-
-**Gameplay:**
-- Easy to learn, hard to master
-- Strategic decision-making
-- Quick games (~5-10 minutes)
-- High replayability
-
----
-
-## 🤝 Contributing
-
-This is a personal project, but feel free to fork and experiment!
-
----
-
-## 📜 License
-
-MIT License - feel free to use this project as you wish.
-
----
-
-## 🎲 Ready to Play?
-
-```bash
-npm install && npm run dev
-```
-
-**Good luck, Scoundrels!** 🃏✨
-
----
-
-Made by Michael Jong
+MIT.
