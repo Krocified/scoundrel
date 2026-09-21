@@ -31,7 +31,7 @@ Test files export named functions (`testDeck`, `testCardUtils`, etc.) aggregated
 - Routes: `/` (game), `/dev` (test runner), `/rules` (game rules)
 - Game logic in `src/game/` — pure functions, no side effects, fully testable
 - **State management**: `GameContext` (useReducer) for game state, `DeckCustomizationContext` for deck themes + visual theme
-- **CSS design system** in `src/styles/` — custom properties for theming (dark-fantasy via `data-theme`), component-specific stylesheets
+- **UI design system** — see `docs/design.md`. Tokens in `src/index.css` `:root`; component styles go in `src/styles/`. No themes, no inline/injected static styles.
 - No CSS framework, no state management library
 - Room cards are a single unified component (no PC/Mobile split)
 
