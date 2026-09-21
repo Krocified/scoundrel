@@ -35,13 +35,7 @@ export function MobileRoomCard({ card, index, isGamePlaying, onPickCard }: Reado
             max-width: 100% !important;
           }
 
-          .room-card-suit span {
-            font-size: 32px !important;
-          }
-
           .room-card-rank {
-            font-size: 24px !important;
-            margin-top: 5px !important;
             min-width: 1.2em !important;
             text-align: center !important;
           }
@@ -67,12 +61,12 @@ export function MobileRoomCard({ card, index, isGamePlaying, onPickCard }: Reado
           <div style={{
             display: 'flex',
             flexDirection: 'row',
-            alignItems: 'center',
-            gap: '4px',
+            alignItems: 'baseline',
+            gap: '8px',
             justifyContent: 'center'
           }}>
             <div className="room-card-rank" style={{
-              fontSize: `${deckConfig.cardFontSize}px`,
+              fontSize: '22px',
               fontFamily: deckConfig.cardFont,
               fontWeight: 'bold',
               lineHeight: 1,
@@ -85,7 +79,7 @@ export function MobileRoomCard({ card, index, isGamePlaying, onPickCard }: Reado
             </div>
             <div className="room-card-suit" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span style={{
-                fontSize: `${deckConfig.cardFontSize + 10}px`,
+                fontSize: '22px',
                 color: accentColor,
                 lineHeight: 1
               }}>

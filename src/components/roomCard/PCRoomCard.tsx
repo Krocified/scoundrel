@@ -11,6 +11,8 @@ import {
 } from '../../game/cardUtils';
 import { deckConfig } from '../../config/deckCustomization';
 
+const NUMBER_SIZE = 48;
+
 interface PCRoomCardProps {
   card: Card;
   index: number;
@@ -34,11 +36,11 @@ export function PCRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<
       {isFaceCard && (
         <div style={{
           position: 'absolute',
-          top: '8px',
-          left: '8px',
+          top: '10px',
+          left: '10px',
           display: 'flex',
           flexDirection: 'row',
-          alignItems: 'center',
+          alignItems: 'baseline',
           gap: '4px'
         }}>
           <div className="room-card-rank" style={{
@@ -55,7 +57,7 @@ export function PCRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<
           </div>
           <div className="room-card-suit" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <span style={{
-              fontSize: `${deckConfig.cardFontSize + 10}px`,
+              fontSize: `${deckConfig.cardFontSize}px`,
               color: accentColor,
               lineHeight: 1
             }}>
@@ -96,12 +98,12 @@ export function PCRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<
           <div style={{
             display: 'flex',
             flexDirection: 'row',
-            alignItems: 'center',
-            gap: '4px',
+            alignItems: 'baseline',
+            gap: '10px',
             justifyContent: 'center'
           }}>
             <div className="room-card-rank" style={{
-              fontSize: `${deckConfig.cardFontSize}px`,
+              fontSize: `${NUMBER_SIZE}px`,
               fontFamily: deckConfig.cardFont,
               fontWeight: 'bold',
               lineHeight: 1,
@@ -114,7 +116,7 @@ export function PCRoomCard({ card, index, isGamePlaying, onPickCard }: Readonly<
             </div>
             <div className="room-card-suit" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <span style={{
-                fontSize: `${deckConfig.cardFontSize + 10}px`,
+                fontSize: `${NUMBER_SIZE}px`,
                 color: accentColor,
                 lineHeight: 1
               }}>
