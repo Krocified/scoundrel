@@ -44,7 +44,8 @@ export function RoomMat({
     const room = roomRef.current;
     if (!room) return [];
     return [...room.children].filter(
-      (el): el is HTMLElement => !el.classList.contains('room__deck')
+      (el): el is HTMLElement =>
+        el.classList.contains('room-card') || el.classList.contains('picked-card-placeholder')
     );
   };
 
@@ -104,6 +105,21 @@ export function RoomMat({
     }, gatherMs);
   };
 
+  const snapBack = () => {
+    const slots = getSlots();
+    const reduced = prefersReducedMotion();
+    slots.forEach((s) => {
+      s.style.transition = reduced ? 'none' : 'transform 220ms var(--ease-out)';
+      s.style.transform = '';
+      s.style.zIndex = '';
+    });
+    window.setTimeout(() => {
+      if (dragRef.current) return;
+      slots.forEach((s) => { s.style.transition = ''; });
+      setActive(false);
+    }, reduced ? 0 : 240);
+  };
+
   const handlePointerDown = (e: React.PointerEvent) => {
     if (!isGamePlaying || sweepingRef.current) return;
     if ((e.target as HTMLElement).closest('.gutter')) return;
@@ -147,7 +163,19 @@ export function RoomMat({
 
     if (!drag.moved) return;
     suppressClickRef.current = true;
-    sweep(drag.dir);
+    if (Math.abs(e.clientX - drag.x) >= 60) {
+      sweep(drag.dir);
+    } else {
+      snapBack();
+    }
+  };
+
+  const handlePointerCancel = (e: React.PointerEvent) => {
+    const drag = dragRef.current;
+    if (!drag || e.pointerId !== drag.id) return;
+    dragRef.current = null;
+    setArmed(null);
+    if (drag.moved) snapBack();
   };
 
   const handleClickCapture = (e: React.MouseEvent) => {
@@ -178,7 +206,7 @@ export function RoomMat({
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
-      onPointerCancel={handlePointerUp}
+      onPointerCancel={handlePointerCancel}
       onClickCapture={handleClickCapture}
       onKeyDown={handleKeyDown}
     >
