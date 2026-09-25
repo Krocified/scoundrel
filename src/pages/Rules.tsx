@@ -51,20 +51,7 @@ export function Rules() {
 
         .rulebook-wrap { max-width: 1120px; margin: 0 auto; padding: 28px 24px 48px; }
 
-        .rulebook-back {
-          display: inline-block;
-          padding: 10px 18px;
-          margin-bottom: 24px;
-          background: var(--accent-dim);
-          color: var(--accent);
-          border: 1px solid var(--accent-border);
-          border-radius: 6px;
-          text-decoration: none;
-          font-weight: 600;
-          font-size: 14px;
-          transition: background 0.15s ease, border-color 0.15s ease;
-        }
-        .rulebook-back:hover { background: rgba(207, 216, 220, 0.22); border-color: var(--accent); }
+        .rulebook-back { margin-bottom: var(--space-6); }
 
         /* The manual sheet */
         .manual {
@@ -210,19 +197,6 @@ export function Rules() {
         .cta { margin-top: 8px; background: #17181a; border-radius: 12px; padding: 34px; text-align: center; box-shadow: inset 0 0 0 1px rgba(207, 216, 220, 0.30); }
         .cta h2 { margin: 0 0 6px; font-family: "Pirata One", Georgia, serif; font-weight: normal; font-size: 30px; color: #eef1f0; }
         .cta p { margin: 0 0 18px; color: rgba(243, 239, 226, 0.7); font-size: 15px; }
-        .cta a {
-          display: inline-block;
-          padding: 14px 32px;
-          border-radius: 8px;
-          background: var(--accent);
-          color: #17181a;
-          font-weight: 700;
-          text-decoration: none;
-          font-size: 16px;
-          transition: transform 0.12s ease, background 0.15s ease;
-        }
-        .cta a:hover { background: #e3ebee; transform: translateY(-1px); }
-        .cta a:active { transform: scale(0.98); }
 
         @media (max-width: 900px) {
           .manual { grid-template-columns: 1fr; }
@@ -241,7 +215,7 @@ export function Rules() {
       `}</style>
 
       <div className="rulebook-wrap">
-        <Link to="/" className="rulebook-back">← Back to Game</Link>
+        <Link to="/" className="btn rulebook-back">← Back to Game</Link>
 
         <div className="manual">
           <nav className="manual-rail" aria-label="Rulebook contents">
@@ -399,7 +373,7 @@ export function Rules() {
             <div className="cta">
               <h2>Think you can clear the deck?</h2>
               <p>Deal yourself in and find out.</p>
-              <Link to="/">Start a game →</Link>
+              <Link className="btn btn--primary" to="/">Start a game →</Link>
             </div>
           </main>
         </div>

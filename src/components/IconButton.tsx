@@ -1,6 +1,5 @@
 // Reusable button component with icon support
 
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 interface IconButtonProps {
@@ -12,49 +11,22 @@ interface IconButtonProps {
   target?: string;
   rel?: string;
   style?: React.CSSProperties;
+  variant?: 'primary';
 }
 
-export function IconButton({ icon, children, onClick, to, href, target, rel, style }: Readonly<IconButtonProps>) {
-  const [isHovered, setIsHovered] = useState(false);
-
-  const baseStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: icon ? '10px' : '0',
-    padding: '12px 16px',
-    background: isHovered ? 'var(--accent-dim)' : 'transparent',
-    color: 'var(--accent)',
-    border: '2px solid',
-    borderColor: isHovered ? 'var(--accent)' : 'var(--accent-border)',
-    borderRadius: '6px',
-    textDecoration: 'none',
-    fontWeight: 'bold',
-    fontFamily: 'inherit',
-    fontSize: '14px',
-    cursor: 'pointer',
-    transition: 'all 0.2s',
-    ...style
-  };
+export function IconButton({ icon, children, onClick, to, href, target, rel, style, variant }: Readonly<IconButtonProps>) {
+  const className = variant === 'primary' ? 'btn btn--primary' : 'btn';
 
   const content = (
     <>
-      {icon && <span style={{ display: 'inline-flex', alignItems: 'center' }}>{icon}</span>}
+      {icon && <span className="btn__icon">{icon}</span>}
       <span>{children}</span>
     </>
   );
 
   if (href) {
     return (
-      <a
-        href={href}
-        target={target}
-        rel={rel}
-        onClick={onClick}
-        style={baseStyle}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
+      <a className={className} href={href} target={target} rel={rel} onClick={onClick} style={style}>
         {content}
       </a>
     );
@@ -62,25 +34,14 @@ export function IconButton({ icon, children, onClick, to, href, target, rel, sty
 
   if (to) {
     return (
-      <Link
-        to={to}
-        onClick={onClick}
-        style={baseStyle}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
+      <Link className={className} to={to} onClick={onClick} style={style}>
         {content}
       </Link>
     );
   }
 
   return (
-    <button
-      onClick={onClick}
-      style={baseStyle}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <button type="button" className={className} onClick={onClick} style={style}>
       {content}
     </button>
   );
